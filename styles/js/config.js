@@ -15,9 +15,9 @@ let charadex = {};
 /* Any preview links will still show Charadex's information
 /* ==================================================================== */
 charadex.site = {
-  title: "Charadex",
-  url: "https://charadex-team.github.io/charadex-v1.0/",
-  description: `A tool for organizing small ARPGs and species.`
+  title: "Pufflings",
+  url: "http://127.0.0.1:5500/",
+  description: `Welcome to the Puffling ARPG! Pufflings are a mysterious, fluffy creature, believed to be a descendants of legendary dragons.`
 }
 
 /* ==================================================================== */
@@ -26,32 +26,73 @@ charadex.site = {
 /* ==================================================================== */
 charadex.sheet = {
 
-  id: "1GwgfLizD3HQCieGia6di-TfU4E3EipT9Jb0BDZQwNak",
+  id: "1-CiEaVNos8-pKPM_MlXBEG67VmqeFwtxrw0whnaSwNY",
 
   pages: {
-    masterlist:    "masterlist",
+    masterlist: "masterlist",
+    masterlistTraits: "masterlist traits",
     masterlistLog: "masterlist log",
-    inventory:     "inventory",
-    inventoryLog:  "inventory log",
-    items:         "items",
-    traits:        "traits",
-    prompts:       "prompts",
-    faq:           "faq",
-    staff:         "mods",
+    inventory: "inventory",
+    inventoryLog: "inventory log",
+    items: "items",
+    traits: "traits",
+    prompts: "prompts",
+    faq: "faq",
+    staff: "mods",
+    options: "OptionsSheet", // New name matches your tab
+    carousel: "carousel", // Add this line for the carousel sheet
   },
 
   options: {
-
-    designTypes: ['All', 'Official Design', 'Guest Design', 'MYO Slot', 'MYO Design'],
-    statuses: ['All', 'Resell', 'Trade', 'Gift', 'Voided', 'For Sale', 'Purchased'],
-    rarity: ['All', 'Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'],
-    species: ['All', 'Dog', 'Cat', 'Bunny'],
-    itemTypes: ['All', 'Currency', 'MYO Slot', 'Pet', 'Trait', 'Misc'],
-    traitTypes: ['All', 'Ears', 'Eyes', 'Body', 'Limbs', 'Tails', 'Misc', 'Mutations']
-
+    // These will be loaded from the sheet
+    designTypes: [],
+    statuses: [],
+    rarity: [],
+    species: [],
+    itemTypes: [],
+    traitTypes: []
   }
 
 }
+
+/* ==================================================================== */
+/* Load Options from Sheet
+/* ==================================================================== */
+charadex.loadOptions = async () => {
+  try {
+    // Load options from the sheet
+    const optionsData = await charadex.importSheet(charadex.sheet.pages.options);
+    
+    // Process the options data
+    for (let option of optionsData) {
+      if (option.optiontype && option.values) {
+        const optionType = option.optiontype.replace(/\s/g, "");
+        const values = option.values.split(',').map(v => v.trim());
+        
+        // Add 'All' option to the beginning of each array
+        values.unshift('All');
+        
+        // Update the options in charadex.sheet.options
+        if (charadex.sheet.options.hasOwnProperty(optionType)) {
+          charadex.sheet.options[optionType] = values;
+        }
+      }
+    }
+    
+    console.log('Options loaded from sheet:', charadex.sheet.options);
+  } catch (error) {
+    console.error('Error loading options from sheet:', error);
+    // Fallback to default options if sheet loading fails
+    // charadex.sheet.options = {
+    //   designTypes: ['All', 'Official Design', 'Guest Design', 'MYO Slot', 'MYO Design'],
+    //   statuses: ['All', 'Resell', 'Trade', 'Gift', 'Voided', 'For Sale', 'Purchased'],
+    //   rarity: ['All', 'Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'],
+    //   species: ['All', 'Dog', 'Cat', 'Bunny'],
+    //   itemTypes: ['All', 'Currency', 'MYO Slot', 'Pet', 'Trait', 'Misc'],
+    //   traitTypes: ['All', 'Ears', 'Eyes', 'Body', 'Limbs', 'Tails', 'Misc', 'Mutations']
+    // };
+  }
+};
 
 
 /* ==================================================================== */
@@ -84,21 +125,21 @@ charadex.page.items = {
 
   filters: {
     toggle: true,
-    parameters: {
+    parameters: () => ({
       'Type': charadex.sheet.options.itemTypes,
       'Rarity': charadex.sheet.options.rarity,
-    }
+    })
   },
 
   fauxFolder: {
-    toggle: true,
+    toggle: false,
     folderProperty: 'Type',
-    parameters: charadex.sheet.options.itemTypes,
+    parameters: () => charadex.sheet.options.itemTypes,
   },
 
   search: {
     toggle: true,
-    filterToggle: true,
+    filterToggle: false,
     parameters: ['All', 'Item', 'Rarity']
   },
 
@@ -133,21 +174,21 @@ charadex.page.traits = {
 
   filters: {
     toggle: true,
-    parameters: {
+    parameters: () => ({
       'Type': charadex.sheet.options.traitTypes,
       'Rarity': charadex.sheet.options.rarity,
-    }
+    })
   },
 
   fauxFolder: {
-    toggle: true,
+    toggle: false,
     folderProperty: 'Type',
-    parameters: charadex.sheet.options.traitTypes,
+    parameters: () => charadex.sheet.options.rarity,
   },
 
   search: {
     toggle: true,
-    filterToggle: true,
+    filterToggle: false,
     parameters: ['All', 'Trait', 'Rarity']
   },
 
@@ -183,14 +224,14 @@ charadex.page.prompts = {
   filters: {
     toggle: false,
     parameters: {
-      'TBA': [],
+      'archived': ['Active', 'Archived'],
     }
   },
 
   fauxFolder: {
-    toggle: false,
-    folderProperty: '',
-    parameters: [],
+    toggle: true,
+    folderProperty: 'archived',
+    parameters: () => ['Active', 'Archived'],
   },
 
   search: {
@@ -327,17 +368,17 @@ charadex.page.masterlist = {
 
   filters: {
     toggle: true,
-    parameters: {
+    parameters: () => ({
       'Design Type': charadex.sheet.options.designTypes,
       'Status': charadex.sheet.options.statuses,
       'Rarity': charadex.sheet.options.rarity,
-    }
+    })
   },
 
   fauxFolder: {
     toggle: true,
-    folderProperty: 'Species',
-    parameters: charadex.sheet.options.species,
+    folderProperty: 'Type',
+    parameters: () => charadex.sheet.options.designTypes,
   },
 
   search: {
@@ -481,7 +522,7 @@ charadex.page.inventory = {
       sortProperty: "item",
       order: "asc",
       parametersKey: 'type', 
-      parameters: charadex.sheet.options.itemTypes
+      parameters: () => charadex.sheet.options.itemTypes
     },
 
     search: {
@@ -492,10 +533,10 @@ charadex.page.inventory = {
 
     filters: {
       toggle: true,
-      parameters: {
+      parameters: () => ({
         'Type': charadex.sheet.options.itemTypes,
         'Rarity': charadex.sheet.options.rarity,
-      }
+      })
     },
 
   }
