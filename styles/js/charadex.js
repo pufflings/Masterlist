@@ -25,8 +25,8 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
   let pageUrl = customPageUrl || charadex.url.getPageUrl(config.sitePage);
 
   // Add folders, filters & search
-  let folders = config.fauxFolder?.toggle ?? false ? charadex.listFeatures.fauxFolders(pageUrl, config.fauxFolder.parameters, selector) : false;
-  let filters = config.filters?.toggle ?? false ? charadex.listFeatures.filters(config.filters.parameters, selector) : false;
+  let folders = config.fauxFolder?.toggle ?? false ? charadex.listFeatures.fauxFolders(pageUrl, typeof config.fauxFolder.parameters === 'function' ? config.fauxFolder.parameters() : config.fauxFolder.parameters, selector) : false;
+  let filters = config.filters?.toggle ?? false ? charadex.listFeatures.filters(typeof config.filters.parameters === 'function' ? config.filters.parameters() : config.filters.parameters, selector) : false;
   let search = config.search?.toggle ?? false ? charadex.listFeatures.search(config.search.parameters, config.search.filterToggle, selector) : false;
 
   // Get our data
@@ -66,7 +66,7 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
       config.sort.sortProperty, 
       config.sort.order,
       config.sort.parametersKey,
-      config.sort.parameters,
+      typeof config.sort.parameters === 'function' ? config.sort.parameters() : config.sort.parameters,
     );
   }
 
@@ -160,7 +160,7 @@ charadex.initialize.groupGallery = async function (config, dataArray, groupBy, c
   const pageUrl = customPageUrl || charadex.url.getPageUrl(config.sitePage);
 
   // Add filters & Search
-  let filters = config.filters?.toggle ?? false ? charadex.listFeatures.filters(config.filters.parameters, selector) : false;
+  let filters = config.filters?.toggle ?? false ? charadex.listFeatures.filters(typeof config.filters.parameters === 'function' ? config.filters.parameters() : config.filters.parameters, selector) : false;
   let search = config.search?.toggle ?? false ? charadex.listFeatures.search(config.search.parameters, config.search.filterToggle, selector) : false;
 
   /* Attempt to Fetch the data */
@@ -178,7 +178,7 @@ charadex.initialize.groupGallery = async function (config, dataArray, groupBy, c
       config.sort.sortProperty, 
       config.sort.order,
       config.sort.parametersKey,
-      config.sort.parameters,
+      typeof config.sort.parameters === 'function' ? config.sort.parameters() : config.sort.parameters,
     );
   }
 

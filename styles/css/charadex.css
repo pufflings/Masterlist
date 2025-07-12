@@ -15,21 +15,20 @@ body {
   /* ============================================================= */
   /* Primary Color
   ================================================================ */
-  --cd-primary-color: #8FB7D4;
-  --cd-primary-text-color: #fff;
-
+  --cd-primary-color:                    #DCCAB4;
+  --cd-primary-text-color:               #68494E;
   /* ============================================================= */
   /* Secondary Color
   ================================================================ */
-  --cd-secondary-color: #939799;
-  --cd-secondary-text-color: #fff;
+  --cd-secondary-color:                  #887765;
+  --cd-secondary-text-color:             #68494E;
 
   /* ============================================================= */
   /* Backgrounds
   ================================================================ */
-  --cd-body-background-color: #f8f8f8;
-  --cd-content-background-color: #ffffff;
-  --cd-faded-background-color: #f8f8f8;
+  --cd-body-background-color:            #9B8A7A;
+  --cd-content-background-color:         #DAC5AA;
+  --cd-faded-background-color:           #E8D8C1;
 
   /* Background Extras */
   --cd-body-background-image: url();
@@ -37,21 +36,21 @@ body {
   /* ============================================================= */
   /* Text
   ================================================================ */
-  --cd-body-text-color: #303030;
-  --cd-faded-text-color: #575757;
+  --cd-body-text-color:                  #68494E;
+  --cd-faded-text-color:                 #68494E;
 
   /* ============================================================= */
   /* Borders
   ================================================================ */
-  --cd-border-color: rgba(0, 0, 0, 0.125);
-  --cd-border-width: 1px;
-  --cd-border-style: solid;
-  --cd-border-radius: 1rem;
-
+  --cd-border-color:                     rgba(0, 0, 0, 0.125);
+  --cd-border-color2:                     rgba(79, 64, 71, 1);
+  --cd-border-width:                     1px;
+  --cd-border-style:                     solid;
+  --cd-border-radius:                    1rem;
   /* ============================================================= */
   /* Navbar
   ================================================================ */
-  --cd-navbar-background-color: #222222;
+  --cd-navbar-background-color:          #4F4047;
   --cd-navbar-brand-color: var(--cd-primary-color);
   --cd-navbar-brand-color-hover: var(--cd-secondary-color);
   --cd-navbar-text-color: var(--cd-content-background-color);
@@ -125,7 +124,7 @@ body {
   /* Link
   ================================================================ */
 
-  --cd-link-text-color: #4c8ebd;
+  --cd-link-text-color: #AA8863;
   --cd-link-text-color-hover: var(--cd-secondary-color);
 
 
@@ -773,4 +772,20 @@ p:last-child {
 .badge-mythic {
   background-color: var(--cd-rarity-legendary-bg);
   color: var(--cd-rarity-legendary-txt);
+}
+
+.my-rounded-carousel,
+.my-rounded-carousel .carousel-inner,
+.my-rounded-carousel .carousel-item,
+.my-rounded-carousel img {
+  border-radius: 25px; /* or whatever value you want */
+  overflow: hidden;
+}
+
+#pufflingCarousel .carousel-item img {
+  width: 100%;
+  height: 350px;           /* Set your desired height */
+  object-fit: cover;       /* Ensures the image covers the area */
+  object-position: center; /* Center the image */
+  border-radius: 2rem;     /* Keep your rounded corners */
 }

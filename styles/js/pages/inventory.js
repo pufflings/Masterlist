@@ -9,6 +9,9 @@ import { charadex } from '../charadex.js';
 ======================================================================= */
 document.addEventListener("DOMContentLoaded", async () => {
 
+  // Load options from sheet first
+  await charadex.loadOptions();
+
   let dex = await charadex.initialize.page(
     null,
     charadex.page.inventory,
@@ -20,9 +23,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         let profile = listData.profileArray[0];
 
         // Inventory
+        const inventoryData = (await charadex.manageData.inventoryFix(profile)).filter(item => Number(item.quantity) > 0);
         charadex.initialize.groupGallery(
           charadex.page.inventory.inventoryConfig,
-          await charadex.manageData.inventoryFix(profile),
+          inventoryData,
           'type',
           charadex.url.getPageUrl('items')
         )

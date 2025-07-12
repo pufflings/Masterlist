@@ -9,10 +9,19 @@ import { charadex } from '../charadex.js';
 ======================================================================= */
 document.addEventListener("DOMContentLoaded", async () => {
 
+  // Load options from sheet first
+  await charadex.loadOptions();
+
   let dex = await charadex.initialize.page(
     null,
     charadex.page.masterlist,
-    null, 
+    // Data callback to debug field names
+    (data) => {
+      if (data.length > 0) {
+        console.log('Masterlist data fields:', Object.keys(data[0]));
+        console.log('First item sample:', data[0]);
+      }
+    },
     async (listData) => {
 
       if (listData.type == 'profile') {
