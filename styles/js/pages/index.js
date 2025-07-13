@@ -66,13 +66,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   ===================================================================== */
     // Load carousel data from sheet
     const carouselData = await charadex.importSheet(charadex.sheet.pages.carousel);
-    console.log('Raw carousel data:', carouselData);
   
     // Filter out hidden images (hide: TRUE or 'TRUE' or true)
     const visibleSlides = carouselData.filter(slide =>
       !slide.hide || slide.hide === 'FALSE' || slide.hide === false || slide.hide === 'false' || slide.hide === 0 || slide.hide === '0'
     );
-    console.log('Visible slides:', visibleSlides);
   
     // Build carousel indicators and items
     let indicators = '';
@@ -102,7 +100,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Initialize carousel
       $('#pufflingCarousel').carousel({ interval: 5000, wrap: true });
       $('#pufflingCarousel').carousel(0); // Go to the first slide
-      console.log('Carousel rendered!');
     } else {
       console.error('Carousel container elements not found in DOM!');
     }

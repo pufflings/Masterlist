@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     null,
     charadex.page.masterlist,
     // Data callback to debug field names and process traits
-    (data) => {     
+    (data) => {
       // Process traits for each masterlist entry
       for (let entry of data) {
         entry.masterlistTraits = entry.masterlisttraits;
@@ -52,6 +52,15 @@ document.addEventListener("DOMContentLoaded", async () => {
           let ownerProfile = entry.owner.toLowerCase().replace(/\s+/g, '');
           entry.ownerlink = `/inventories.html?profile=${ownerProfile}`;
         }
+        // Process seeker link if present
+        if (entry.seeker) {
+          // Split into design and name
+          let parts = entry.seeker.split(/\s+/, 2);
+          let design = parts[0];
+          let name = entry.seeker.substring(design.length).trim();
+          entry.seekerlink = `/seekers.html?profile=${encodeURIComponent(design)}`;
+          entry.seekername = name || entry.seeker;
+        }
       }
     },
     async (listData) => {
@@ -66,6 +75,17 @@ document.addEventListener("DOMContentLoaded", async () => {
           );
         }
 
+        // Directly update the Seeker row in the DOM
+        const data = listData.profileArray[0];
+        if (data && data.seekername && data.seekerlink) {
+          var row = document.querySelector('.seeker-row');
+          if (row) {
+            row.style.display = '';
+            var link = row.querySelector('.seekerlink');
+            link.textContent = data.seekername;
+            link.href = data.seekerlink;
+          }
+        }
       }
 
     }
