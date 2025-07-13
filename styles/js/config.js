@@ -24,7 +24,7 @@ charadex.site = {
 const isLocalhost = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
 charadex.site.url = isLocalhost
   ? "http://127.0.0.1:5500/"
-  : "https://pufflings.github.io/";
+  : "https://pufflings.github.io/Masterlist/";
 
 /* ==================================================================== */
 /* Sheet Config
