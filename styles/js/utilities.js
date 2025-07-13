@@ -86,8 +86,8 @@ charadex.tools = {
   // All things with the word 'image' will be made into images
   // And all things with the word 'link' will be made into links
   createListClasses(sheetArray) {
-
     let classArr = [...new Set(sheetArray.slice(0, 5).flatMap(Object.keys))];
+    if (!classArr.includes('folder')) classArr.push('folder');
     let newArr = [];
     for (let i in classArr) {
       newArr[i] = classArr[i];
@@ -98,9 +98,7 @@ charadex.tools = {
         newArr[i] = { name: classArr[i], attr: 'href' };
       }
     }
-
     return newArr;
-
   },
   
   // Adds profile links
@@ -297,7 +295,7 @@ charadex.manageData = {
     for (let primaryEntry of primaryArray) {
       primaryEntry[scrub(secondaryPageName)] = [];
       for (let secondaryEntry of secondaryArray) {
-        let secondaryDataArray = secondaryEntry[secondaryKey].split(',');
+        let secondaryDataArray = (secondaryEntry[secondaryKey] || '').split(',');
         for (let prop of secondaryDataArray) {
           if (scrub(primaryEntry[primaryKey]) === scrub(prop)) {
             primaryEntry[scrub(secondaryPageName)].push(secondaryEntry);

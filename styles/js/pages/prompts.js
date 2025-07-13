@@ -14,18 +14,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   let dex = await charadex.initialize.page(null, charadex.page.prompts, 
     // Data callback to process archived status and debug field names
-    (data) => {
-      if (data.length > 0) {
-        console.log('Prompts data fields:', Object.keys(data[0]));
-        console.log('First prompt sample:', data[0]);
-      }
-      
+    (data) => {     
       for (let prompt of data) {
         // Convert archived boolean to readable status for filtering
         if (prompt.archived === true || prompt.archived === 'TRUE') {
           prompt.archived = 'Archived';
         } else {
           prompt.archived = 'Active';
+        }
+        
+        // Add the folder property for fauxfolders to work correctly
+        // This ensures the folder system uses the processed 'Active'/'Archived' values
+        prompt.folder = prompt.archived;
+      }
+      
+      // Handle custom filtering for "All" folder
+      const urlParams = charadex.url.getUrlParametersObject();
+      if (urlParams && urlParams.folder === 'All') {
+        // Remove the folder parameter so no filtering is applied
+        delete urlParams.folder;
+        // Update the URL without the folder parameter
+        const newUrl = charadex.url.addUrlParameters(window.location.pathname, urlParams);
+        if (newUrl !== window.location.pathname + window.location.search) {
+          window.history.replaceState({}, '', newUrl);
         }
       }
     },
@@ -38,6 +49,22 @@ document.addEventListener("DOMContentLoaded", async () => {
           const image = listData.array[i]?.image;
           $(this).attr('style', `background-image: url(${listData.array[i]?.image})`);
         });
+      }
+      
+      // Ensure data-folder attribute is set for CSS targeting on the correct card element
+      if (listData.type == 'gallery') {
+        setTimeout(() => {
+          listData.array.forEach((prompt) => {
+            if (prompt.folder) {
+              $('.col-md-6.p-2 > .card.h-100').each(function () {
+                const titleLink = $(this).find('.card-header a');
+                if (titleLink.text().trim() === (prompt.title || '').trim()) {
+                  $(this).attr('data-folder', prompt.folder);
+                }
+              });
+            }
+          });
+        }, 100);
       }
     }
   );

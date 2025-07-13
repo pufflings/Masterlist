@@ -46,9 +46,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   ===================================================================== */
   let designs = await charadex.initialize.page(null, charadex.page.index.designs, (arr) => {
     
-    // Splice the silly little array
+    // Filter out designs of type "slot" or "MYO Slot"
+    arr.splice(0, arr.length, ...arr.filter(design => {
+      const designType = design.type || design['Design Type'] || '';
+      return !designType.toLowerCase().includes('slot');
+    }));
+    
+    // Get the latest X items from the array
     let sliceAmount = charadex.page.index.designs.amount || 6;
-    arr.splice(sliceAmount, arr.length);
+
+    if (arr.length > sliceAmount) {
+      arr.splice(0, arr.length - sliceAmount);
+    }
 
   });
     await charadex.loadOptions();
