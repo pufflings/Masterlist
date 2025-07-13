@@ -717,6 +717,12 @@ p:last-child {
   min-height: 150px;
 }
 
+/* Archived prompt styling */
+.card.h-100[data-folder="Archived"] .card-header a {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
 /* Makes sure your text formatting is preserved from the sheet */
 /* Best for large areas like notes */
 .cd-text-pre {

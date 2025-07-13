@@ -16,9 +16,15 @@ let charadex = {};
 /* ==================================================================== */
 charadex.site = {
   title: "Pufflings",
-  url: "http://127.0.0.1:5500/",
+  url: "",
   description: `Welcome to the Puffling ARPG! Pufflings are a mysterious, fluffy creature, believed to be a descendants of legendary dragons.`
 }
+
+// Automatically set the site URL based on environment
+const isLocalhost = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+charadex.site.url = isLocalhost
+  ? "http://127.0.0.1:5500/"
+  : "https://pufflings.github.io/";
 
 /* ==================================================================== */
 /* Sheet Config
@@ -41,6 +47,7 @@ charadex.sheet = {
     staff: "mods",
     options: "OptionsSheet", // New name matches your tab
     carousel: "carousel", // Add this line for the carousel sheet
+    traitItems: "Trait items", // Add this line for the trait items sheet
   },
 
   options: {
@@ -230,8 +237,8 @@ charadex.page.prompts = {
 
   fauxFolder: {
     toggle: true,
-    folderProperty: 'archived',
-    parameters: () => ['Active', 'Archived'],
+    folderProperty: 'folder',
+    parameters: () => ['All', 'Active', 'Archived'],
   },
 
   search: {
@@ -413,6 +420,30 @@ charadex.page.masterlist = {
         toggle: true,
         bottomToggle: false,
         amount: 12,
+      },
+
+    },
+
+    [charadex.sheet.pages.masterlistTraits]: {
+
+      sheetPage: charadex.sheet.pages.masterlistTraits,
+      primaryProperty: 'design',
+      relatedProperty: 'id',
+      dexSelector: 'traits',
+      profileProperty: 'trait',
+      profileToggle: false,
+
+      sort: {
+        toggle: true,
+        key: "trait",
+        order: "asc",
+        parameters: []
+      },
+
+      pagination: {
+        toggle: false,
+        bottomToggle: false,
+        amount: 50,
       },
 
     }
