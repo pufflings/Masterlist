@@ -58,6 +58,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (arr.length > sliceAmount) {
       arr.splice(0, arr.length - sliceAmount);
     }
+    // Set ownerlink for each design
+    for (let entry of arr) {
+      if (entry.owner) {
+        let ownerProfile = entry.owner.toLowerCase().replace(/\s+/g, '');
+        entry.ownerlink = `/inventories.html?profile=${ownerProfile}`;
+      }
+    }
 
   });
     await charadex.loadOptions();

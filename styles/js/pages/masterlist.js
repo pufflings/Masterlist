@@ -19,7 +19,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     (data) => {
       // Process traits for each masterlist entry
       for (let entry of data) {
-        entry.masterlistTraits = entry.masterlisttraits;
+        // Use the correct field name based on the sheet page name
+        entry.masterlistTraits = entry.pufflingtraits;
         if (charadex.tools.checkArray(entry.masterlistTraits)) {
           // Filter out hidden traits
           let visibleTraits = entry.masterlistTraits.filter(trait => !trait.hide || trait.hide.toLowerCase() !== 'true');
@@ -86,6 +87,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             link.href = data.seekerlink;
           }
         }
+
+        // Set Design Type
+        const designType = data.Type || data.type || data['Design Type'] || data.designType || '';
+        const designTypeElem = document.querySelector('.designtype');
+        if (designTypeElem) designTypeElem.textContent = designType;
       }
 
     }
