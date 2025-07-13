@@ -35,9 +35,10 @@ charadex.sheet = {
   id: "1-CiEaVNos8-pKPM_MlXBEG67VmqeFwtxrw0whnaSwNY",
 
   pages: {
-    masterlist: "masterlist",
-    masterlistTraits: "masterlist traits",
+    masterlist: "Pufflings",
+    masterlistTraits: "Puffling Traits",
     masterlistLog: "masterlist log",
+    seekers: "seekers",
     inventory: "inventory",
     inventoryLog: "inventory log",
     items: "items",
@@ -45,9 +46,9 @@ charadex.sheet = {
     prompts: "prompts",
     faq: "faq",
     staff: "mods",
-    options: "OptionsSheet", // New name matches your tab
-    carousel: "carousel", // Add this line for the carousel sheet
-    traitItems: "Trait items", // Add this line for the trait items sheet
+    options: "OptionsSheet", 
+    carousel: "carousel",
+    traitItems: "Trait items",
   },
 
   options: {
@@ -452,6 +453,55 @@ charadex.page.masterlist = {
 
 };
 
+/* Seekers
+/* --------------------------------------------------------------- */
+charadex.page.seekers = {
+
+  sheetPage: charadex.sheet.pages.seekers,
+  sitePage: 'seekers',
+  dexSelector: 'charadex',
+  profileProperty: 'design',
+
+  sort: {
+    toggle: true,
+    key: "id",
+    order: "desc",
+    parameters: []
+  },
+
+  pagination: {
+    toggle: true,
+    bottomToggle: true,
+    amount: 12,
+  },
+
+  filters: {
+    toggle: false,
+    parameters: () => ({
+      'Design Type': charadex.sheet.options.designTypes,
+      'Status': charadex.sheet.options.statuses,
+      'Rarity': charadex.sheet.options.rarity,
+    })
+  },
+
+  fauxFolder: {
+    toggle: false,
+    folderProperty: 'Type',
+    parameters: () => charadex.sheet.options.designTypes,
+  },
+
+  search: {
+    toggle: true,
+    filterToggle: true,
+    parameters: ['All', 'Design', 'Owner', 'Designer', 'Artist']
+  },
+
+  prevNext: {
+    toggle: true,
+  },
+
+};
+
 /* Inventory
 /* --------------------------------------------------------------- */
 charadex.page.inventory = {
@@ -531,6 +581,22 @@ charadex.page.inventory = {
       primaryProperty: 'username',
       relatedProperty: 'owner',
       dexSelector: 'designs',
+      profileProperty: 'design',
+      profileToggle: false,
+
+    },
+
+    [charadex.sheet.pages.seekers]: {
+
+      // This imports the config from the seekers
+      // So you dont have to repeat yourself
+      ...charadex.page.seekers, 
+
+      sheetPage: charadex.sheet.pages.seekers,
+      sitePage: 'seekers',
+      primaryProperty: 'username',
+      relatedProperty: 'owner',
+      dexSelector: 'seekers',
       profileProperty: 'design',
       profileToggle: false,
 

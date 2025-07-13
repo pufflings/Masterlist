@@ -123,7 +123,9 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
     let galleryList = list.initializeGallery(charadexData, additionalListConfigs);
 
     // Initialize filters and search
-    if ((config.filters?.toggle ?? false) && filters) filters.initializeFilters(galleryList);
+    if ((config.filters?.toggle ?? false) && filters) {
+      filters.initializeFilters(galleryList);
+    }
     if ((config.search?.toggle ?? false) && search) search.initializeSearch(galleryList);
 
     // Return those values on Callback

@@ -32,20 +32,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         )
 
         // Designs
-        if (charadex.tools.checkArray(profile.masterlist)) {
+        if (charadex.tools.checkArray(profile.pufflings)) {
           let designs = await charadex.initialize.page(
-            profile.masterlist,
-            charadex.page.inventory.relatedData['masterlist'],
+            profile.pufflings,
+            charadex.page.inventory.relatedData[charadex.sheet.pages.masterlist],
+          );
+        }
+
+        // Seekers
+        if (charadex.tools.checkArray(profile.seekers)) {
+          let seekers = await charadex.initialize.page(
+            profile.seekers,
+            charadex.page.inventory.relatedData[charadex.sheet.pages.seekers],
           );
         }
 
         // Logs
-        if (charadex.tools.checkArray(profile.inventorylog)) {
-          let logs = await charadex.initialize.page(
-            profile.inventorylog,
-            charadex.page.inventory.relatedData['inventory log'],
-          );
-        }
+        // if (charadex.tools.checkArray(profile.inventorylog)) {
+        //   let logs = await charadex.initialize.page(
+        //     profile.inventorylog,
+        //     charadex.page.inventory.relatedData['inventory log'],
+        //   );
+        // }
 
 
       }
