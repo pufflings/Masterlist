@@ -60,6 +60,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const titleLink = $(this).find('.card-header a');
                 if (titleLink.text().trim() === (prompt.title || '').trim()) {
                   $(this).attr('data-folder', prompt.folder);
+                  // Add fade class if archived
+                  if (prompt.folder === 'Archived') {
+                    $(this).addClass('shop-card-fade');
+                  } else {
+                    $(this).removeClass('shop-card-fade');
+                  }
                 }
               });
             }
