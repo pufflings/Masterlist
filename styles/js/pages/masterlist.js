@@ -104,10 +104,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             imageContainer.innerHTML = `
               <ul class="nav nav-tabs justify-content-center mb-3" id="imageTab" role="tablist">
                 <li class="nav-item">
-                  <a class="nav-link active" id="main-image-tab" data-toggle="tab" href="#main-image" role="tab" aria-controls="main-image" aria-selected="true">Main Image</a>
+                  <a class="nav-link active" id="main-image-tab" data-toggle="tab" href="#main-image" role="tab" aria-controls="main-image" aria-selected="true">Puffling</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" id="alt-image-tab" data-toggle="tab" href="#alt-image" role="tab" aria-controls="alt-image" aria-selected="false">Humanoid Image</a>
+                  <a class="nav-link" id="alt-image-tab" data-toggle="tab" href="#alt-image" role="tab" aria-controls="alt-image" aria-selected="false">Humanoid</a>
                 </li>
               </ul>
               <div class="tab-content" id="imageTabContent">
