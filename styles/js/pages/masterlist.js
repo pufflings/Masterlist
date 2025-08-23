@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 let traitName = parts.slice(1).join(' ');
                 let profile = traitName.toLowerCase().replace(/\s+/g, '');
                 let note = trait.notes ? ` - ${trait.notes}` : '';
-                traitsHtml += `<li><a href="/traits.html?profile=${profile}">${traitName}</a>${note}</li>`;
+                traitsHtml += `<li><a href="traits.html?profile=${profile}">${traitName}</a>${note}</li>`;
               }
             }
             traitsHtml += '</ul>';
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Process owner link to point to inventories page
         if (entry.owner) {
           let ownerProfile = entry.owner.toLowerCase().replace(/\s+/g, '');
-          entry.ownerlink = `/inventories.html?profile=${ownerProfile}`;
+          entry.ownerlink = `inventories.html?profile=${ownerProfile}`;
         }
         // Process seeker link if present
         if (entry.seeker) {
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           let parts = entry.seeker.split(/\s+/, 2);
           let design = parts[0];
           let name = entry.seeker.substring(design.length).trim();
-          entry.seekerlink = `/seekers.html?profile=${encodeURIComponent(design)}`;
+          entry.seekerlink = `seekers.html?profile=${encodeURIComponent(design)}`;
           entry.seekername = name || entry.seeker;
         }
       }

@@ -41,9 +41,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const image = item.image || item.img || item.thumbnail || '';
             const name = item.Item || item.item || '';
             const profile = name.toLowerCase().replace(/\s+/g, '');
-            const link = `/items.html?profile=${profile}`;
+            const link = `items.html?profile=${profile}`;
             // Add an 'Item' field to the trait for rendering
-            trait.Item = `<a href="${link}" target="_blank"><img src="${image}" alt="${name}" style="max-width:32px;max-height:32px;vertical-align:middle;"/> <span style="vertical-align:middle;">${name}</span></a>`;
+            trait.Item = `<a href="${link}"><img src="${image}" alt="${name}" style="max-width:32px;max-height:32px;vertical-align:middle;"/> <span style="vertical-align:middle;">${name}</span></a>`;
           }
         }
       }

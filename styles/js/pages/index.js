@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     for (let entry of arr) {
       if (entry.owner) {
         let ownerProfile = entry.owner.toLowerCase().replace(/\s+/g, '');
-        entry.ownerlink = `/inventories.html?profile=${ownerProfile}`;
+        entry.ownerlink = `inventories.html?profile=${ownerProfile}`;
       }
     }
 
