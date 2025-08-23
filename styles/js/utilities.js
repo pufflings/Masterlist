@@ -3,6 +3,9 @@
 ======================================================================= */
 import { charadex } from './config.js';
 
+// Make charadex globally available for inline handlers
+window.charadex = charadex;
+
 
 /* ==================================================================== */
 /* Tools
@@ -133,14 +136,18 @@ charadex.tools = {
   clearCache() {
     try {
       const keys = Object.keys(localStorage);
+      let clearedCount = 0;
       keys.forEach(key => {
         if (key.startsWith('charadex_')) {
           localStorage.removeItem(key);
+          clearedCount++;
         }
       });
-      console.log('Cache cleared successfully');
+      console.log(`Cache cleared successfully. Removed ${clearedCount} items.`);
+      return true;
     } catch (error) {
       console.warn('Cache clear failed:', error);
+      return false;
     }
   },
 
@@ -386,12 +393,17 @@ charadex.manageData = {
     let inventoryData = [];
     for (let property in profileArray) {
       for (let item of itemArr) {
-        if (property === charadex.tools.scrub(item.item) && profileArray[property] !== '') inventoryData.push({
-          ... item,
-          ... {
-            quantity: profileArray[property]
-          }
-        });
+        const scrubbedItemName = charadex.tools.scrub(item.item);
+        const scrubbedProperty = charadex.tools.scrub(property);
+        
+        if (scrubbedProperty === scrubbedItemName && profileArray[property] !== '' && profileArray[property] !== null && profileArray[property] !== undefined) {
+          inventoryData.push({
+            ... item,
+            ... {
+              quantity: profileArray[property]
+            }
+          });
+        }
       }
     }
   

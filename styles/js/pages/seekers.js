@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Process owner link to point to inventories page
         if (entry.owner) {
           let ownerProfile = entry.owner.toLowerCase().replace(/\s+/g, '');
-          entry.ownerlink = `/inventories.html?profile=${ownerProfile}`;
+          entry.ownerlink = `inventories.html?profile=${ownerProfile}`;
         }
         // Notes, Artist, Designer are passed through as-is
       }

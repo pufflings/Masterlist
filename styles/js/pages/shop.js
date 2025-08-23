@@ -24,9 +24,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const image = item.image || item.imageurl || 'assets/favicon.png';
     const name = item.item || '';
     const description = item.description || '';
+    
+    // Handle Tradeable field
+    const tradeable = item.tradeable || item.Tradeable || '';
+    let tradeableText = 'No';
+    let tradeableClass = 'text-muted';
+    if (tradeable === true || tradeable === "true" || tradeable === 1 || tradeable === "1" || tradeable === "yes" || tradeable === "Yes") {
+      tradeableText = 'Yes';
+      tradeableClass = 'text-success';
+    }
+    
     // Create profile link (lowercase, remove spaces and special characters)
     const profile = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-    let nameLink = `<a href="/items.html?profile=${profile}">${name}</a>`;
+    let nameLink = `<a href="items.html?profile=${profile}">${name}</a>`;
     let cardFadeClass = '';
     if (stock === 0 || stock === '0') {
       nameLink = `<s>${nameLink}</s>`;
@@ -49,6 +59,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="d-flex justify-content-between align-items-end mt-4">
                   <span><b>Price:</b> ${price} <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></span>
                   <span><b>Stock:</b> ${stock}</span>
+                </div>
+                <div class="mt-2">
+                  <span class="${tradeableClass}"><b>Tradeable:</b> ${tradeableText}</span>
                 </div>
               </div>
             </div>
