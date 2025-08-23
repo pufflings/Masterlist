@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               <div class="col-md-8 p-2">
                 <div class="description mb-2">${description}</div>
                 <div class="d-flex justify-content-between align-items-end mt-4">
-                  <span><b>Price:</b> ${price} ${price === 1 || price === '1' ? 'coin' : 'coins'}</span>
+                  <span><b>Price:</b> ${price} <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></span>
                   <span><b>Stock:</b> ${stock}</span>
                 </div>
               </div>
