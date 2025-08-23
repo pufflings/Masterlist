@@ -87,7 +87,10 @@ charadex.loadOptions = async () => {
       }
     }
     
-    console.log('Options loaded from sheet:', charadex.sheet.options);
+    // Only log in development mode
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      console.log('Options loaded from sheet:', charadex.sheet.options);
+    }
   } catch (error) {
     console.error('Error loading options from sheet:', error);
     // Fallback to default options if sheet loading fails
@@ -99,6 +102,40 @@ charadex.loadOptions = async () => {
     //   itemTypes: ['All', 'Currency', 'MYO Slot', 'Pet', 'Trait', 'Misc'],
     //   traitTypes: ['All', 'Ears', 'Eyes', 'Body', 'Limbs', 'Tails', 'Misc', 'Mutations']
     // };
+  }
+};
+
+/* ==================================================================== */
+/* Preload Critical Data
+/* ==================================================================== */
+charadex.preloadCriticalData = async () => {
+  try {
+    // Start loading critical data immediately when the page starts loading
+    const criticalPages = [
+      charadex.sheet.pages.options,
+      charadex.sheet.pages.masterlist,
+      charadex.sheet.pages.items,
+      charadex.sheet.pages.traits
+    ];
+    
+    // Load critical data in parallel
+    const preloadPromises = criticalPages.map(page => 
+      charadex.importSheet(page).catch(err => {
+        console.warn(`Failed to preload ${page}:`, err);
+        return null;
+      })
+    );
+    
+    // Don't await here - let it load in background
+    Promise.all(preloadPromises).then(() => {
+      // Only log in development mode
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        console.log('Critical data preloaded');
+      }
+    });
+    
+  } catch (error) {
+    console.warn('Preload failed:', error);
   }
 };
 
@@ -515,9 +552,10 @@ charadex.page.inventory = {
   // Dex Options
   sort: {
     toggle: true,
-    key: "username",
+    sortProperty: "username",
     order: "asc",
-    parameters: []
+    parameters: [],
+    caseSensitive: false
   },
 
   pagination: {

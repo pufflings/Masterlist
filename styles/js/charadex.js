@@ -41,12 +41,31 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
 
   // If there's related data, add it
   if (config.relatedData) {
+    // Load all related data in parallel
+    const relatedDataPromises = [];
+    const relatedDataConfigs = [];
+    
     for (let page in config.relatedData) {
+      relatedDataPromises.push(charadex.importSheet(page));
+      relatedDataConfigs.push({
+        page: page,
+        config: config.relatedData[page]
+      });
+    }
+    
+    // Wait for all related data to load
+    const relatedDataResults = await Promise.all(relatedDataPromises);
+    
+    // Process the related data
+    for (let i = 0; i < relatedDataResults.length; i++) {
+      const relatedData = relatedDataResults[i];
+      const relatedConfig = relatedDataConfigs[i];
+      
       await charadex.manageData.relateData(
         charadexData, 
-        config.relatedData[page].primaryProperty, 
-        page, 
-        config.relatedData[page].relatedProperty
+        relatedConfig.config.primaryProperty, 
+        relatedConfig.page, 
+        relatedConfig.config.relatedProperty
       );
     }
   }
