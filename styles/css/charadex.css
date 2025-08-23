@@ -77,12 +77,12 @@ body {
   --cd-rarity-rare-bg: #97b34e;
   --cd-rarity-rare-txt: var(--cd-rarity-common-txt);
 
-  --cd-rarity-veryrare-bg: #548b71;
-  --cd-rarity-veryrare-txt: var(--cd-rarity-common-txt);
+  --cd-rarity-superrare-bg: #548b71;
+  --cd-rarity-superrare-txt: var(--cd-rarity-common-txt);
 
-  /* Legendary & Mythic */
-  --cd-rarity-legendary-bg: #5a473e;
-  --cd-rarity-legendary-txt: var(--cd-rarity-common-txt);
+  /* Exclusive & Mythic */
+  --cd-rarity-exclusive-bg: #5a473e;
+  --cd-rarity-exclusive-txt: var(--cd-rarity-common-txt);
 
 
   /* ============================================================= */
@@ -767,15 +767,15 @@ p:last-child {
   color: var(--cd-rarity-rare-txt);
 }
 
-.badge-veryrare {
-  background-color: var(--cd-rarity-veryrare-bg);
-  color: var(--cd-rarity-veryrare-txt);
+.badge-superrare {
+  background-color: var(--cd-rarity-superrare-bg);
+  color: var(--cd-rarity-superrare-txt);
 }
 
-.badge-legendary,
+.badge-exclusive,
 .badge-mythic {
-  background-color: var(--cd-rarity-legendary-bg);
-  color: var(--cd-rarity-legendary-txt);
+  background-color: var(--cd-rarity-exclusive-bg);
+  color: var(--cd-rarity-exclusive-txt);
 }
 
 .my-rounded-carousel,
