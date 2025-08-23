@@ -377,9 +377,9 @@ charadex.page.masterlist = {
   filters: {
     toggle: true,
     parameters: () => ({
-      'Design Type': charadex.sheet.options.designTypes,
-      'Status': charadex.sheet.options.statuses,
-      'Rarity': charadex.sheet.options.rarity,
+      // 'Design Type': charadex.sheet.options.designTypes,
+      // 'Status': charadex.sheet.options.statuses,
+      // 'Rarity': charadex.sheet.options.rarity,
     })
   },
 
@@ -392,7 +392,7 @@ charadex.page.masterlist = {
   search: {
     toggle: true,
     filterToggle: true,
-    parameters: ['All', 'ID', 'Design', 'Owner', 'Designer', 'Artist', 'Traits']
+    parameters: ['All', 'Design', 'Owner', 'Designer', 'Artist', 'Traits']
   },
 
   prevNext: {
