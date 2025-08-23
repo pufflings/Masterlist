@@ -732,7 +732,7 @@ p:last-child {
 /* For the hero image in the index */
 .cd-hero-image {
   border-radius: var(--cd-border-radius);
-  min-height: 250px;
+  min-height: 200px;
   position: relative;
   z-index: 1;
   background-color: transparent !important;
@@ -743,7 +743,7 @@ p:last-child {
 
 @media (min-width: 768px) {
   .cd-hero-image {
-    min-height: 350px;
+    min-height: 250px;
   }
 }
 

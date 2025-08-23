@@ -93,8 +93,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const designTypeElem = document.querySelector('.designtype');
         if (designTypeElem) designTypeElem.textContent = designType;
 
-        // Debug: Log the profile data object
-        console.log('Profile data:', data);
+        // Debug: Log the profile data object (development only)
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+          console.log('Profile data:', data);
+        }
 
         // Render profile image(s)
         const imageContainer = document.querySelector('.cd-profile-image-container');

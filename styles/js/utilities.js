@@ -52,9 +52,18 @@ charadex.tools = {
   // Load Page
   // Load selected areas
   loadPage(loadAreaSelector = '', timeout = 500, loadIconSelector = '#loading') {
+    // Show loading indicator immediately
+    if (loadIconSelector) {
+      $(loadIconSelector).show();
+    }
+    
     setTimeout(function () {
-      $(loadIconSelector).hide();
-      $(loadAreaSelector).addClass('active');
+      if (loadIconSelector) {
+        $(loadIconSelector).hide();
+      }
+      if (loadAreaSelector) {
+        $(loadAreaSelector).addClass('active');
+      }
     }, timeout);
   },
   
@@ -118,7 +127,69 @@ charadex.tools = {
     } catch (err) { 
       console.error('Make sure the Multiselect CDN is in this file.') 
     }
-  } 
+  },
+
+  // Clear all cached data
+  clearCache() {
+    try {
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('charadex_')) {
+          localStorage.removeItem(key);
+        }
+      });
+      console.log('Cache cleared successfully');
+    } catch (error) {
+      console.warn('Cache clear failed:', error);
+    }
+  },
+
+  // Clear cache for specific sheet/page
+  clearCacheFor(sheetPage, sheetId = charadex.sheet.id) {
+    try {
+      const cacheKey = `charadex_${sheetId}_${sheetPage}`;
+      localStorage.removeItem(cacheKey);
+      // Only log in development mode
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        console.log(`Cache cleared for ${sheetPage}`);
+      }
+    } catch (error) {
+      console.warn('Cache clear failed:', error);
+    }
+  },
+
+  // Performance monitoring
+  performance: {
+    timers: {},
+    
+    start(label) {
+      this.timers[label] = performance.now();
+      // Only log in development mode
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        console.log(`⏱️ Started: ${label}`);
+      }
+    },
+    
+    end(label) {
+      if (this.timers[label]) {
+        const duration = performance.now() - this.timers[label];
+        // Only log in development mode
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+          console.log(`✅ Completed: ${label} (${duration.toFixed(2)}ms)`);
+        }
+        delete this.timers[label];
+        return duration;
+      }
+      return 0;
+    },
+    
+    log(label, message) {
+      // Only log in development mode
+      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        console.log(`📊 ${label}: ${message}`);
+      }
+    }
+  }
 
 }
 
@@ -229,8 +300,8 @@ charadex.manageData = {
       });
     } else {
       sorted = sheetArray.slice(0).sort(function (a, b) {
-        const valA = String(a[property] || '');
-        const valB = String(b[property] || '');
+        const valA = String(a[property] || '').toLowerCase();
+        const valB = String(b[property] || '').toLowerCase();
         return valA.localeCompare(valB, undefined, { numeric: true, sensitivity: 'base' });
       });
     }
@@ -353,6 +424,29 @@ charadex.importSheet = async (sheetPage, sheetId = charadex.sheet.id) => {
   if (!sheetId) return console.error('Missing sheetID.');
   if (!sheetPage) return console.error('Missing sheetPage.');
 
+  charadex.tools.performance.start(`Loading ${sheetPage}`);
+
+  // Check cache first
+  const cacheKey = `charadex_${sheetId}_${sheetPage}`;
+  const cacheExpiry = 30 * 60 * 1000; // 30 minutes cache
+  
+  try {
+    const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+        const cachedData = JSON.parse(cached);
+        if (Date.now() - cachedData.timestamp < cacheExpiry) {
+          // Only log in development mode
+          if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+            console.log(`Using cached data for ${sheetPage}`);
+          }
+          charadex.tools.performance.end(`Loading ${sheetPage}`);
+          return cachedData.data;
+        }
+      }
+  } catch (error) {
+    console.warn('Cache read failed:', error);
+  }
+
   // Fetch the sheet
   const importUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&tq=WHERE A IS NOT NULL&sheet=${sheetPage}`;
 
@@ -388,6 +482,18 @@ charadex.importSheet = async (sheetPage, sheetId = charadex.sheet.id) => {
 
   // Filter out everything that says hide
   let publicData = scrubbedData.filter(i => !i['hide']);
+
+  // Cache the data
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify({
+      data: publicData,
+      timestamp: Date.now()
+    }));
+  } catch (error) {
+    console.warn('Cache write failed:', error);
+  }
+
+  charadex.tools.performance.end(`Loading ${sheetPage}`);
 
   // Return Data
   return publicData;
