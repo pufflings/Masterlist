@@ -217,6 +217,29 @@ document.addEventListener('DOMContentLoaded', function() {
   if (endOfChapter) {
     endOfChapter.style.display = 'none';
   }
+  
+  // =============================================================
+  // Scroll to Top Button Functionality
+  // =============================================================
+  
+  const scrollToTopButton = document.getElementById('scroll-to-top');
+  
+  // Show/hide button based on scroll position
+  window.addEventListener('scroll', function() {
+    if (window.pageYOffset > 300) { // Show button after scrolling 300px
+      scrollToTopButton.style.opacity = '1';
+    } else {
+      scrollToTopButton.style.opacity = '0';
+    }
+  });
+  
+  // Scroll to top when button is clicked
+  scrollToTopButton.addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
 });
 
 // Add CSS for smooth transitions and proper layout
