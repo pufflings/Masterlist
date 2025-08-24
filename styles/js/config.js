@@ -287,7 +287,7 @@ charadex.page.prompts = {
   },
 
   prevNext: {
-    toggle: true,
+    toggle: false,
   },
 
 };
@@ -335,7 +335,7 @@ charadex.page.mainstory = {
   },
 
   prevNext: {
-    toggle: true,
+    toggle: false,
   },
 
 };

@@ -1,136 +1,103 @@
 // =============================================================
-// Generic Dialogue Navigation System
+// Click-to-Reveal Dialogue System - Persistent Display
 // =============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
   // Get all dialogue containers
   const dialogueContainers = document.querySelectorAll('.dialogue-container, .dialogue-container-right, .dialogue-simple');
   let currentDialogueIndex = 0;
+  let endSectionsRevealed = false; // Flag to track if end sections have been revealed
   
-  // Get navigation elements (all optional)
-  const prevButton = document.getElementById('prev-button');
-  const nextButton = document.getElementById('next-button');
-  const restartButton = document.getElementById('restart-button');
+  // Get elements
   const skipButton = document.getElementById('skip-button');
-  const dialogueCounter = document.getElementById('dialogue-counter');
-  const totalDialoguesSpan = document.getElementById('total-dialogues');
-  const questSection = document.getElementById('quest-section');
-  const endOfChapter = document.getElementById('end-of-prologue'); // Generic name for end-of-chapter content
+  const questSections = document.querySelectorAll('#quest-section'); // Get all elements with ID "quest-section"
+  const endOfChapter = document.getElementById('end-of-prologue');
   
-  // Set total dialogues count
-  const totalDialogues = dialogueContainers.length;
-  if (totalDialoguesSpan) {
-    totalDialoguesSpan.textContent = totalDialogues;
-  }
-  
-  // Add initial hidden state to all dialogues
-  dialogueContainers.forEach(container => {
-    container.style.opacity = '0';
-    container.style.transform = 'translateY(20px)';
-    container.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    container.style.position = 'absolute';
-    container.style.top = '0';
-    container.style.left = '0';
-    container.style.right = '0';
-    container.style.pointerEvents = 'none'; // Disable pointer events when hidden
-  });
-  
-  // Ensure the dialogue stage container has relative positioning
-  const dialogueStage = document.getElementById('dialogue-stage');
-  if (dialogueStage) {
-    dialogueStage.style.position = 'relative';
-    dialogueStage.style.minHeight = '300px'; // Increased minimum height
-  }
-  
-  // Function to show a specific dialogue
-  function showDialogue(index) {
-    // Hide all dialogues first
-    dialogueContainers.forEach(container => {
+  // Hide all dialogues except the first one
+  dialogueContainers.forEach((container, index) => {
+    if (index === 0) {
+      // Show first dialogue
+      container.style.opacity = '1';
+      container.style.transform = 'translateY(0)';
+      container.style.position = 'relative';
+      container.style.pointerEvents = 'auto';
+      container.style.marginBottom = '1rem';
+    } else {
+      // Hide all other dialogues
       container.style.opacity = '0';
       container.style.transform = 'translateY(20px)';
       container.style.position = 'absolute';
       container.style.top = '0';
       container.style.left = '0';
       container.style.right = '0';
-      container.style.pointerEvents = 'none'; // Disable pointer events when hidden
-    });
-    
-    // Show the current dialogue
-    if (index >= 0 && index < dialogueContainers.length) {
-      const container = dialogueContainers[index];
-      container.style.opacity = '1';
-      container.style.transform = 'translateY(0)';
-      container.style.position = 'relative';
-      container.style.pointerEvents = 'auto'; // Enable pointer events when visible
+      container.style.pointerEvents = 'none';
+      container.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    }
+  });
+  
+  // Ensure the dialogue stage container has proper positioning
+  const dialogueStage = document.getElementById('dialogue-stage');
+  if (dialogueStage) {
+    dialogueStage.style.position = 'relative';
+    dialogueStage.style.minHeight = '300px';
+  }
+  
+  // Function to show next dialogue
+  function showNextDialogue() {
+    if (currentDialogueIndex < dialogueContainers.length - 1) {
+      // Show next dialogue (keep previous ones visible)
+      currentDialogueIndex++;
+      const nextContainer = dialogueContainers[currentDialogueIndex];
+      nextContainer.style.opacity = '1';
+      nextContainer.style.transform = 'translateY(0)';
+      nextContainer.style.position = 'relative';
+      nextContainer.style.pointerEvents = 'auto';
+      nextContainer.style.marginBottom = '1rem';
       
-      // Add a subtle animation to the speech bubble
-      const speechBubble = container.querySelector('.speech-bubble, .speech-bubble-right');
-      if (speechBubble) {
-        speechBubble.style.animation = 'dialogueReveal 0.3s ease 0.2s both';
-      }
-      
-      // Adjust dialogue stage height based on current dialogue content
+      // Adjust dialogue stage height to accommodate all visible dialogues
       if (dialogueStage) {
-        const containerHeight = container.offsetHeight;
-        const minHeight = Math.max(300, containerHeight + 100); // Increased padding
+        let totalHeight = 0;
+        for (let i = 0; i <= currentDialogueIndex; i++) {
+          const container = dialogueContainers[i];
+          if (container.style.position === 'relative') {
+            totalHeight += container.offsetHeight;
+          }
+        }
+        const minHeight = Math.max(300, totalHeight + 100);
         dialogueStage.style.minHeight = minHeight + 'px';
-        
-        // Force a reflow to ensure proper layout
-        dialogueStage.offsetHeight;
       }
+      
+      // Scroll to center the new dialogue
+      setTimeout(() => {
+        nextContainer.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+      }, 100);
+    } else if (currentDialogueIndex === dialogueContainers.length - 1) {
+      // We're at the last dialogue, show end sections
+      showEndSections();
+      endSectionsRevealed = true; // Mark that end sections have been revealed
     }
-    
-    // Update counter
-    if (dialogueCounter) {
-      dialogueCounter.textContent = `${index + 1} of ${totalDialogues}`;
-    }
-    
-    // Update button states
-    if (prevButton) {
-      if (index <= 0) {
-        prevButton.style.display = 'none';
-      } else {
-        prevButton.style.display = 'inline-block';
-        prevButton.disabled = false;
-      }
-    }
-    
-    if (nextButton) {
-      if (index >= totalDialogues - 1) {
-        nextButton.style.display = 'none';
-      } else {
-        nextButton.style.display = 'inline-block';
-        nextButton.disabled = false;
-      }
-    }
-
-    // Show restart button on the last dialogue
-    if (restartButton) {
-      if (index === totalDialogues - 1) {
-        restartButton.style.display = 'inline-block';
-        restartButton.disabled = false;
-      } else {
-        restartButton.style.display = 'none';
-        restartButton.disabled = true;
-      }
-    }
-    
-    // Show quest section if we're at the end
-    if (questSection && index >= totalDialogues - 1) {
-      questSection.style.display = 'block';
-      questSection.style.opacity = '0';
-      questSection.style.transform = 'translateY(20px)';
+  }
+  
+  // Function to show end sections progressively
+  function showEndSections() {
+    // Show all quest sections at once
+    questSections.forEach(section => {
+      section.style.display = 'block';
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
       
       setTimeout(() => {
-        questSection.style.opacity = '1';
-        questSection.style.transform = 'translateY(0)';
+        section.style.opacity = '1';
+        section.style.transform = 'translateY(0)';
       }, 500);
-    } else if (questSection) {
-      questSection.style.display = 'none';
-    }
+    });
     
-    // Show end of chapter content if we're at the end
-    if (endOfChapter && index >= totalDialogues - 1) {
+    // Show end of chapter content
+    if (endOfChapter) {
       endOfChapter.style.display = 'block';
       endOfChapter.style.opacity = '0';
       endOfChapter.style.transform = 'translateY(20px)';
@@ -139,111 +106,122 @@ document.addEventListener('DOMContentLoaded', function() {
         endOfChapter.style.opacity = '1';
         endOfChapter.style.transform = 'translateY(0)';
       }, 300);
-    } else if (endOfChapter) {
-      endOfChapter.style.display = 'none';
     }
-  }
-  
-  // Function to go to next dialogue
-  function nextDialogue() {
-    if (currentDialogueIndex < totalDialogues - 1) {
-      currentDialogueIndex++;
-      showDialogue(currentDialogueIndex);
-    }
-  }
-  
-  // Function to go to previous dialogue
-  function prevDialogue() {
-    if (currentDialogueIndex > 0) {
-      currentDialogueIndex--;
-      showDialogue(currentDialogueIndex);
-    }
-  }
-  
-  // Function to skip to the end
-  function skipToEnd() {
-    currentDialogueIndex = totalDialogues - 1;
-    showDialogue(currentDialogueIndex);
     
-    // Show quest section when skip button is clicked
-    if (questSection) {
-      questSection.style.display = 'block';
-      questSection.style.opacity = '0';
-      questSection.style.transform = 'translateY(20px)';
-      
+    // Adjust dialogue stage height
+    if (dialogueStage) {
+      dialogueStage.style.minHeight = 'auto';
+    }
+  }
+  
+  // Function to skip to the end and show quest section
+  function skipToEnd() {
+    // Show all dialogues
+    dialogueContainers.forEach(container => {
+      container.style.opacity = '1';
+      container.style.transform = 'translateY(0)';
+      container.style.position = 'relative';
+      container.style.pointerEvents = 'auto';
+      container.style.marginBottom = '1rem';
+    });
+    
+    // Show all quest sections when skip button is clicked
+    questSections.forEach(section => {
+      section.style.display = 'block';
+      section.style.opacity = '1';
+      section.style.transform = 'translateY(0)';
+    });
+    
+    // Show end of chapter content
+    if (endOfChapter) {
+      endOfChapter.style.display = 'block';
+      endOfChapter.style.opacity = '1';
+      endOfChapter.style.transform = 'translateY(0)';
+    }
+    
+    // Scroll to first quest section
+    if (questSections.length > 0) {
       setTimeout(() => {
-        questSection.style.opacity = '1';
-        questSection.style.transform = 'translateY(0)';
-        questSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        questSections[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 500);
     }
-  }
-  
-  // Function to restart the story
-  function restartStory() {
-    currentDialogueIndex = 0;
-    showDialogue(currentDialogueIndex);
     
-    // Hide quest section when restarting
-    if (questSection) {
-      questSection.style.display = 'none';
+    // Adjust dialogue stage height
+    if (dialogueStage) {
+      dialogueStage.style.minHeight = 'auto';
     }
   }
   
-  // Add event listeners for navigation buttons (only if they exist)
-  if (prevButton) {
-    prevButton.addEventListener('click', function(e) {
-      prevDialogue();
-    });
-  }
-  
-  if (nextButton) {
-    nextButton.addEventListener('click', function(e) {
-      nextDialogue();
-    });
-  }
-
-  if (restartButton) {
-    restartButton.addEventListener('click', function(e) {
-      restartStory();
-    });
-  }
-  
-  if (skipButton) {
-    skipButton.addEventListener('click', function(e) {
-      skipToEnd();
-    });
-  }
-  
-  // Add keyboard navigation
-  document.addEventListener('keydown', function(event) {
-    if (event.key === 'ArrowRight' || event.key === ' ') {
-      event.preventDefault();
-      nextDialogue();
-    } else if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      prevDialogue();
+  // Add click event listener to the body
+  document.body.addEventListener('click', function(e) {
+    // Don't trigger if clicking on buttons, links, or within the skip button area
+    if (e.target.tagName === 'BUTTON' || 
+        e.target.tagName === 'A' || 
+        e.target.closest('button') || 
+        e.target.closest('a') ||
+        e.target.closest('#skip-button')) {
+      return;
     }
+    
+    // Don't trigger if end sections have already been revealed
+    if (endSectionsRevealed) {
+      return;
+    }
+    
+    showNextDialogue();
   });
   
-  // Show the first dialogue initially
-  showDialogue(0);
-});
-
-// Add CSS animation for speech bubble reveal
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes dialogueReveal {
-    0% {
-      transform: scale(0.8);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
+  // Skip button functionality
+  if (skipButton) {
+    skipButton.addEventListener('click', function() {
+      // Show all dialogues at once
+      dialogueContainers.forEach(container => {
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0)';
+        container.style.position = 'relative';
+        container.style.pointerEvents = 'auto';
+        container.style.marginBottom = '1rem';
+      });
+      
+      // Show all quest sections when skip button is clicked
+      questSections.forEach(section => {
+        section.style.display = 'block';
+        section.style.opacity = '1';
+        section.style.transform = 'translateY(0)';
+      });
+      
+      // Show end of chapter content
+      if (endOfChapter) {
+        endOfChapter.style.display = 'block';
+        endOfChapter.style.opacity = '1';
+        endOfChapter.style.transform = 'translateY(0)';
+      }
+      
+      // Set flag to disable further clicks
+      endSectionsRevealed = true;
+      
+      // Scroll to first quest section
+      if (questSections.length > 0) {
+        setTimeout(() => {
+          questSections[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 500);
+      }
+    });
   }
   
+  // Hide quest sections and end of chapter content initially
+  questSections.forEach(section => {
+    section.style.display = 'none';
+  });
+  
+  if (endOfChapter) {
+    endOfChapter.style.display = 'none';
+  }
+});
+
+// Add CSS for smooth transitions and proper layout
+const style = document.createElement('style');
+style.textContent = `
   #skip-button {
     position: relative;
     z-index: 1;
@@ -254,17 +232,18 @@ style.textContent = `
     position: relative;
     z-index: 1;
     margin-bottom: 1rem;
+    cursor: pointer;
+  }
+  
+  #dialogue-stage:hover {
+    cursor: pointer;
   }
   
   .dialogue-container, .dialogue-container-right, .dialogue-simple {
-    position: absolute !important;
+    position: relative !important;
     z-index: 1 !important;
-  }
-  
-  .dialogue-container[style*="position: relative"], 
-  .dialogue-container-right[style*="position: relative"], 
-  .dialogue-simple[style*="position: relative"] {
-    z-index: 2 !important;
+    margin-bottom: 1rem !important;
+    transition: opacity 0.5s ease, transform 0.5s ease !important;
   }
   
   .speech-bubble, .speech-bubble-right {
