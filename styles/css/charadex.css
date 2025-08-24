@@ -715,6 +715,19 @@ p:last-child {
   background-position: center;
   background-size: cover;
   min-height: 150px;
+  position: relative;
+}
+
+/* Add fade-out effect to prompt background images in gallery view */
+.col-md-6 .cd-prompt-background::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(to bottom, transparent, var(--cd-content-background-color));
+  pointer-events: none;
 }
 
 /* Archived prompt styling */
@@ -1164,4 +1177,123 @@ p:last-child {
 .dialogue-simple strong {
   color: #6B4E3F;
   font-weight: 600;
+}
+
+/* Illustration styling within dialogue content */
+.dialogue-simple img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  border: 2px solid #C8A88C;
+  background-color: #F5E0C9;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================= */
+/* Character Showcase Styles
+=============================================================== */
+
+.dashed-line {
+  border-top: 2px dashed #887765;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  margin: 1rem 0;
+}
+
+.character-showcase-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #E8D8C1;
+  border-radius: 1rem;
+  margin: 1rem 0;
+}
+
+.character-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.character-illustration {
+  width: 200px;
+  height: 250px;
+  background-color: #DAC5AA;
+  border: 2px solid #887765;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.character-illustration img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.character-label {
+  font-family: var(--cd-header-font-family);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--cd-primary-text-color);
+  background-color: #DAC5AA;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #887765;
+}
+
+/* Responsive design for character showcase */
+@media (max-width: 768px) {
+  .character-showcase-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .character-illustration {
+    width: 150px;
+    height: 180px;
+  }
+  
+  .character-label {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================================= */
+/* Link Styles for Dialogue
+=============================================================== */
+
+.speech-bubble a, .speech-bubble-right a {
+  color: #007bff !important;
+  text-decoration: underline !important;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.speech-bubble a:hover, .speech-bubble-right a:hover {
+  color: #0056b3 !important;
+  text-decoration: underline !important;
+}
+
+.speech-bubble a:visited, .speech-bubble-right a:visited {
+  color: #6610f2 !important;
+}
+
+.speech-bubble a:active, .speech-bubble-right a:active {
+  color: #e83e8c !important;
 }
