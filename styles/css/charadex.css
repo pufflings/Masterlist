@@ -739,11 +739,19 @@ p:last-child {
   margin-top: -1.5rem;
   margin-left: -1.5rem;
   margin-right: -1.5rem;
+  overflow: hidden;
+}
+
+.cd-hero-image img {
+  border-radius: var(--cd-border-radius);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 @media (min-width: 768px) {
   .cd-hero-image {
-    min-height: 250px;
+    min-height: 400px;
   }
 }
 
@@ -813,4 +821,347 @@ p:last-child {
   opacity: 0.4;
   filter: grayscale(0.5);
   transition: opacity 0.3s, filter 0.3s;
+}
+
+/* ============================================================= */
+/* Dialogue Box Styles
+/* ============================================================= */
+
+.dialogue-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: none;
+}
+
+.character-portrait {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  border: 2px solid #C8A88C;
+  border-radius: 1rem;
+  background-color: #F5E0C9;
+  overflow: hidden;
+  position: relative;
+}
+
+.character-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.8rem;
+}
+
+.character-name {
+  padding: 0.5rem 1rem;
+  background-color: #F5E0C9;
+  border: 2px solid #C8A88C;
+  border-radius: 0.5rem;
+  color: #6B4E3F;
+  font-family: var(--cd-header-font-family);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.speech-bubble {
+  flex: 1;
+  background-color: #F5E0C9;
+  border: 2px solid #C8A88C;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  color: #6B4E3F;
+  font-family: var(--cd-body-font-family);
+  line-height: 1.6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 30px;
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid #C8A88C;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 30px;
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid #F5E0C9;
+}
+
+.speech-bubble p {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.speech-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.speech-bubble strong {
+  color: #6B4E3F;
+  font-weight: 600;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .dialogue-container {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .character-portrait {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .character-name {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+  }
+  
+  .speech-bubble::before {
+    left: -8px;
+    top: 20px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid #C8A88C;
+  }
+  
+  .speech-bubble::after {
+    left: -6px;
+    top: 20px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid #F5E0C9;
+  }
+}
+
+/* Alternative layout for dialogue without character portrait */
+.dialogue-simple {
+  background-color: #F5E0C9;
+  border: 2px solid #C8A88C;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  color: #6B4E3F;
+  font-family: var(--cd-body-font-family);
+  line-height: 1.6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Character portrait with hidden face shadow */
+.character-portrait.hidden-face {
+  position: relative;
+}
+
+.character-portrait.hidden-face::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(165deg, 
+    rgba(0, 0, 0, 1) 0%, 
+    rgba(0, 0, 0, 0.95) 40%, 
+    rgba(0, 0, 0, 0.8) 70%, 
+    rgba(0, 0, 0, 0.4) 90%, 
+    transparent 100%);
+  border-radius: 0.8rem 0.8rem 0 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Alternative layout for dialogue with character portrait on the right */
+.dialogue-container-right {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: none;
+  flex-direction: row-reverse;
+}
+
+.dialogue-container-right .character-portrait {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  border: 2px solid #C8A88C;
+  border-radius: 1rem;
+  background-color: #F5E0C9;
+  overflow: hidden;
+  position: relative;
+}
+
+.dialogue-container-right .character-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.8rem;
+}
+
+.dialogue-container-right .character-name {
+  padding: 0.5rem 1rem;
+  background-color: #F5E0C9;
+  border: 2px solid #C8A88C;
+  border-radius: 0.5rem;
+  color: #6B4E3F;
+  font-family: var(--cd-header-font-family);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.dialogue-container-right .speech-bubble {
+  flex: 1;
+  background-color: #F5E0C9;
+  border: 2px solid #C8A88C;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  color: #6B4E3F;
+  font-family: var(--cd-body-font-family);
+  line-height: 1.6;
+}
+
+.speech-bubble-right {
+  flex: 1;
+  background-color: #F5E0C9;
+  border: 2px solid #C8A88C;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  color: #6B4E3F;
+  font-family: var(--cd-body-font-family);
+  line-height: 1.6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.speech-bubble-right::before {
+  content: '';
+  position: absolute;
+  right: -12px;
+  top: 30px;
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid #C8A88C;
+}
+
+.speech-bubble-right::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: 30px;
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid #F5E0C9;
+}
+
+.speech-bubble-right p {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.speech-bubble-right p:last-child {
+  margin-bottom: 0;
+}
+
+.speech-bubble-right strong {
+  color: #6B4E3F;
+  font-weight: 600;
+}
+
+.dialogue-container-right .speech-bubble p {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.dialogue-container-right .speech-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.dialogue-container-right .speech-bubble strong {
+  color: #6B4E3F;
+  font-weight: 600;
+}
+
+/* Responsive design for mobile - right portrait */
+@media (max-width: 768px) {
+  .dialogue-container-right {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .dialogue-container-right .character-portrait {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .dialogue-container-right .character-name {
+    width: 80px;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+  }
+  
+  .speech-bubble-right::before {
+    right: -8px;
+    top: 20px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid #C8A88C;
+  }
+  
+  .speech-bubble-right::after {
+    right: -6px;
+    top: 20px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid #F5E0C9;
+  }
+}
+
+.dialogue-simple p {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.dialogue-simple p:last-child {
+  margin-bottom: 0;
+}
+
+.dialogue-simple strong {
+  color: #6B4E3F;
+  font-weight: 600;
 }
