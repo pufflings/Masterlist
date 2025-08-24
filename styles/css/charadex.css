@@ -727,18 +727,7 @@ p:last-child {
   object-position: center;
 }
 
-/* Description visibility control */
-.col-md-6 .long-description {
-  display: none !important;
-}
 
-.col-12 .description {
-  display: none !important;
-}
-
-.col-12 .long-description {
-  display: block !important;
-}
 
 /* Add fade-out effect to prompt background images in gallery view */
 .col-md-6 .cd-prompt-background::after {

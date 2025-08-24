@@ -42,30 +42,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
     (listData) => {
       let backgroundElement = $('.cd-prompt-background');
-      let imageElements = $('.prompt-image');
       
-      if (listData.type == 'profile') {
-        // Set image src for profile view (img tag)
-        const prompt = listData.profileArray[0];
-        if (prompt && prompt.image) {
-          imageElements.attr('src', prompt.image);
+      // Set background images for gallery view
+      backgroundElement.each(function(i) {
+        const image = listData.array[i]?.image;
+        if (image) {
+          $(this).attr('style', `background-image: url(${image})`);
         }
-        
-        // Set long description for profile view
-        if (prompt && prompt.longdescription) {
-          $('.long-description').html(prompt.longdescription);
-        }
-      } else {
-        // Set background images for gallery view
-        backgroundElement.each(function(i) {
-          const image = listData.array[i]?.image;
-          if (image) {
-            $(this).attr('style', `background-image: url(${image})`);
-          }
-        });
-      }
+      });
       
-      // Ensure data-folder attribute is set for CSS targeting on the correct card element
+      // Ensure data-folder attribute is set for CSS targeting and override profile links
       if (listData.type == 'gallery') {
         setTimeout(() => {
           listData.array.forEach((prompt) => {
@@ -79,6 +65,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                     $(this).addClass('shop-card-fade');
                   } else {
                     $(this).removeClass('shop-card-fade');
+                  }
+                  
+                  // Override profile link to go directly to URL
+                  if (prompt.link) {
+                    titleLink.attr('href', prompt.link);
+                    titleLink.attr('target', '_blank');
+                    
+                    // Make the background image clickable too
+                    const backgroundDiv = $(this).find('.cd-prompt-background');
+                    backgroundDiv.css('cursor', 'pointer');
+                    backgroundDiv.off('click').on('click', function() {
+                      window.open(prompt.link, '_blank');
+                    });
                   }
                 }
               });

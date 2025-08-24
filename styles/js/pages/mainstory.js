@@ -42,43 +42,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
     (listData) => {
       let backgroundElement = $('.cd-prompt-background');
-      let imageElements = $('.prompt-image');
       
-      if (listData.type == 'profile') {
-        // Set image src for profile view (img tag)
-        const story = listData.profileArray[0];
-        if (story && story.image) {
-          imageElements.attr('src', story.image);
+      // Set background images for gallery view
+      backgroundElement.each(function(i) {
+        const image = listData.array[i]?.image;
+        if (image) {
+          $(this).attr('style', `background-image: url(${image})`);
         }
-        
-        // Set long description for profile view
-        if (story && story.longdescription) {
-          $('.long-description').html(story.longdescription);
-        }
-        
-        // Add NEW! button for profile view
-        if (story && story.folder === 'New') {
-          const titleLink = $('.card-header a');
-          if (titleLink.length > 0) {
-            // Remove any existing NEW! button first
-            titleLink.siblings('.new-badge').remove();
-            
-            // Add NEW! button next to the title
-            const newBadge = $('<span class="new-badge badge badge-danger ml-2">NEW!</span>');
-            titleLink.after(newBadge);
-          }
-        }
-      } else {
-        // Set background images for gallery view
-        backgroundElement.each(function(i) {
-          const image = listData.array[i]?.image;
-          if (image) {
-            $(this).attr('style', `background-image: url(${image})`);
-          }
-        });
-      }
+      });
       
-      // Ensure data-folder attribute is set for CSS targeting and add NEW! buttons
+      // Ensure data-folder attribute is set for CSS targeting, add NEW! buttons, and override profile links
       if (listData.type == 'gallery') {
         setTimeout(() => {
           listData.array.forEach((story) => {
@@ -99,6 +72,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                   } else {
                     // Remove NEW! button if not new
                     $(this).find('.new-badge').remove();
+                  }
+                  
+                  // Override profile link to go directly to URL
+                  if (story.link) {
+                    titleLink.attr('href', story.link);
+                    titleLink.attr('target', '_blank');
+                    
+                    // Make the background image clickable too
+                    const backgroundDiv = $(this).find('.cd-prompt-background');
+                    backgroundDiv.css('cursor', 'pointer');
+                    backgroundDiv.off('click').on('click', function() {
+                      window.open(story.link, '_blank');
+                    });
                   }
                 }
               });
