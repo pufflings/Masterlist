@@ -42,13 +42,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
     (listData) => {
       let backgroundElement = $('.cd-prompt-background');
+      let imageElements = $('.prompt-image');
+      
       if (listData.type == 'profile') {
-        backgroundElement.attr('style', `background-image: url(${listData.profileArray[0].image})`);
-        
-        // Replace description with long description for profile view
+        // Set image src for profile view (img tag)
         const story = listData.profileArray[0];
+        if (story && story.image) {
+          imageElements.attr('src', story.image);
+        }
+        
+        // Set long description for profile view
         if (story && story.longdescription) {
-          $('.description').html(story.longdescription);
+          $('.long-description').html(story.longdescription);
         }
         
         // Add NEW! button for profile view
@@ -64,9 +69,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
         }
       } else {
+        // Set background images for gallery view
         backgroundElement.each(function(i) {
           const image = listData.array[i]?.image;
-          $(this).attr('style', `background-image: url(${listData.array[i]?.image})`);
+          if (image) {
+            $(this).attr('style', `background-image: url(${image})`);
+          }
         });
       }
       

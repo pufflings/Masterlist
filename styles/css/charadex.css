@@ -716,6 +716,28 @@ p:last-child {
   background-size: cover;
   min-height: 150px;
   position: relative;
+  overflow: hidden;
+}
+
+/* Profile view image styling */
+.prompt-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Description visibility control */
+.col-md-6 .long-description {
+  display: none !important;
+}
+
+.col-12 .description {
+  display: none !important;
+}
+
+.col-12 .long-description {
+  display: block !important;
 }
 
 /* Add fade-out effect to prompt background images in gallery view */
@@ -727,6 +749,18 @@ p:last-child {
   right: 0;
   height: 50px;
   background: linear-gradient(to bottom, transparent, var(--cd-content-background-color));
+  pointer-events: none;
+}
+
+/* Add subtle fade-out effect to prompt background images in profile view */
+.col-12 .cd-prompt-background::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(to bottom, transparent, rgba(218, 197, 170, 0.3));
   pointer-events: none;
 }
 
