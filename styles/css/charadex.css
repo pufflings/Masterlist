@@ -1231,7 +1231,6 @@ p:last-child {
 
 .character-showcase-container {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 2rem;
   padding: 2rem;
@@ -1239,6 +1238,11 @@ p:last-child {
   border-radius: 1rem;
   margin: 1rem 0;
   border: 2px solid #C8A88C;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  scrollbar-color: #C8A88C #E8D8C1;
 }
 
 .character-card {
@@ -1278,17 +1282,38 @@ p:last-child {
   border: 1px solid #887765;
 }
 
+/* Custom scrollbar for character showcase */
+.character-showcase-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.character-showcase-container::-webkit-scrollbar-track {
+  background: #E8D8C1;
+  border-radius: 4px;
+}
+
+.character-showcase-container::-webkit-scrollbar-thumb {
+  background: #C8A88C;
+  border-radius: 4px;
+}
+
+.character-showcase-container::-webkit-scrollbar-thumb:hover {
+  background: #B89A7A;
+}
+
 /* Responsive design for character showcase */
 @media (max-width: 768px) {
   .character-showcase-container {
-    flex-direction: column;
+    flex-direction: row;
     gap: 1rem;
     padding: 1rem;
+    overflow-x: auto;
   }
   
   .character-illustration {
     width: 150px;
     height: 180px;
+    flex-shrink: 0;
   }
   
   .character-label {
