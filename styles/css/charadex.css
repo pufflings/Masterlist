@@ -1238,6 +1238,7 @@ p:last-child {
   background-color: #E8D8C1;
   border-radius: 1rem;
   margin: 1rem 0;
+  border: 2px solid #C8A88C;
 }
 
 .character-card {
@@ -1251,7 +1252,7 @@ p:last-child {
   width: 200px;
   height: 250px;
   background-color: #DAC5AA;
-  border: 2px solid #887765;
+  border: 2px solid #C8A88C;
   border-radius: 1rem;
   display: flex;
   align-items: center;
