@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let dex = await charadex.initialize.page(
     null,
     charadex.page.masterlist,
-    // Data callback to debug field names and process traits
+    // Data callback to process traits
     (data) => {
       // Process traits for each masterlist entry
       for (let entry of data) {
@@ -67,7 +67,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     async (listData) => {
 
       if (listData.type == 'profile') {
-
         // Create the log dex
         if (charadex.tools.checkArray(listData.profileArray[0].masterlistlog)) {
           let logs = await charadex.initialize.page(
@@ -87,16 +86,48 @@ document.addEventListener("DOMContentLoaded", async () => {
             link.href = data.seekerlink;
           }
         }
+        
+        // Update Relationship Gauge if data exists
+        if (data && data.relationship) {
+          const relationshipRow = document.querySelector('.relationship-row');
+          if (relationshipRow) {
+            relationshipRow.style.display = '';
+            
+            // Get relationship values (try different possible field names)
+            const current = data.relationship || 0;
+            const max = 50;
+            
+            // Calculate percentage
+            const percentage = Math.min(Math.max((current / max) * 100, 0), 100);
+            
+            // Update gauge fill
+            const gaugeFill = relationshipRow.querySelector('.gauge-fill');
+            if (gaugeFill) {
+              gaugeFill.style.width = percentage + '%';
+            }
+            
+            // Update gauge text
+            const gaugeText = relationshipRow.querySelector('.gauge-text');
+            if (gaugeText) {
+              gaugeText.textContent = `${current} / ${max}`;
+            }
+            
+            // Update heart icon based on heartboundcrystal
+            const heartIcon = relationshipRow.querySelector('.heart-icon');
+            if (heartIcon) {
+              if (data.heartboundcrystal === true || data.heartboundcrystal === 'true') {
+                heartIcon.classList.add('heartbound');
+              } else {
+                heartIcon.classList.remove('heartbound');
+              }
+            }
+          }
+        }
 
         // Set Design Type
         const designType = data.Type || data.type || data['Design Type'] || data.designType || '';
         const designTypeElem = document.querySelector('.designtype');
         if (designTypeElem) designTypeElem.textContent = designType;
-
-        // Debug: Log the profile data object (development only)
-        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-          console.log('Profile data:', data);
-        }
 
         // Render profile image(s)
         const imageContainer = document.querySelector('.cd-profile-image-container');
@@ -129,7 +160,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
   );
-  
+
   charadex.tools.loadPage('.softload', 500);
   
 });

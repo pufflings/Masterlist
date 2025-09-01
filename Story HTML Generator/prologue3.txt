@@ -1,0 +1,231 @@
+﻿Here's the input text file for Prologue 3:
+File name: prologue3.html
+Chapter title: Prologue - Pt. 3
+Scene: Guild Center / Outside
+
+
+Characters:
+You | https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png | https://img-l.ink/img/1v9B-Ya3_Iw_Bt7t4y3QKSVfPo4E6GOgr.png | -
+Pebble | https://f2.toyhou.se/file/f2-toyhou-se/images/84377636_qDs7Vjzso3mYpbG.png | https://img-l.ink/img/19qM9KgEapl4Y3j5gBTKOCyOQg5h6pSo-.png | -
+Peridot | https://f2.toyhou.se/file/f2-toyhou-se/images/84346052_8Oab5Ev815hVJGJ.png | https://img-l.ink/img/1t6ebd9nsY_QmpzDnK6OwUPNQA3Re1yd6.png | -
+King Puff | https://img-l.ink/img/1apsT96twYn8yIWXjJ8y1Y_LVCEnT7gy_.png | https://img-l.ink/img/1apsT96twYn8yIWXjJ8y1Y_LVCEnT7gy_.png | -
+Queen Puff | https://img-l.ink/img/16M91fnhb62M0ExxzfBgjA5RaeKgWiSUN.png | https://img-l.ink/img/16M91fnhb62M0ExxzfBgjA5RaeKgWiSUN.png | -
+Guard | - | https://img-l.ink/img/19qM9KgEapl4Y3j5gBTKOCyOQg5h6pSo-.png | -
+Merchant | - | https://img-l.ink/img/19qM9KgEapl4Y3j5gBTKOCyOQg5h6pSo-.png | -
+Another Shopkeeper | - | https://img-l.ink/img/19qM9KgEapl4Y3j5gBTKOCyOQg5h6pSo-.png | -
+
+
+Dialogue:
+[narration] You keep your pace quick, rushing to the castle as Aria's words echo in your head: <i>Urgent!!!</i> Struggling to keep up, your Puffling clings to your coat for dear life, yet you keep moving. Whatever awaits you at Puff Castle must be serious.
+Yet, as you cross the last hill, you can't stop yourself from gawking.
+Puff Castle rises from the valley floor, its walls glittering like stained glass. At the peak, a massive magical ring spins slowly, pulsing with power.
+
+
+[image] https://img-l.ink/img/1-ap3m0Xj4A5G6MfRi0v08jcwmZctms6R.png
+
+
+[narration] The castle only grows bigger as you get closer. The staircase rises higher than the walls of any town you've seen. The doors look heavy enough to take a dozen Pufflings just to budge them. Even the steps are wide and flat, built for strides much longer than yours.
+Your Puffling clings to your shoulder, catching their breath. The castle towers over both of you, and the other puff sized buildings around you look even smaller in comparison.
+As you approach the gates, the guard stationed at the entrance widens his eyes at the sight of your guild emblem and rushes to welcome you.
+
+
+[Guard | Guard | hidden] A Seeker! Thank the stars! Finally!
+
+
+[Guard | Guard | hidden] King Puff's been pacing holes in the throne room waiting for you!
+
+
+[narration] You stare up. The doorway is so tall you could stack ten Puffs on top of each other and still not reach the top. Before you can even reply, the Guard quickly ushers you into the castle.
+
+
+[narration] As soon as you step inside, before you can even register your surroundings, a loud <i>CRASH!</i> startles you. A door next to you opens, and two pufflings barrel down the hallway at full speed, one chasing the other. You yank yourself and your Puffling out of the way just in time as they blast past.
+The first Puff skids to a stop, eyes wide when she spots you. The second puff, panting and struggling to keep up, looks at you with pleading eyes.
+
+
+[Pebble | Pebble | ] Oh! Hello... Seeker...! Sorry about that! I'm Pebble, apprentice knight of Puff Castle!
+
+
+[narration] He gestures frantically at the pink Puff half-hiding behind him.
+
+
+[Pebble | Pebble | ] And this... is Princess Peri-
+
+
+[narration] The other puffling elbows him hard. She seems to be wearing a fake mustache and oversized glasses that wobble as she breathes.
+
+
+[Pebble | Pebble | ] Ah! Sorry! I mean, and this is, uh…
+
+
+[Pebble | Pebble | ] …My uncle! Uncle Peridora! Definitely not Princess Peridot!
+
+
+[narration] <i>THWACK!</i> A swift bonk to the back of his head sends him stumbling.
+
+
+[Peridot | Princess Peridot | right] Stop speaking nonsense already!! Anyway, nice to meet you, young one, we are really busy and need to go.
+
+
+[Pebble | Pebble | ] Right, right! Urgent uncle business! Bye!
+
+
+[narration] She rushes past you, Pebble following her, out of the castle, leaving you completely baffled. The guard, seemingly used to this, just shrugs and leads you to the throne room.
+
+
+[narration] The throne room glitters like the inside of a jewel. At the far end, a throne much too large for its occupants, shakes with every bounce of King Puff. His little crown wobbles as he paces in frantic circles. Next to him, Queen Puff sits on a cushion, teacup balanced neatly in her paws. She takes a sip, unbothered, eyes half-lidded with a gentle smile.
+
+
+[image] https://img-l.ink/img/1KXp0p11RjSaB_Dkttj1NChfIuMqDle4Z.png
+
+
+[King Puff | King Puff | ] Finally! At last! A Seeker has come!
+
+
+[narration] He throws his tiny paws in the air, almost knocking his crown off entirely.
+
+
+[King Puff | King Puff | ] A disaster has struck! A catastrophe of the highest order! My daughter has vanished! Kidnapped! Spirited away! And all the kidnappers left behind is this... this slanderous note!
+
+
+[narration] He thrusts it into your hands. The handwriting is big, blotchy, and very dramatic.
+<em>"Dear Father, Dear Mother,<br>
+I am moving out. Do not try to find me.<br>
+From this day forward, I shall live free!<br>
+Goodbye forever.<br>
+- Princess Peridot"</em>
+
+
+[King Puff | King Puff | ] You must find her at once, Seeker! Before-before-
+
+
+[narration] You raise your hand, about to explain that... you just saw her moments ago...? But before you can say anything, a gentle voice interrupts.
+
+
+[Queen Puff | Queen Puff | right] My dear, please calm down... Maybe she wasn't kidnapped at all... Maybe she actually meant to leave... Could it have something to do with her pudding you secretly ate?
+
+
+[King Puff | King Puff | ] What?! Nonsense! It was just pudding!
+
+
+[narration] The Queen smiles softly and leans toward you.
+
+
+[Queen Puff | Queen Puff | right] Apologies for dragging you into this mess... But honestly, I don't think she's far. She's probably just hiding nearby. Tell her to come back before dinner, will you? Meanwhile, I'll convince her father to ask for forgiveness.
+
+
+[narration] The King keeps rambling on his own about sharing or filial duty or something, too busy to pay notice to the exchange.
+
+
+[King Puff | King Puff | ] ... Anyway, Where is that damn knight when we need him? Pebble! Report at once!
+
+
+[narration] Pebble bursts through the doors, panting and saluting.
+
+
+[Pebble | Pebble | ] Pebble, reporting in! Ready for duty!
+
+
+[King Puff | King Puff | ] Go with the Seeker and bring the princess back, whatever it takes!
+
+
+[narration] You bid farewell to the King and Queen, and set out with your Puffling partner and Pebble, who's still panting from his earlier dramatic entrance. Once outside, you stop and stare at Pebble with a raised eyebrow.
+
+
+[Pebble | Pebble | ] Uh… h-hello again, Seeker…
+
+
+[narration] You glance at him, narrowing your eyes.
+
+
+[You | You | right] Do you have any idea where the princess might be? Or should I say... Uncle Peridora?
+
+
+[narration] Pebble freezes mid-step, avoiding your gaze.
+
+
+[Pebble | Pebble | ] N-not exactly... I, um... kinda lost track of him, I mean her, when she... um...
+
+
+[You | You | right] Pebble. A knight shouldn't lie, you know?
+
+
+[narration] Pebble's eyes grow misty. He takes in a shaky breath, straightens his back, before blurting out his words.
+
+
+[Pebble | Pebble | ] Look, it's not like I didn't try to stop her! But she didn't listen, she never does, and, and-
+
+
+[Pebble | Pebble | ] ... I promise I'll bring her back, okay? She just needs a bit of time to cool off. Just trust me, please?
+
+
+[Pebble | Pebble | ] In the meantime, I'll... I'll show you around town! Yes! We'll search while I give you the grand tour!
+
+
+[You | You | right] Hm, can I trust you then?
+
+
+[Pebble | Pebble | ] I swear on my honor as an apprentice knight!
+
+
+[narration] After the noise of the castle, Puff Town feels almost too calm, even as it hums with life. The crystal houses glow softly in the sun, and Puffs shuffle by with smiles and snacks. There are almost no Seekers around, with all stores and stalls being Puffling sized. The local Puffs greet you warmly, their cheerful chatter echoing like the laughter of carefree children. The scent of delicious food wafts through the air. Everyone looks so happy here.
+
+
+[Merchant | Merchant | hidden] Come on in, come on in! My snacks are so good a Puff once fainted after eating one!
+
+
+[Another Shopkeeper | Another shopkeeper | hidden, right] Struggling with sleep? Try my special sleepy crystals! Guaranteed to make you sleep like a baby!
+
+
+[narration] One puff has already fallen asleep in a pile of samples, snoring loudly. You chuckle, shaking your head. This place feels so peaceful, it's almost like a dream.
+
+
+[Pebble | Pebble | ] Pufflings use the magical crystals to build their homes. They generate energy, light up the town, even work as weather barriers. Some say the crystals are alive... But I'm not so sure.
+
+
+[You | You | right] These crystals are so strong, barely anything can break them... But Puffs can carve easily through them using magic. Funny isn't it? Something so common for you is something so incredibly rare for us, outsiders.
+
+
+[narration] You pause to admire a soft pink house glinting in the sunlight, and take out your Keystone.
+
+
+[You | You | right] We can't even enter the Puff Kingdom without a magic crystal. You can't even imagine how hard it was to find one!
+
+
+[You | You | right] These crystals are worth a fortune to humans... but to me, this one's worth more than gold. It's the reason I can be here, seeing the unknown with my own eyes..!
+
+
+[narration] Pebble stares at you, quiet for once, then gives a small nod.
+
+
+[Pebble | Pebble | ] ...You sound like a real Seeker already. Come, let me show you my favorite store!
+
+
+Quest:
+Quest: Tour Puff Town... er, Find the Princess!
+<p><strong>Objective:</strong> Draw or write about your tour around Puff Town with Pebble.</p>
+<p><strong>Details:</strong> You might visit the marketplace, crystal gardens, cozy cafes, or any other locations that catches your fancy. Show your Seeker and Puffling partner experiencing the town alongside Pebble, who's trying his best to be a good tour guide while secretly worrying about the princess.</p>
+<br>
+<p><strong>Requirements:</strong> 
+<ul>
+  <li><strong>Art:</strong> The art must minimally include a simple background, Pebble and your Puffling partner.</li>
+  <li><strong>Writing:</strong> Minimum of 500 words describing your exploration of the town.</li>
+</ul>
+</p>
+<br>
+
+
+<p><strong>Rewards (first time only):</strong></p>
+<ul>
+  <li>10 <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></li>
+  <li>Bonus <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"> according to the <a href="https://toyhou.se/~world/176769.puff-dragon/page/162856.art-rpg-and-how-to-play">quality of your art.</a></li>
+</ul>
+
+
+<p><strong>Rewards (Repeatable):</strong></p>
+<ul>
+  <li>5 <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></li>
+  <li>Bonus <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"> according to the <a href="https://toyhou.se/~world/176769.puff-dragon/page/162856.art-rpg-and-how-to-play">quality of your art.</a></li>
+</ul>
+<div class="text-center mt-4">
+    <a href="https://discord.com/channels/1227190888867037204/1390985818302054475/1390985818302054475"><button class="btn btn-outline-secondary btn-sm">Accept quest!</button></a>
+</div>

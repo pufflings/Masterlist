@@ -26,11 +26,9 @@ function setupClearCacheHandler() {
   setTimeout(() => {
     const clearCacheButton = document.getElementById('clear-cache-btn');
     if (clearCacheButton) {
-      console.log('Clear cache button found, setting up event listener...');
       // Add event listener
       clearCacheButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Clear cache button clicked!');
         const success = charadex.tools.clearCache();
         if (success) {
           alert('Cache cleared! Refreshing page...');
