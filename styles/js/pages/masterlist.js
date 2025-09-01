@@ -134,21 +134,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (imageContainer) {
           imageContainer.innerHTML = '';
           if (data.humanoidimage) {
+            // Check if heartboundcrystal is true to determine lock status
+            const isHeartbound = data.heartboundcrystal === true || data.heartboundcrystal === 'true';
+            const lockIcon = isHeartbound ? '' : ' 🔒';
+            const humanoidTabClass = isHeartbound ? '' : 'locked-humanoid-tab';
+            
             imageContainer.innerHTML = `
               <ul class="nav nav-tabs justify-content-center mb-3" id="imageTab" role="tablist">
                 <li class="nav-item">
                   <a class="nav-link active" id="main-image-tab" data-toggle="tab" href="#main-image" role="tab" aria-controls="main-image" aria-selected="true">Puffling</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" id="alt-image-tab" data-toggle="tab" href="#alt-image" role="tab" aria-controls="alt-image" aria-selected="false">Humanoid</a>
+                  <a class="nav-link" id="alt-image-tab" data-toggle="tab" href="#alt-image" role="tab" aria-controls="alt-image" aria-selected="false">Humanoid${lockIcon}</a>
                 </li>
               </ul>
               <div class="tab-content" id="imageTabContent">
                 <div class="tab-pane fade show active" id="main-image" role="tabpanel" aria-labelledby="main-image-tab">
                   <img class="image img-fluid" src="${data.image}">
                 </div>
-                <div class="tab-pane fade" id="alt-image" role="tabpanel" aria-labelledby="alt-image-tab">
-                  <img class="alt-image img-fluid" src="${data.humanoidimage}">
+                <div class="tab-pane fade ${humanoidTabClass}" id="alt-image" role="tabpanel" aria-labelledby="alt-image-tab">
+                  <div class="locked-humanoid-container">
+                    <img class="alt-image img-fluid" src="${data.humanoidimage}">
+                    ${!isHeartbound ? '<div class="locked-humanoid-overlay">🔒</div>' : ''}
+                  </div>
                 </div>
               </div>
             `;

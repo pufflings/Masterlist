@@ -1519,3 +1519,30 @@ a:hover img {
       display: block;
     }
   }
+
+/* ============================================================= */
+/* Locked Humanoid Image Styles
+=============================================================== */
+
+.locked-humanoid-container {
+  position: relative;
+  display: inline-block;
+}
+
+.locked-humanoid-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8em;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  z-index: 10;
+}
+
+.locked-humanoid-tab {
+  background-color: rgb(114, 114, 114, 0.5);
+  padding: 20px;
+  border-radius: 8px;
+  filter: grayscale(70%) opacity(0.7);
+}
