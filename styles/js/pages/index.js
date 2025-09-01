@@ -42,6 +42,73 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
 
+  /* News
+  ===================================================================== */
+  let news = await charadex.initialize.page(null, charadex.page.index.news, (arr) => {
+    
+    // Filter out hidden news items (hide: TRUE or 'TRUE' or true)
+    arr.splice(0, arr.length, ...arr.filter(newsItem => {
+      return !newsItem.hide || newsItem.hide === 'FALSE' || newsItem.hide === false || newsItem.hide === 'false' || newsItem.hide === 0 || newsItem.hide === '0';
+    }));
+    
+    // Show all news items (no limit for horizontal scrolling)
+
+  }, (listData) => {
+    let backgroundElement = $('.news-list .cd-prompt-background');
+    
+    // Set background images for news cards
+    backgroundElement.each(function(i) {
+      const image = listData.array[i]?.image;
+      if (image) {
+        $(this).attr('style', `background-image: url(${image})`);
+      }
+    });
+    
+    // Add NEW! badges and handle links
+    if (listData.type == 'gallery') {
+      setTimeout(() => {
+        listData.array.forEach((newsItem) => {
+          $('.news-list .news-item > .card.h-100').each(function () {
+            const titleLink = $(this).find('.card-header a');
+            if (titleLink.text().trim() === (newsItem.title || '').trim()) {
+              
+              // Add NEW! button if news item is new
+              if (newsItem.new === true || newsItem.new === 'TRUE') {
+                // Remove any existing NEW! button first
+                $(this).find('.new-badge').remove();
+                
+                // Add NEW! button next to the title
+                const newBadge = $('<span class="new-badge badge badge-danger ml-2">NEW!</span>');
+                titleLink.after(newBadge);
+              } else {
+                // Remove NEW! button if not new
+                $(this).find('.new-badge').remove();
+              }
+              
+              // Handle links
+              if (newsItem.link) {
+                titleLink.attr('href', newsItem.link);
+                titleLink.attr('target', '_blank');
+                
+                // Make the background image clickable too
+                const backgroundDiv = $(this).find('.cd-prompt-background');
+                backgroundDiv.css('cursor', 'pointer');
+                backgroundDiv.off('click').on('click', function() {
+                  window.open(newsItem.link, '_blank');
+                });
+                
+                // Update footer link
+                const footerLink = $(this).find('.card-footer .link');
+                footerLink.attr('href', newsItem.link);
+                footerLink.attr('target', '_blank');
+              }
+            }
+          });
+        });
+      }, 100);
+    }
+  });
+
   /* Designs
   ===================================================================== */
   let designs = await charadex.initialize.page(null, charadex.page.index.designs, (arr) => {

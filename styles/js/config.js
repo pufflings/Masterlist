@@ -50,6 +50,7 @@ charadex.sheet = {
     options: "OptionsSheet", 
     carousel: "carousel",
     traitItems: "Trait items",
+    news: "news",
   },
 
   options: {
@@ -127,13 +128,7 @@ charadex.preloadCriticalData = async () => {
       })
     );
     
-    // Don't await here - let it load in background
-    Promise.all(preloadPromises).then(() => {
-      // Only log in development mode
-      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        console.log('Critical data preloaded');
-      }
-    });
+    Promise.all(preloadPromises);
     
   } catch (error) {
     console.warn('Preload failed:', error);
@@ -332,6 +327,51 @@ charadex.page.mainstory = {
     toggle: true,
     filterToggle: false,
     parameters: ['Title']
+  },
+
+  prevNext: {
+    toggle: false,
+  },
+
+};
+
+/* News
+/* --------------------------------------------------------------- */
+charadex.page.news = {
+
+  sheetPage: charadex.sheet.pages.news,
+  sitePage: 'news',
+  dexSelector: 'charadex',
+  profileProperty: 'title',
+
+  sort: {
+    toggle: true,
+    key: "id",
+    order: "desc",
+    parameters: []
+  },
+
+  pagination: {
+    toggle: false,
+    bottomToggle: false,
+    amount: 6,
+  },
+
+  filters: {
+    toggle: false,
+    parameters: {}
+  },
+
+  fauxFolder: {
+    toggle: false,
+    folderProperty: '',
+    parameters: [],
+  },
+
+  search: {
+    toggle: false,
+    filterToggle: false,
+    parameters: []
   },
 
   prevNext: {
@@ -748,6 +788,12 @@ charadex.page.index = {
     ... charadex.page.masterlist,
     dexSelector: 'design',
     amount: 4,
+  },
+
+  news: {
+    ... charadex.page.news,
+    dexSelector: 'news',
+    amount: 3,
   }
 
 };

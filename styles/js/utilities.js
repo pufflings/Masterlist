@@ -117,6 +117,8 @@ charadex.tools = {
   addProfileLinks(entry, pageUrl, key = 1) {
     entry.profileid = entry[key];
     entry.profilelink = charadex.url.addUrlParameters(pageUrl, { profile: entry[key] });
+    entry.imageprofilelink = entry.profilelink;
+    
   },
 
   // Try to add the select picker
@@ -143,7 +145,6 @@ charadex.tools = {
           clearedCount++;
         }
       });
-      console.log(`Cache cleared successfully. Removed ${clearedCount} items.`);
       return true;
     } catch (error) {
       console.warn('Cache clear failed:', error);
@@ -156,10 +157,7 @@ charadex.tools = {
     try {
       const cacheKey = `charadex_${sheetId}_${sheetPage}`;
       localStorage.removeItem(cacheKey);
-      // Only log in development mode
-      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        console.log(`Cache cleared for ${sheetPage}`);
-      }
+
     } catch (error) {
       console.warn('Cache clear failed:', error);
     }
@@ -171,19 +169,11 @@ charadex.tools = {
     
     start(label) {
       this.timers[label] = performance.now();
-      // Only log in development mode
-      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        console.log(`⏱️ Started: ${label}`);
-      }
     },
     
     end(label) {
       if (this.timers[label]) {
         const duration = performance.now() - this.timers[label];
-        // Only log in development mode
-        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-          console.log(`✅ Completed: ${label} (${duration.toFixed(2)}ms)`);
-        }
         delete this.timers[label];
         return duration;
       }
@@ -191,10 +181,7 @@ charadex.tools = {
     },
     
     log(label, message) {
-      // Only log in development mode
-      if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        console.log(`📊 ${label}: ${message}`);
-      }
+      // Development logging disabled
     }
   }
 
@@ -395,7 +382,9 @@ charadex.manageData = {
       for (let item of itemArr) {
         const scrubbedItemName = charadex.tools.scrub(item.item);
         const scrubbedProperty = charadex.tools.scrub(property);
-        
+        if (item.profilelink){
+          item.imageprofilelink = item.profilelink;
+        }
         if (scrubbedProperty === scrubbedItemName && profileArray[property] !== '' && profileArray[property] !== null && profileArray[property] !== undefined) {
           inventoryData.push({
             ... item,
@@ -406,6 +395,8 @@ charadex.manageData = {
         }
       }
     }
+
+    console.log("inventoryData", inventoryData);
   
     return inventoryData;
   
@@ -447,10 +438,6 @@ charadex.importSheet = async (sheetPage, sheetId = charadex.sheet.id) => {
           if (cached) {
         const cachedData = JSON.parse(cached);
         if (Date.now() - cachedData.timestamp < cacheExpiry) {
-          // Only log in development mode
-          if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-            console.log(`Using cached data for ${sheetPage}`);
-          }
           charadex.tools.performance.end(`Loading ${sheetPage}`);
           return cachedData.data;
         }

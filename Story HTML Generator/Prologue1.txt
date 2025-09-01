@@ -1,0 +1,121 @@
+﻿File name: prologue1.html
+Chapter title: Prologue - Pt. 1
+Scene: Guild Center / Outside
+
+
+Characters:
+You | https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png | https://img-l.ink/img/1v9B-Ya3_Iw_Bt7t4y3QKSVfPo4E6GOgr.png | https://site/profiles/you
+Poki | https://img-l.ink/img/1lQbQ6rObHKruUFegY-3iECcFROQKzopg.png | https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png | -
+Momo | - | https://img-l.ink/img/18mDK0Hw_VU2Etn2x1qx1rCJFY_G8kM4s.png | https://site/profiles/poki
+
+
+Dialogue:
+[narration] A newcomer stares up at the intimidating guild building, clutching their belongings, unsure whether to step inside. They take a deep breath and take a step towards it-
+<br>
+<i>Ring-ding~!</i>
+<br>
+A bell jingles behind them, and a voice calls out from across the street.
+
+
+[Poki | ??? | hidden] Oooh~? What do we have here? A brand-new face? Don't tell me you were about to march straight into the Guild Center... dressed like <i>that?</i>
+
+
+[image] https://img-l.ink/img/16xZoJO_EL0eZyFI95oZZd7cYXznK1gp4.png
+
+
+[narration] She waves a hand dramatically at the newcomer's clothes, then grins.
+
+
+[Poki | Poki | ] Welcome, welcome to Poki's Shop! The finest rookie supply stall this side of the Puff Kingdom - staffed by yours truly, **Poki Bloodfallen**! Need a map? A new outfit? A slightly used but mostly reliable dagger? We've got it all~!
+
+
+[narration] She slaps the counter proudly, rattling a few jars. A small, fluffy monster with a cat-like face stretches on the counter, lets out a high-pitched "Fwooo~," then curls up lazily.
+
+
+[Poki | Poki | ] And this here is my partner, Momo! Now about those clothes-
+
+
+[Momo | Momo | right] Meow~!
+
+
+[narration] Poki freezes. She squints at Momo, then coughs into her fist.
+
+
+[Poki | Poki | ] ...Okay, fine, fine. I'm not trying to scam them this time! Really! Ahem, anyway.
+
+
+[narration] She leans forward on the counter, lowering her voice.
+
+
+[Poki | Poki | ] ...You've met Pufflings before, right? Wouldn't be the first rookie who came charging up here, saw Momo, and <i>splat!</i> Right on the cobblestones. One kid even dropped his sword on his own foot while screaming. Poor guy limped into the guild and they still made him do the test.
+
+
+[Momo | Momo | right] Fwooo~.
+
+
+[Poki | Poki | ] Exactly, Momo. Tragic, really. But you look tougher than that... probably. Maybe. Eh, fifty-fifty. But just in case you'd like a refresher, I have this <a target="_blank" href="https://toyhou.se/~world/176769.puff-dragon/page/162785.welcome-and-intro-guide">pamphlet here</a> that might be of help. A freebie~
+
+
+[narration] Poki straightens her back, claps her hands, and grins wide.
+
+
+[Poki | Poki | ] Alright then! Enough stalling. First quest time! Show me your Keystone and your travel gear. If it's too worn out… Hoo boy! Thankfully, I sell outfits too! All sizes available~ Heehee!
+
+
+[Poki | Poki | ] And one last thing - do you have a Puff partner yet? If you do, wonderful! That means you're all set!!
+
+
+[Poki | Poki | ] If not, no worries. Quests usually need a Puff, but the Guild can lend you one for your test. You won't be alone. Just remember, the one you bond with is going to stick by you for a long, long time~
+
+
+[narration] You show her your keystone. She looks you up and down, then grins.
+
+
+[Poki | Poki | ] Alright! Looks like our newbie's ready to roll~ Normally I'd charge a mountain of coin for all this prep... but today it's a special deal, free of charge, courtesy of Poki's Shop!
+
+
+[Poki | Poki | ] Good luck out there, rookie~ And if you need anything, you know where to find me. Poki's Shop has it all: from stars above to destiny sealed in a bottle!
+
+
+[Momo | Momo | right] Meow~
+
+
+[narration] Momo tilts their head and gives a low 'nyaa~,' as if whispering something only Poki can hear.
+
+
+[Poki | Poki | ] Hmm? What's that...?<br>
+You think this kid's got potential?<br>
+Shhh, keep it down, or they'll get a big head~!
+
+
+[narration] Poki chuckles, then glances back one more time.
+
+
+[Poki | Poki | ] Just kidding! **Welcome to the Puff Kingdom!**
+
+
+
+
+Quest:
+Quest: Design your keystone
+<p><strong>Objective:</strong> Draw your own keystone</p>
+<p><strong>Details:</strong> The Keystone is a crystal containing faint magical power, similar to the magical crystals found in Puff Kingdom, which enables you to interact with and cross the Kingdom's magical Barrier. Color, shape, adornments, and casing are all up to you - just make sure it's always clearly visible in your seeker and feels like "yours" with any small details or patterns you'd like.</p>
+<br>
+<p><i><strong>Optional:</strong> Draw your Seeker in their travel outfit. The outer Coat can be custom-designed, but it must be white and bear the guild's emblem on the arm. The keystone must be visible in the seeker. You can read more about the Seekers, their outfit and their keystone in the <a target="_blank" href="https://toyhou.se/~world/176769.puff-dragon/page/126972.seeker-info-rules">Seeker Info / Rules</a>.</i></p>
+
+
+<p><strong>Rewards (first time only):</strong></p>
+<ul>
+  <li>10 <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></li>
+  <li>Bonus <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"> according to the <a href="https://toyhou.se/~world/176769.puff-dragon/page/162856.art-rpg-and-how-to-play">quality of your art.</a></li>
+</ul>
+
+
+<p><strong>Rewards (Repeatable):</strong></p>
+<ul>
+  <li>2 <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></li>
+  <li>Bonus <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"> according to the <a href="https://toyhou.se/~world/176769.puff-dragon/page/162856.art-rpg-and-how-to-play">quality of your art.</a></li>
+</ul>
+<div class="text-center mt-4">
+    <a href="https://discord.com/channels/1227190888867037204/1390985818302054475/1390985818302054475"><button class="btn btn-outline-secondary btn-sm">Accept quest!</button></a>
+</div>

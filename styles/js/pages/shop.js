@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           </div>
           <div class="card-body p-md-4 p-3 d-flex flex-fill align-items-center">
             <div class="row no-gutters m-n2 w-100">
-              <div class="col-md-4 p-2 d-flex align-items-center justify-content-center"><img class="image img-fluid m-auto" src="${image}" alt="${name}"></div>
+              <div class="col-md-4 p-2 d-flex align-items-center justify-content-center"><a href="items.html?profile=${profile}"><img class="image img-fluid m-auto" src="${image}" alt="${name}"></a></div>
               <div class="col-md-8 p-2">
                 <div class="description mb-2">${description}</div>
                 <div class="d-flex justify-content-between align-items-end mt-4">
