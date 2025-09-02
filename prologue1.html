@@ -282,16 +282,12 @@ Shhh, keep it down, or they'll get a big head~!</p>
         <h5 class="text-center mb-4">Characters in this Chapter</h5>
         <div class="character-showcase-container">
           <div class="character-card">
-            <div class="character-illustration clickable-character" data-character="you">
+            <div class="character-illustration">
               <img src="https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png" alt="You" onerror="this.style.display='none'">
-              <div class="character-overlay" style="display: none;">
-                <div class="overlay-content">
-                  <p>A newcomer to the Puff Kingdom, ready to begin their journey as a seeker. Armed with determination and a keystone, they stand at the threshold of adventure.</p>
-                </div>
-              </div>
             </div>
             <div class="character-label"><a href="https://site/profiles/you">You</a></div>
           </div>
+          
           <div class="character-card">
             <div class="character-illustration clickable-character" data-character="poki">
               <img src="https://img-l.ink/img/1lQbQ6rObHKruUFegY-3iECcFROQKzopg.png" alt="Poki" onerror="this.style.display='none'">
@@ -303,6 +299,7 @@ Shhh, keep it down, or they'll get a big head~!</p>
             </div>
             <div class="character-label">Poki</div>
           </div>
+          
         </div>
         
         <hr class="dashed-line mt-4">
@@ -375,31 +372,5 @@ Shhh, keep it down, or they'll get a big head~!</p>
   <script src="styles/js/pages/base.js" type="module"></script>
   <script src="styles/js/pages/prompt.js"></script>
 
-  <!-- Character Card Click Functionality -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get all clickable character elements
-      const clickableCharacters = document.querySelectorAll('.clickable-character');
-      
-      clickableCharacters.forEach(character => {
-        character.addEventListener('click', function() {
-          const overlay = this.querySelector('.character-overlay');
-          const img = this.querySelector('img');
-          
-          if (overlay.style.display === 'none') {
-            // Show overlay
-            overlay.style.display = 'flex';
-            this.classList.add('overlay-active');
-            img.style.opacity = '0.3';
-          } else {
-            // Hide overlay
-            overlay.style.display = 'none';
-            this.classList.remove('overlay-active');
-            img.style.opacity = '1';
-          }
-        });
-      });
-    });
-  </script>
 </body>
 </html>

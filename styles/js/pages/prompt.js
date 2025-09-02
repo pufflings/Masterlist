@@ -240,6 +240,32 @@ document.addEventListener('DOMContentLoaded', function() {
       behavior: 'smooth'
     });
   });
+  
+  // =============================================================
+  // Character Card Click Functionality
+  // =============================================================
+  
+  // Get all clickable character elements
+  const clickableCharacters = document.querySelectorAll('.clickable-character');
+  
+  clickableCharacters.forEach(character => {
+    character.addEventListener('click', function() {
+      const overlay = this.querySelector('.character-overlay');
+      const img = this.querySelector('img');
+      
+      if (overlay.style.display === 'none') {
+        // Show overlay
+        overlay.style.display = 'flex';
+        this.classList.add('overlay-active');
+        img.style.opacity = '0.3';
+      } else {
+        // Hide overlay
+        overlay.style.display = 'none';
+        this.classList.remove('overlay-active');
+        img.style.opacity = '1';
+      }
+    });
+  });
 });
 
 // Add CSS for smooth transitions and proper layout

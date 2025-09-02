@@ -4,9 +4,9 @@ Scene: Guild Center / Outside
 
 
 Characters:
-You | https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png | https://img-l.ink/img/1v9B-Ya3_Iw_Bt7t4y3QKSVfPo4E6GOgr.png | https://site/profiles/you
-Poki | https://img-l.ink/img/1lQbQ6rObHKruUFegY-3iECcFROQKzopg.png | https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png | -
-Momo | - | https://img-l.ink/img/18mDK0Hw_VU2Etn2x1qx1rCJFY_G8kM4s.png | https://site/profiles/poki
+You | https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png | https://img-l.ink/img/1v9B-Ya3_Iw_Bt7t4y3QKSVfPo4E6GOgr.png | https://site/profiles/you | -
+Poki | https://img-l.ink/img/1lQbQ6rObHKruUFegY-3iECcFROQKzopg.png | https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png | - | A newcomer to the Puff Kingdom, ready to begin their journey as a seeker. Armed with determination and a keystone, they stand at the threshold of adventure.
+Momo | - | https://img-l.ink/img/18mDK0Hw_VU2Etn2x1qx1rCJFY_G8kM4s.png | https://site/profiles/momo | -
 
 
 Dialogue:

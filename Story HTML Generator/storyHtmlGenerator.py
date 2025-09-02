@@ -79,12 +79,14 @@ class StoryHTMLGenerator:
             if len(parts) >= 3:
                 name = parts[0]
                 full_body = parts[1] if parts[1] != '-' else None
-                portrait  = parts[2] if parts[2] != '-' else None
-                profile   = parts[3] if len(parts) >= 4 and parts[3] and parts[3] != '-' else None
+                portrait = parts[2] if parts[2] != '-' else None
+                profile = parts[3] if len(parts) >= 4 and parts[3] and parts[3] != '-' else None
+                description = parts[4] if len(parts) >= 5 and parts[4] and parts[4] != '-' else None
                 self.characters[name] = {
                     'full_body': full_body,
                     'portrait': portrait,
-                    'profile': profile
+                    'profile': profile,
+                    'description': description
                 }
 
     def _parse_dialogue(self, text):
@@ -207,25 +209,45 @@ class StoryHTMLGenerator:
                 dialogue_html += html + '\n\n'
 
         # Characters showcase: only those with full-body, link image and name if profile present
-        character_showcase = ''
+        character_showcase = ""
         for name, data in self.characters.items():
             fb = data.get('full_body')
             if not fb:
                 continue
             profile = (data.get('profile') or '').strip()
+            desc_raw = (data.get('description') or '').strip()
+            desc_html = self._process_markdown(desc_raw) if desc_raw else ''
+            has_desc = bool(desc_html)
+
+            # image + name, link if profile present
+            img_block = f'<img src="{fb}" alt="{name}" onerror="this.style.display=\'none\'">'
             if profile:
-                img_block = f'<a href="{profile}"><img src="{fb}" alt="{name}" onerror="this.style.display=\'none\'"></a>'
                 name_block = f'<a href="{profile}">{name}</a>'
             else:
-                img_block = f'<img src="{fb}" alt="{name}" onerror="this.style.display=\'none\'">'
                 name_block = name
 
+            # overlay only when description exists
+            illus_classes = "character-illustration"
+            data_attr = ""
+            overlay_block = ""
+            if has_desc:
+                illus_classes += " clickable-character"
+                key = name.lower().replace(" ", "-")
+                data_attr = f' data-character="{key}"'
+                overlay_block = f'''
+              <div class="character-overlay" style="display: none;">
+                <div class="overlay-content">
+                  <p>{desc_html}</p>
+                </div>
+              </div>'''
+
             character_showcase += f'''          <div class="character-card">
-            <div class="character-illustration">
-              {img_block}
+            <div class="{illus_classes}"{data_attr}>
+              {img_block}{overlay_block}
             </div>
             <div class="character-label">{name_block}</div>
           </div>
+          
 '''
         # Generate trivia section if trivia exists
         trivia_html = ""
