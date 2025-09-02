@@ -1,0 +1,479 @@
+// CYOA Story Engine
+class CYOAStory {
+    constructor() {
+        this.currentScene = 'scene1';
+        this.storyData = null;
+        this.choiceHistory = [];
+        this.dialogueStage = document.getElementById('dialogue-stage');
+        this.skipButton = document.getElementById('skip-button');
+        this.currentDialogueIndex = 0;
+        this.currentSceneDialogueIndex = 0;
+        this.isRevealing = false;
+        
+        this.init();
+    }
+
+    async init() {
+        // Load story data
+        await this.loadStoryData();
+        
+        // Set up event listeners
+        this.setupEventListeners();
+        
+        // Start the story
+        this.displayScene(this.currentScene);
+    }
+
+    async loadStoryData() {
+        try {
+            // Load story data from external JSON file
+            const response = await fetch('Story HTML Generator/CYOA/cyoa-story-data.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            this.storyData = await response.json();
+        } catch (error) {
+            console.error('Error loading story data:', error);
+        }
+    }
+
+    setupEventListeners() {
+        // Skip button functionality
+        if (this.skipButton) {
+            this.skipButton.addEventListener('click', () => {
+                this.showQuestSection();
+            });
+        }
+
+        // Add click event listener for progressive reveal
+        document.body.addEventListener('click', (e) => {
+            // Don't trigger if clicking on buttons, links, or within the skip button area
+            if (e.target.tagName === 'BUTTON' || 
+                e.target.tagName === 'A' || 
+                e.target.closest('button') || 
+                e.target.closest('a') ||
+                e.target.closest('#skip-button')) {
+                return;
+            }
+
+            // Don't trigger if we're in the middle of revealing content
+            if (this.isRevealing) {
+                return;
+            }
+
+            this.showNextDialogue();
+        });
+    }
+
+    displayScene(sceneId) {
+        const scene = this.storyData.scenes.find(s => s.scene === sceneId);
+        if (!scene) {
+            console.error('Scene not found:', sceneId);
+            return;
+        }
+
+        // Create a scene separator if this isn't the first scene
+        if (this.currentScene !== 'scene1') {
+            const separator = document.createElement('hr');
+            separator.className = 'scene-separator';
+            separator.setAttribute('data-scene', sceneId);
+            this.dialogueStage.appendChild(separator);
+        }
+
+        // Create all dialogue elements for this scene but hide them initially
+        this.currentSceneDialogueIndex = 0;
+        scene.dialogue.forEach((entry, index) => {
+            const dialogueElement = this.createDialogueElement(entry);
+            
+            // Add scene identifier to each element
+            dialogueElement.setAttribute('data-scene', sceneId);
+            
+            // Hide all dialogues except the first one
+            if (index === 0) {
+                dialogueElement.classList.add('dialogue-visible');
+            } else {
+                dialogueElement.classList.add('dialogue-hidden');
+            }
+            
+            this.dialogueStage.appendChild(dialogueElement);
+
+            // Add choices if this is the last entry and has choices
+            if (index === scene.dialogue.length - 1 && entry.choices) {
+                const choicesElement = this.createChoicesElement(entry.choices);
+                choicesElement.setAttribute('data-scene', sceneId);
+                choicesElement.classList.add('dialogue-hidden');
+                this.dialogueStage.appendChild(choicesElement);
+            }
+            
+            // Add dice choices if this is the last entry and has dice-choices
+            if (index === scene.dialogue.length - 1 && entry['dice-choices']) {
+                const diceChoicesElement = this.createDiceChoicesElement(entry['dice-choices']);
+                diceChoicesElement.setAttribute('data-scene', sceneId);
+                diceChoicesElement.classList.add('dialogue-hidden');
+                this.dialogueStage.appendChild(diceChoicesElement);
+            }
+        });
+
+
+
+        // Scroll to the new content
+        const lastElement = this.dialogueStage.lastElementChild;
+        if (lastElement) {
+            lastElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+
+    }
+
+    showNextDialogue() {
+        if (this.isRevealing) return;
+        
+        this.isRevealing = true;
+        
+        const scene = this.storyData.scenes.find(s => s.scene === this.currentScene);
+        if (!scene) return;
+
+        if (this.currentSceneDialogueIndex < scene.dialogue.length - 1) {
+            // Show next dialogue
+            this.currentSceneDialogueIndex++;
+            
+            // Find the next dialogue element by looking at the current scene's elements
+            // Use data-scene attribute to identify elements belonging to the current scene
+            const allElements = Array.from(this.dialogueStage.children);
+            const currentSceneElements = allElements.filter(child => 
+                child.getAttribute('data-scene') === this.currentScene
+            );
+            
+            const dialogueElements = currentSceneElements.filter(child => 
+                child.classList.contains('dialogue-container') || 
+                child.classList.contains('dialogue-container-right') || 
+                child.classList.contains('dialogue-simple')
+            );
+            
+            const nextContainer = dialogueElements[this.currentSceneDialogueIndex];
+            
+            if (nextContainer) {
+                nextContainer.classList.remove('dialogue-hidden');
+                nextContainer.classList.add('dialogue-visible');
+                
+                // Scroll to center the new dialogue
+                setTimeout(() => {
+                    nextContainer.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                    this.isRevealing = false;
+                }, 100);
+            } else {
+                this.isRevealing = false;
+            }
+        } else if (this.currentSceneDialogueIndex === scene.dialogue.length - 1) {
+            // We're at the last dialogue, show choices if they exist
+            const lastEntry = scene.dialogue[scene.dialogue.length - 1];
+            if (lastEntry.choices) {
+                // Find the choices element by looking for the element with choices-element class
+                // Only look in the current scene's elements
+                const allElements = Array.from(this.dialogueStage.children);
+                const currentSceneElements = allElements.filter(child => 
+                    child.getAttribute('data-scene') === this.currentScene
+                );
+                
+                const choicesElement = currentSceneElements.find(child => 
+                    child.classList.contains('choices-element') && !child.classList.contains('dice-choices-element')
+                );
+                
+                if (choicesElement) {
+                    choicesElement.classList.remove('dialogue-hidden');
+                    choicesElement.classList.add('dialogue-visible');
+                    
+
+                    
+                    setTimeout(() => {
+                        choicesElement.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center',
+                            inline: 'nearest'
+                        });
+                        this.isRevealing = false;
+                    }, 100);
+                }
+            } else if (lastEntry['dice-choices']) {
+                // Find the dice choices element
+                const allElements = Array.from(this.dialogueStage.children);
+                const currentSceneElements = allElements.filter(child => 
+                    child.getAttribute('data-scene') === this.currentScene
+                );
+                
+                const diceChoicesElement = currentSceneElements.find(child => 
+                    child.classList.contains('dice-choices-element')
+                );
+                
+                if (diceChoicesElement) {
+                    diceChoicesElement.classList.remove('dialogue-hidden');
+                    diceChoicesElement.classList.add('dialogue-visible');
+                    
+                    setTimeout(() => {
+                        diceChoicesElement.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center',
+                            inline: 'nearest'
+                        });
+                        this.isRevealing = false;
+                    }, 100);
+                }
+            } else {
+                // No choices or dice choices, check if this is a final scene
+                if (scene.final === true) {
+                    this.showEndSections();
+                }
+                this.isRevealing = false;
+            }
+        } else {
+            this.isRevealing = false;
+        }
+    }
+
+
+
+    createDialogueElement(entry) {
+        const container = document.createElement('div');
+        
+        // Get the class from modifiers, or use dialogue-simple as default
+        const dialogueClass = entry.modifiers?.class || 'dialogue-simple';
+        container.className = dialogueClass;
+        
+        if (dialogueClass === 'dialogue-simple') {
+            if (entry.text) {
+                const p = document.createElement('p');
+                p.innerHTML = this.processMarkdown(entry.text);
+                container.appendChild(p);
+            }
+        } else if (dialogueClass === 'dialogue-container' || dialogueClass === 'dialogue-container-right') {
+            // Create portrait if character has a name and portrait
+            if (entry.name && entry.portrait) {
+                const portraitDiv = document.createElement('div');
+                const portrait = document.createElement('div');
+                portrait.className = 'character-portrait';
+                
+                // Add character portrait image
+                portrait.innerHTML = `<img src="${entry.portrait}" alt="${entry.name}" onerror="this.style.display='none'">`;
+                
+                // Apply hidden modifier if specified
+                if (entry.modifiers?.hidden === true) {
+                    portrait.classList.add('hidden-face');
+                }
+                
+                portraitDiv.appendChild(portrait);
+                container.appendChild(portraitDiv);
+            }
+            
+            const speechBubble = document.createElement('div');
+            speechBubble.className = dialogueClass === 'dialogue-container-right' ? 'speech-bubble-right' : 'speech-bubble';
+            
+            if (entry.name) {
+                const characterName = document.createElement('div');
+                characterName.className = 'character-name';
+                characterName.textContent = entry.name;
+                speechBubble.appendChild(characterName);
+            }
+            
+            if (entry.text) {
+                const text = document.createElement('p');
+                text.innerHTML = this.processMarkdown(entry.text);
+                speechBubble.appendChild(text);
+            }
+            
+            container.appendChild(speechBubble);
+        }
+        
+        return container;
+    }
+
+    createChoicesElement(choices) {
+        const container = document.createElement('div');
+        container.className = 'dialogue-simple choices-element';
+        
+        const choicesTitle = document.createElement('h5');
+        choicesTitle.textContent = 'What would you like to do?';
+        choicesTitle.style.marginBottom = '1rem';
+        container.appendChild(choicesTitle);
+        
+        choices.forEach((choice, index) => {
+            const button = document.createElement('button');
+            button.className = 'btn btn-outline-primary m-2 choice-button';
+            button.textContent = choice.text;
+            
+            button.addEventListener('click', () => {
+                // Disable all choice buttons after one is selected
+                this.disableAllChoices(container);
+                
+                // Add visual feedback that choice was made
+                button.className = 'btn btn-success m-2';
+                button.textContent = '✓ ' + choice.text;
+                button.disabled = true;
+                
+                // Small delay to show the selection, then proceed
+                setTimeout(() => {
+                    this.makeChoice(choice.next);
+                }, 500);
+            });
+            
+            container.appendChild(button);
+        });
+        
+        return container;
+    }
+
+    createDiceChoicesElement(diceChoices) {
+        const container = document.createElement('div');
+        container.className = 'dialogue-simple choices-element dice-choices-element';
+        
+        const diceTitle = document.createElement('h5');
+        diceTitle.textContent = `Roll a d${diceChoices['dice-max']}!`;
+        diceTitle.style.marginBottom = '1rem';
+        container.appendChild(diceTitle);
+        
+        const rollButton = document.createElement('button');
+        rollButton.className = 'btn btn-warning m-2 dice-roll-button';
+        rollButton.textContent = '🎲 Roll the Dice!';
+        
+        rollButton.addEventListener('click', () => {
+            // Disable the roll button
+            rollButton.disabled = true;
+            rollButton.classList.add('selected');
+            rollButton.textContent = '🎲 Rolling...';
+            
+            // Generate random number
+            const roll = Math.floor(Math.random() * diceChoices['dice-max']) + diceChoices['dice-min'];
+            
+            // Find which choice this roll corresponds to
+            const selectedChoice = diceChoices.choices.find(choice => 
+                roll >= choice['dice-min'] && roll <= choice['dice-max']
+            );
+            
+            if (selectedChoice) {
+                // Show the roll result
+                rollButton.textContent = `🎲 You rolled: ${roll}`;
+                rollButton.className = 'btn btn-success m-2';
+                
+                // Small delay to show the result, then proceed
+                setTimeout(() => {
+                    this.makeChoice(selectedChoice.next);
+                }, 1500);
+            }
+        });
+        
+        container.appendChild(rollButton);
+        
+        return container;
+    }
+
+    disableAllChoices(container) {
+        const buttons = container.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.disabled = true;
+            button.classList.add('selected');
+        });
+    }
+
+    makeChoice(nextScene) {
+        // Record the choice
+        this.choiceHistory.push({
+            from: this.currentScene,
+            to: nextScene,
+            timestamp: new Date()
+        });
+        
+        // Update current scene
+        this.currentScene = nextScene;
+        
+        // Reset dialogue index for the new scene
+        this.currentSceneDialogueIndex = 0;
+        
+        // Display the new scene
+        this.displayScene(nextScene);
+    }
+
+    processMarkdown(text) {
+        if (!text) return '';
+        
+        // Process bold text
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Process italic text
+        text = text.replace(/\*(.*?)\*/g, '<i>$1</i>');
+        
+        // Process line breaks
+        text = text.replace(/\n/g, '<br>');
+        
+        return text;
+    }
+
+    showQuestSection() {
+        // Show all dialogues at once
+        this.showAllContent();
+        
+        // Show both the character showcase and quest section
+        this.showEndSections();
+        
+        // Scroll to quest section
+        const questSection = document.getElementById('quest-section');
+        if (questSection) {
+            questSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+    
+    showAllContent() {
+        // Show all dialogue elements in the current scene
+        const scene = this.storyData.scenes.find(s => s.scene === this.currentScene);
+        if (scene) {
+            const dialogueElements = this.dialogueStage.children;
+            const startIndex = dialogueElements.length - scene.dialogue.length;
+            
+            for (let i = startIndex; i < dialogueElements.length; i++) {
+                const element = dialogueElements[i];
+                element.classList.remove('dialogue-hidden');
+                element.classList.add('dialogue-visible');
+            }
+        }
+        
+        // Reset dialogue index to show all content
+        this.currentSceneDialogueIndex = scene ? scene.dialogue.length - 1 : 0;
+        
+
+    }
+
+    showEndSections() {
+        // Show the character showcase
+        const characterSection = document.getElementById('end-of-prologue');
+        if (characterSection) {
+            characterSection.style.display = 'block';
+        }
+        
+        // Show the quest section
+        const questSection = document.getElementById('quest-section');
+        if (questSection) {
+            questSection.style.display = 'block';
+        }
+    }
+
+    // Get choice history for debugging or saving
+    getChoiceHistory() {
+        return this.choiceHistory;
+    }
+
+    // Reset story to beginning
+    resetStory() {
+        this.currentScene = 'scene1';
+        this.choiceHistory = [];
+        this.displayScene(this.currentScene);
+    }
+}
+
+// Initialize the story when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new CYOAStory();
+});
+
+
