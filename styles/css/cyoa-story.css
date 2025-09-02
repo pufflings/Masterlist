@@ -1,0 +1,126 @@
+/* CYOA Story Engine Styles */
+
+/* Dialogue Stage Container */
+#dialogue-stage {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  min-height: 300px;
+}
+
+#dialogue-stage:hover {
+  cursor: pointer;
+}
+
+/* Dialogue Elements - Base Styles */
+.dialogue-container, 
+.dialogue-container-right, 
+.dialogue-simple {
+  position: relative !important;
+  z-index: 1 !important;
+  margin-bottom: 1rem !important;
+  transition: opacity 0.5s ease, transform 0.5s ease !important;
+}
+
+/* Hidden Dialogue Elements */
+.dialogue-hidden {
+  opacity: 0 !important;
+  transform: translateY(20px) !important;
+  pointer-events: none !important;
+  margin-bottom: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Visible Dialogue Elements */
+.dialogue-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+  margin-bottom: 1rem !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Choices Element */
+.choices-element {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.choices-element.dialogue-hidden {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.choices-element.dialogue-visible {
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Speech Bubble Links */
+.speech-bubble a, 
+.speech-bubble-right a {
+  position: relative !important;
+  z-index: 2 !important;
+  pointer-events: auto !important;
+  color: #007bff !important;
+  text-decoration: underline !important;
+}
+
+.speech-bubble a:hover, 
+.speech-bubble-right a:hover {
+  color: #0056b3 !important;
+}
+
+/* Scene Separator */
+.scene-separator {
+  margin: 2rem 0;
+  border-style: dashed;
+}
+
+/* Choice Buttons */
+.choice-button {
+    min-width: 200px;
+}
+
+.choice-button.selected {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Dice Choices */
+.dice-choices-element {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.dice-roll-button {
+    min-width: 250px;
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(45deg, #ffc107, #ff9800);
+    border: none;
+    color: #212529;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.dice-roll-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.dice-roll-button:disabled {
+    cursor: not-allowed;
+}
+
+.dice-roll-button.selected {
+    opacity: 0.8;
+}
+
+/* Hidden Portrait Modifier */
+.character-portrait.hidden {
+    display: none;
+}

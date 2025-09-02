@@ -1,0 +1,442 @@
+{
+  "scenes": [
+    {
+      "scene": "scene1",
+      "dialogue": [
+        {
+          "name": "???",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "hidden": true,
+            "class": "dialogue-container"
+          },
+          "text": "Well, well, well~ Look who decided to show up! Ready for your first adventure, rookie?"
+        },
+        {
+          "name": "You",
+          "portrait": "https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png",
+          "modifiers": {
+            "class": "dialogue-container-right"
+          },
+          "text": "I think so... I'm a bit nervous though."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Poki gives you an encouraging smile and leans forward on the counter.",
+          "choices": [
+            {
+              "text": "Tell me about the quest",
+              "next": "scene2"
+            },
+            {
+              "text": "Lets gamble!",
+              "next": "scene3"
+            },
+            {
+              "text": "Can I meet your Puff partner?",
+              "next": "scene4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene2",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Ah, straight to business! I like that~ The quest is simple: you need to find a lost Puffling in the Whispering Woods."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "She pulls out a map and points to a forested area marked with a small paw print.",
+          "choices": [
+            {
+              "text": "That sounds dangerous...",
+              "next": "scene5"
+            },
+            {
+              "text": "I can handle it!",
+              "next": "scene6"
+            },
+            {
+              "text": "What's the reward?",
+              "next": "scene7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene3",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Time to gamble!~"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "She opens a cabinet behind the counter, revealing various supplies and equipment.",
+          "dice-choices": { 
+            "dice-min": 1,
+            "dice-max": 18,
+            "choices": [
+              { 
+                "dice-min": 1,
+                "dice-max": 6,
+                "next": "scene8"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene9"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene17"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene4",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Of course! Momo, come say hello to our new friend~"
+        },
+        {
+          "name": "Momo",
+          "portrait": "https://img-l.ink/img/18mDK0Hw_VU2Etn2x1qx1rCJFY_G8kM4s.png",
+          "modifiers": {
+            "class": "dialogue-container-right"
+          },
+          "text": "Fwooo~!"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "A small, fluffy Puffling with a cat-like face stretches and gives you a friendly wave."
+        }
+      ],
+        "final": true
+    },
+    {
+      "scene": "scene5",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Don't worry, rookie! The Whispering Woods are mostly safe. The Puffling just got lost playing hide and seek."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "She pats your shoulder reassuringly.",
+          "choices": [
+            {
+              "text": "Okay, I'll try it",
+              "next": "scene6"
+            },
+            {
+              "text": "I still need more preparation",
+              "next": "scene3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene6",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "That's the spirit! I knew you had it in you~ Here's your quest scroll and a small reward for your confidence!"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "She hands you a rolled parchment and a small pouch that jingles with coins.",
+          "choices": [
+            {
+              "text": "Thank you! I won't let you down!",
+              "next": "scene12"
+            },
+            {
+              "text": "What's next?",
+              "next": "scene13"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene7",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "Ah, a practical one! The reward is 15 coins, plus whatever you find in the woods. There might be some rare herbs or crystals~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "Her eyes twinkle with excitement as she mentions the potential treasures.",
+          "choices": [
+            {
+              "text": "That sounds worth it!",
+              "next": "scene6"
+            },
+            {
+              "text": "I need to think about it",
+              "next": "scene5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene8",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "Bad roll!~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "Better luck next time!~"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene9",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "Armor is crucial for survival! This leather vest is lightweight but offers good protection. Perfect for a rookie adventurer~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "She holds up a sturdy leather vest with reinforced stitching.",
+          "choices": [
+            {
+              "text": "That looks perfect!",
+              "next": "scene15"
+            },
+            {
+              "text": "I need a weapon first",
+              "next": "scene8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene10",
+      "dialogue": [
+        {
+          "name": "Momo",
+          "class": "dialogue-container-right",
+          "text": "Nyaa~!"
+        },
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "See? Momo likes you! Pufflings have excellent instincts about people. If Momo approves, you're definitely ready for this quest~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "Momo purrs contentedly and gives you an approving nod.",
+          "choices": [
+            {
+              "text": "Then let's do this!",
+              "next": "scene6"
+            },
+            {
+              "text": "I still have questions",
+              "next": "scene2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene11",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "Absolutely! Pufflings are incredibly helpful. They can sense danger, find hidden things, and some even have magical abilities. Momo here is great at finding lost items~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "Momo puffs up proudly at the compliment.",
+          "choices": [
+            {
+              "text": "That's amazing!",
+              "next": "scene10"
+            },
+            {
+              "text": "Tell me more about Pufflings",
+              "next": "scene16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene12",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "I believe in you, rookie! Now get out there and show the world what you're made of~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "She gives you a thumbs up and a bright smile. Momo waves goodbye with their paw.",
+          "choices": [
+            {
+              "text": "Goodbye! I'll be back soon!",
+              "next": "scene17"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene13",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "Next, you head to the Whispering Woods! The entrance is just past the town square. Look for the old oak tree with the blue ribbon~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "She draws a quick map on the back of your quest scroll.",
+          "choices": [
+            {
+              "text": "Got it! Thanks for everything!",
+              "next": "scene17"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene14",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "Great choice! That'll be 8 coins. Now you're properly armed for adventure~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "She carefully wraps the dagger in cloth and hands it to you.",
+          "choices": [
+            {
+              "text": "Now I need armor",
+              "next": "scene9"
+            },
+            {
+              "text": "I'm ready for the quest now",
+              "next": "scene2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene15",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "Excellent! That's 12 coins. You're looking more like a proper adventurer already~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "She helps you adjust the vest to make sure it fits properly.",
+          "choices": [
+            {
+              "text": "Now I need a weapon",
+              "next": "scene8"
+            },
+            {
+              "text": "I'm ready for the quest now",
+              "next": "scene2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene16",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "class": "dialogue-container",
+          "text": "Pufflings are descendants of ancient dragons, you know! They're incredibly intelligent and loyal. Each one has unique abilities and personalities~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "Her eyes sparkle with enthusiasm as she shares this knowledge.",
+          "choices": [
+            {
+              "text": "That's fascinating!",
+              "next": "scene10"
+            },
+            {
+              "text": "I want to learn more later",
+              "next": "scene2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene17",
+      "dialogue": [
+        {
+          "class": "dialogue-simple",
+          "text": "With your quest scroll in hand and determination in your heart, you step out of Poki's Shop. The adventure awaits in the Whispering Woods!"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "You've successfully completed the prologue and are ready to begin your first quest as a Puffling adventurer!"
+        }
+      ],
+      "final": true
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="image/png" href="assets/favicon.png" />
+  <title>Pufflings - CYOA Chapter</title>
+  <meta name="title" content="Pufflings - CYOA Chapter" />
+  <meta name="type" content="website" />
+  <meta name="url" content="https://pufflings.github.io/Masterlist/" />
+  <meta name="image" content="assets/meta.png" />
+  <meta name="description" content="Welcome to the Puffling ARPG! Pufflings are a mysterious, fluffy creature, believed to be descendants of legendary dragons.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="styles/css/charadex.css">
+  <link rel="stylesheet" type="text/css" href="styles/css/cyoa-story.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400|Comfortaa:500" rel="stylesheet">
+
+</head>
+<body id="charadex-body">
+  <div class="load-html" id="header" data-source="includes/header.html"></div>
+  <div class="container" id="main-container">
+    <div id="charadex-gallery">
+      <!-- Top Card Container -->
+      <div class="card p-md-5 p-4 mb-4">
+        <!-- Title -->
+        <h3 class="mb-0"><a href="cyoa-chapter.html">CYOA Chapter</a></h3>
+        <h6><i>Scene — Interactive Story</i></h6>
+        <hr>
+        <div class="text-justify my-4">
+          <!-- Skip Story Button -->
+          <div class="text-center mb-3" style="position: relative; z-index: 1;">
+            <button id="skip-button" class="btn btn-outline-secondary btn-sm">⭐️ Skip to Quest</button>
+          </div>
+
+          <!-- Dialogue Container -->
+          <div id="dialogue-stage" style="position: relative;">
+            <!-- Dynamic content will be generated here -->
+          </div> <!-- End of dialogue-stage -->
+      
+      <!-- End of Chapter Character Box -->
+      <div id="end-of-prologue" class="card p-md-5 p-4 mb-4 mt-4" style="display: none;">
+        <h4 class="text-center mb-3"><i>End of CYOA Chapter</i></h4>
+        <hr class="dashed-line">
+        <h5 class="text-center mb-4">Characters in this Chapter</h5>
+        <div class="character-showcase-container">
+          <div class="character-card">
+            <div class="character-illustration">
+              <img src="https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png" alt="You" onerror="this.style.display='none'">
+            </div>
+            <div class="character-label">You</div>
+          </div>
+          
+          <div class="character-card">
+            <div class="character-illustration clickable-character" data-character="poki">
+              <img src="https://img-l.ink/img/1lQbQ6rObHKruUFegY-3iECcFROQKzopg.png" alt="Poki" onerror="this.style.display='none'">
+              <div class="character-overlay" style="display: none;">
+                <div class="overlay-content">
+                  <p>A cheerful shopkeeper with a passion for helping rookies. Owner of Poki's Shop, the finest rookie supply stall in the Puff Kingdom. Always ready with advice and supplies for new adventurers.</p>
+                </div>
+              </div>
+            </div>
+            <div class="character-label">Poki</div>
+          </div>
+          
+        </div>
+        
+        <hr class="dashed-line mt-4">
+      </div>
+
+      <!-- quest info here -->
+      <div id="quest-section" style="display: none; opacity: 1; transform: translateY(0); transition: opacity 0.5s ease, transform 0.5s ease;">
+        <div class="card p-md-5 p-4 mb-4">
+          <h4>🎯 Quest: Complete the CYOA Story</h4>
+          <hr>
+          <div class="text-justify my-4">
+            <p><strong>Objective:</strong> Make choices and complete the interactive story</p>
+            <p><strong>Details:</strong> Navigate through the story by making choices. Your decisions will shape the outcome of your adventure!</p>
+            <br>
+            <p><strong>Rewards (first time only):</strong></p>
+            <ul>
+              <li>10 <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></li>
+              <li>Bonus <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"> according to the <a href="https://toyhou.se/~world/176769.puff-dragon/page/162856.art-rpg-and-how-to-play">quality of your art.</a></li>
+            </ul>
+            <div class="text-center mt-4">
+                <a href="#"><button class="btn btn-outline-secondary btn-sm">Accept quest!</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+        </div>
+        <hr>
+      </div>
+      <!-- Content List -->
+      <div class="row no-gutters charadex-shop-list softload m-n2"></div>
+    </div>
+  </div>
+  <div class="load-html" id="footer" data-source="includes/footer.html"></div>
+  
+  <!-- Floating Scroll to Top Button -->
+  <button id="scroll-to-top" class="btn btn-primary" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  " title="Scroll to top">
+    ↑
+  </button>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+  <script src="styles/js/pages/base.js" type="module"></script>
+  <script src="styles/js/cyoa-story.js"></script>
+  <script src="styles/js/pages/prompt.js"></script>
+
+</body>
+</html>
