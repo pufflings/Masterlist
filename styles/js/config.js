@@ -501,9 +501,10 @@ charadex.page.masterlist = {
   },
 
   filters: {
-    toggle: true,
+    toggle: false,
     parameters: () => ({
-      // 'Design Type': charadex.sheet.options.designTypes,
+       'Species': charadex.sheet.options.species,
+       'Type': charadex.sheet.options.designTypes,
       // 'Status': charadex.sheet.options.statuses,
       // 'Rarity': charadex.sheet.options.rarity,
     })
@@ -511,14 +512,14 @@ charadex.page.masterlist = {
 
   fauxFolder: {
     toggle: true,
-    folderProperty: 'Type',
-    parameters: () => charadex.sheet.options.designTypes,
+    folderProperty: 'Species',
+    parameters: () => charadex.sheet.options.species,
   },
 
   search: {
     toggle: true,
     filterToggle: true,
-    parameters: ['All', 'Design', 'Owner', 'Designer', 'Artist', 'Traits']
+    parameters: ['All', 'Design', 'Owner', 'Designer', 'Artist']
   },
 
   prevNext: {
