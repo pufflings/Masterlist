@@ -46,7 +46,7 @@ Dialogue | scene3:
 [choices | dice | 1 | 18]
 1-6 | scene8
 7-12 | scene9
-13-18 | scene17
+13-18 | scene12
 
 Dialogue | scene4 | end:
 [Poki | Poki | ] Of course! Momo, come say hello to our new friend~

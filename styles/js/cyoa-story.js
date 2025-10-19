@@ -396,6 +396,9 @@ class CYOAStory {
             rollButton.disabled = true;
             rollButton.classList.add('selected');
             rollButton.textContent = '🎲 Rolling...';
+
+            // Disable all controls once an option is selected
+                this.disableAllChoices(container);
             
             // Generate random number
             const roll = Math.floor(Math.random() * diceChoices['dice-max']) + diceChoices['dice-min'];
