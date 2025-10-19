@@ -1,0 +1,189 @@
+File name: slimeHunt
+Chapter title: Slime Hunt
+Scene: Guild Center / Outside
+Type: dice
+
+
+Characters:
+You | https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png | https://img-l.ink/img/1v9B-Ya3_Iw_Bt7t4y3QKSVfPo4E6GOgr.png | https://site/profiles/you | -
+
+
+Dialogue | scene1 | start:
+[narration] You waltz into the Adventurer's Guild with your puffling in tow. It’s early, but the floorboards are already sticky with ale and mud. 
+
+[image] https://img-l.ink/img/1oqIVXuP2ceENlbEQTYrGW-6RbcGKE2sA.png
+
+[narration]You scan the quest board. <br> Goblin nest? Too annoying. <br>Escort mission? Too boring. <br>"Hunt slimes in my farm." Now that sounds easy enough. <br>The quest's from a local farmer. Apparently, the slimes have been nesting in their orchard again. Maybe you can sneak out some apples and blame it on the slimes. Heh. What do you do next?
+
+[choices] Go straight to the farm | scene2
+Go to the market to buy supplies | scene13
+Go to the library to research | scene24
+
+Dialogue | scene2:
+[narration] You stroll into the farm with a dull blade, bad boots, and a puffling full of confidence. Up ahead, three slimes jiggle ominously around a tree stump. What do you do?
+
+[choices] Rush in swinging | scene3
+Try to intimidate them | scene4
+
+Dialogue | scene3:
+[narration] Why be cautious when you can be fast? You rush in, screaming at the top of your lungs.
+
+[choices | dice | 1 | 20]
+1-1 | scene5
+7-12 | scene6
+13-18 | scene7
+20-20 | scene8
+
+Dialogue | scene4:
+[narration] You puff up your chest and stomp forward, trying to look like the biggest, scariest adventurer those slimes have ever seen.
+
+[choices | dice | 1 | 20]
+1-1 | scene9
+7-12 | scene10
+13-18 | scene11
+20-20 | scene12
+
+Dialogue | scene5 | end:
+[narration] *Critical failure!* <br> You trip over your own sword. Your Puffling takes over while you sit in the mud blinking at the sky… In the chaos, you also manage to destroy three apple trees. The farmer chases you out of the orchard with a cane, yelling about “youths these days"..
+
+Dialogue | scene6 | end:
+[narration] *Failure!* <br> Your Puffling handles everything while you fumble to unsheathe your blade for a solid five minutes. By the time you join the fight, it’s already over. The farmer gives puffling a firm handshake, and you a pitiful look.
+
+Dialogue | scene7 | end:
+[narration] *Mixed Success!* <br> You clear the orchard in one noisy charge. There’s slime in your boots, your sleeves, and somehow in your mouth, but the job is done. The farmer gives you a whole apple!
+
+Dialogue | scene8 | end:
+[narration] *Critical Success!* <br> You look cool, feel cool, and didn’t even get dirty. You even found time to pose dramatically on a tree stump! The farmer keeps casually mentioning he has “a daughter your age” and insists you take a whole basket of apples.
+
+Dialogue | scene9 | end:
+[narration] *Critical failure!* <br> You roar. One slime jiggles slightly. Another jumps onto your face, and you fall back in the mud. Your puffling stands to the side, pretending not to know you. The farmer doesn't even come outside.
+
+Dialogue | scene10 | end:
+[narration] *Failure!* <br> You yell loud and long. The slimes respond by jiggling aggressively and charging you as a group. You spend the next ten minutes fighting the very battle you meant to avoid, only now you're out of breath and covered in grass and slime.
+
+Dialogue | scene11 | end:
+[narration] *Mixed Success!* <br> You manage a solid stomp and a sharp glare. Two slimes ooze off nervously... The other is easy cleanup for your Puffling.
+
+Dialogue | scene12 | end:
+[narration] *Critical Success!* <br> You say nothing. Just stare. One by one, the slimes slowly retreat. Your puffling whispers, “Did you always have this power?”. The farmer rewards you with homemade jam in total silence, eyes wide.
+
+
+Dialogue | scene13:
+[narration] You detour to the market. You’ve got just enough coin for one item. What do you get?
+
+[choices] New weapon for your seeker | scene14
+New *cool* accessory for your puff | scene15
+
+Dialogue | scene14:
+[narration] Being well-armed is the best. You make your way to the farm feeling confident.
+
+[choices | dice | 1 | 20]
+1-1 | scene16
+7-12 | scene17
+13-18 | scene18
+20-20 | scene19
+
+Dialogue | scene15:
+[narration] You could get new gear, but you could also look sleek while hunting. You equip your puff and head to the farm.
+
+[choices | dice | 1 | 20]
+1-1 | scene20
+7-12 | scene21
+13-18 | scene22
+20-20 | scene23
+
+Dialogue | scene16 | end:
+[narration] *Critical failure!* <br> You drop your weapon on your foot during the first swing.
+Your puffling winces and sighs. You spend the rest of the job hobbling and using a tree branch to support yourself as your puff cleans up your mess. The farmer recommends a new career path.
+
+Dialogue | scene17 | end:
+[narration] *Failure!* <br> The new weapon works well… when you hit. Which is not often.
+Puffling carries the fight while you mostly just try not to stab yourself, but still manage to get completely covered in slime. At least the job is done, and the farmer gives you a pat on the back.
+
+Dialogue | scene18 | end:
+[narration] *Mixed Success!* <br> Your strikes land true, though a few slimes slip past before your puffling finishes them off. The field ends up mostly clear, just a few globs left clinging to the grass, trees, and you. The farmer wipes his brow, impressed enough to hand you an orange in gratitude.
+
+Dialogue | scene19 | end:
+[narration] *Critical Success!* <br> You finish with a perfect spin-cut, your blade slicing clean through the last slime in a shimmer of green and gold. Your puffling slow claps, and the farmer lets out a low whistle and mutters, “Elegant.” They disappear into their cottage for a moment, then return with a basket full of oranges, pressing them into your hands with a grin.
+
+Dialogue | scene20 | end:
+[narration] *Critical failure!* <br> You strap the new bow on upside down. Your puffling immediately trips and faceplants. The farmer comments on the ribbon, saying something about those being so last year. Your puffling refuses to fight. You do the job alone while both of them watch in silent judgment.
+
+Dialogue | scene21 | end:
+[narration] *Failure!* <br> You get your puffling some fake tattoos. Your puffling starts whispering about a cursed arm, muttering, “Forgive me, but I must unleash it… just this once.” Then proceeds to run dramatically into a slime pile while screaming. You’re not sure if it's acting or not. The farmer claps anyway. The slimes mostly ignore your puff, and you silently hunt them.
+
+Dialogue | scene22 | end:
+[narration] *Mixed Success!* <br> Slimes go down fast. Your puffling zips and spins like a stylish whirlwind of destruction, wearing their new sunglasses, completely disregarding you getting covered in slime. By the end, they lean against a tree and eat an apple dramatically, staring into the sunset.
+
+Dialogue | scene23 | end:
+[narration] *Critical Success!* <br> You get your puffling a new cape. An artist walking past stops to sketch puffling mid-fight. The drawing ends up framed in the farmer's house, labeled “The Whirl.”
+The puffling adopts the title on the spot and gives the farmer an autograph. The farmer smiles and sighs and fans themself with their hat.
+
+Dialogue | scene24:
+[narration] You decide to do the unthinkable: research in the local library. You flip through a bestiary so old the ink’s faded. Still, you learn to differentiate slimes by color. Choose how you’ll apply your slime wisdom.
+
+[choices] Go after the safest slimes | scene25
+Go after the most dangerous slimes | scene26
+
+Dialogue | scene25:
+[narration] Battle prowess is nothing without strategy. You decide to focus on the easier slimes, guaranteeing your safety.
+
+[choices | dice | 1 | 20]
+1-1 | scene27
+7-12 | scene28
+13-18 | scene29
+20-20 | scene30
+
+Dialogue | scene26:
+[narration] Armed with knowledge, you’re sure that you can defeat any challenge that comes your way.
+
+[choices | dice | 1 | 20]
+1-1 | scene31
+7-12 | scene32
+13-18 | scene33
+20-20 | scene34
+
+Dialogue | scene27 | end:
+[narration] *Critical failure!* <br> You carefully avoid every blue, green, and yellow slime and focus only on the grays and browns… Except that one wasn’t brown, it was just dirty!  Turns out it was pink. It sticks to your leg and explodes, ruining your clothes. 
+
+Dialogue | scene28 | end:
+[narration] *Failure!* <br> You avoid the dangerous slimes so thoroughly that you spend eight hours chasing down the safest ones. Your puffling falls asleep halfway through.  The farmer’s already gone home, leaving the payment under a rock.
+
+Dialogue | scene29 | end:
+[narration] *Mixed Success!* <br> You stick to greys and browns: slow, boring, but manageable.
+No injuries and no surprises. The farmer offers a nod and a jar of pickles. You get home in time for dinner.
+
+Dialogue | scene30 | end:
+[narration] *Critical Success!* <br> Your restraint is so precise, so smooth, so efficient that the farmer thinks you’re some kind of slime scholar. He gives you extra apples, and your puffling starts wearing a tiny pair of reading glasses and insisting you call them “Professor.”
+
+
+Dialogue | scene31 | end:
+[narration] *Critical failure!* <br> You charge toward the biggest blue slime you can find. It explodes. You fall into a nearby green slime, which splits, and those halves explode too. The blast sends you flying face-first into what you thought was a rock, but it's a pink slime. It also explodes. The farmer chases you out of the orchard, throwing leftover slimes at your head.
+
+Dialogue | scene32 | end:
+[narration] *Failure!* <br> You try to chain some explosions together, but mistime it. A blue one knocks you into a yellow one, leaving you all sticky and unable to move. Then a pink one sneaks up and explodes, clearing the remaining slimes. The job is done, but so is your gear. The farmer laughs at your new hairdo.
+
+Dialogue | scene33 | end:
+[narration] *Mixed Success!* <br> You manage the blue and green ones with decent timing, dodging expertly. Mid-fight, a pink slime appears. You freeze. Puffling freezes. It watches silently... then waddles away. You finish the job in fear.
+
+Dialogue | scene34 | end:
+[narration] *Critical Success!* <br> You set up a perfect sequence: blue explodes into green, which splits into yellow, which ricochets into a tree and squishes a pink slime that you didn't even know was there. You pause and nod as if that was all part of the plan. The farmer looks at you like you're some kind of war god and offers to name an apple variety after you.
+
+
+Quest:
+Quest: Test
+<p><strong>Objective:</strong> Defeat the slimes!</p>
+<p><strong>Details:</strong> Draw or write about your seeker and your puffling going on your quest. You can show any related moment, such as during the preparation, the fight itself, or the post-quest scene. You can also come up with different scenes or outcomes not in the story above, as long as they relate to the objective.</p>
+<br>
+<p><strong>Requirements:</strong> <ul><li><strong>Art:</strong> The art must include a puffling and a simple background related to the objective at minimum.</li><li><strong>Writing:</strong> Minimum of 500 words.</li></ul></p>
+<br>
+<p><strong>Rewards (first time only):</strong></p>
+<ul>
+  <li>10 <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></li>
+  <li>Bonus <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"> according to the <a href="https://toyhou.se/~world/176769.puff-dragon/page/162856.art-rpg-and-how-to-play">quality of your art.</a></li>
+</ul>
+
+<div class="text-center mt-4">
+    <a href="https://discord.com/channels/1227190888867037204/1390985818302054475/1390985818302054475"><button class="btn btn-outline-secondary btn-sm">Accept quest!</button></a>
+</div>
+
