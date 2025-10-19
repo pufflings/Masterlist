@@ -1,4 +1,4 @@
-File name: slimeHunt
+File name: SlimeHunt
 Chapter title: Slime Hunt
 Scene: Guild Center / Outside
 Type: dice

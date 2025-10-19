@@ -9,6 +9,15 @@ import { charadex } from '../charadex.js';
 ======================================================================= */
 document.addEventListener("DOMContentLoaded", async () => {
 
+  const designTypeFilters = (() => {
+    const body = document.body || {};
+    const raw = body.dataset ? body.dataset.designTypeFilter || '' : '';
+    return raw
+      .split(',')
+      .map(type => charadex.tools.scrub(type.trim()))
+      .filter(Boolean);
+  })();
+
   // Load options from sheet first
   await charadex.loadOptions();
 
@@ -17,6 +26,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     charadex.page.masterlist,
     // Data callback to process traits
     (data) => {
+      if (designTypeFilters.length) {
+        for (let i = data.length - 1; i >= 0; i--) {
+          const entry = data[i];
+          const entryDesignType = entry.Type || entry.type || entry['Design Type'] || entry.designType || entry.designtype || '';
+          const entryTypeKey = charadex.tools.scrub(entryDesignType);
+          if (!designTypeFilters.includes(entryTypeKey)) {
+            data.splice(i, 1);
+          }
+        }
+      }
+
       // Process traits for each masterlist entry
       for (let entry of data) {
         // Use the correct field name based on the sheet page name
