@@ -9,6 +9,10 @@ class StoryHTMLGenerator:
         self.file_name = ""
         self.chapter_title = ""
         self.scene = ""
+        self.story_type = 'simple'
+        # Track dice dialogue section names
+        self.dice_start_sections = set()
+        self.dice_end_sections = set()
         self.characters = {}
         self.dialogue = []
         self.quest_data = {}
@@ -34,7 +38,9 @@ class StoryHTMLGenerator:
 
             # Top-level keys
             if s.startswith('File name:'):
-                self.file_name = s[len('File name:'):].strip()
+                raw_name = s[len('File name:'):].strip()
+                # Ensure the output name ends with .html
+                self.file_name = self._ensure_html_extension(raw_name)
                 section = None
                 continue
             if s.startswith('Chapter title:'):
@@ -45,12 +51,32 @@ class StoryHTMLGenerator:
                 self.scene = s[len('Scene:'):].strip()
                 section = None
                 continue
+            if s.startswith('Type:'):
+                parsed_type = s[len('Type:'):].strip().lower()
+                if parsed_type in ('simple', 'dice'):
+                    self.story_type = parsed_type
+                else:
+                    self.story_type = 'simple'
+                section = None
+                continue
 
             # Section headers
             if s == 'Characters:':
                 section = 'characters'; continue
             if s == 'Dialogue:':
                 section = 'dialogue'; continue
+            # Dice-style dialogue section header: Dialogue | sectionName | start/end (last part optional)
+            if s.lower().startswith('dialogue') and '|' in s:
+                parts = [p.strip() for p in s.split('|')]
+                if parts and parts[0].lower().rstrip(':') == 'dialogue':
+                    section_name = parts[1].rstrip(':') if len(parts) > 1 else ''
+                    phase = parts[2].lower().rstrip(':') if len(parts) > 2 else ''
+                    if section_name:
+                        if phase == 'start':
+                            self.dice_start_sections.add(section_name)
+                        elif phase == 'end':
+                            self.dice_end_sections.add(section_name)
+                    section = 'dialogue'; continue
             if s == 'Quest:':
                 section = 'quest'; continue
             if s == 'Trivia:':
@@ -70,6 +96,19 @@ class StoryHTMLGenerator:
         self._parse_dialogue('\n'.join(dialogue_lines))
         self._parse_quest(quest_lines)
         self._parse_trivia(trivia_lines)
+
+    def _ensure_html_extension(self, name):
+        name = (name or '').strip()
+        if not name:
+            return name
+        p = Path(name)
+        try:
+            if p.suffix.lower() != '.html':
+                p = p.with_suffix('.html')
+            return str(p)
+        except Exception:
+            # Fallback if Path.with_suffix fails for unusual names
+            return name if name.lower().endswith('.html') else name + '.html'
 
     def _parse_characters(self, lines):
         for line in lines:
@@ -203,10 +242,35 @@ class StoryHTMLGenerator:
 
         # Dialogue HTML
         dialogue_html = ''
-        for entry in self.dialogue:
-            html = self._generate_dialogue_html(entry)
-            if html:
-                dialogue_html += html + '\n\n'
+        if self.story_type == 'simple':
+            for entry in self.dialogue:
+                html = self._generate_dialogue_html(entry)
+                if html:
+                    dialogue_html += html + '\n\n'
+        else:
+            # For 'dice' type, keep dialogue-stage empty for now
+            dialogue_html = ''
+
+        # Extra scripts (e.g., for dice/CYOA behavior)
+        extra_scripts = ''
+        if self.story_type == 'dice':
+            extra_scripts = '\n  <script src="styles/js/cyoa-story.js"></script>'
+
+        # Extra styles (only for dice/CYOA pages)
+        extra_head_links = ''
+        if self.story_type == 'dice':
+            extra_head_links = '\n  <link rel="stylesheet" type="text/css" href="styles/css/cyoa-story.css">'
+
+        # Prepare dialogue container attributes/inner content
+        dialogue_data_attrs = ''
+        dialogue_inner = dialogue_html
+        if self.story_type == 'dice':
+            story_json_name = Path(self.input_file).stem + '.json'
+            story_json_path = f"Story HTML Generator/CYOA/{story_json_name}"
+            start_names = ', '.join(sorted(self.dice_start_sections))
+            end_names = ', '.join(sorted(self.dice_end_sections))
+            dialogue_data_attrs = f'data-story-file="{story_json_path}" data-start-scene="{start_names}" data-end-sections="{end_names}"'
+            dialogue_inner = '            <!-- Dynamic content will be generated here -->\n'
 
         # Characters showcase: only those with full-body, link image and name if profile present
         character_showcase = ""
@@ -322,6 +386,7 @@ class StoryHTMLGenerator:
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" type="text/css" href="styles/css/charadex.css">
+  {extra_head_links}
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400|Comfortaa:500" rel="stylesheet">
 </head>
 <body id="charadex-body">
@@ -341,8 +406,8 @@ class StoryHTMLGenerator:
           </div>
 
           <!-- Dialogue Container -->
-          <div id="dialogue-stage" style="position: relative;">
-{dialogue_html}
+          <div id="dialogue-stage" {dialogue_data_attrs} style="position: relative;">
+{dialogue_inner}
           </div> <!-- End of dialogue-stage -->
       
       <!-- End of Chapter Character Box -->
@@ -392,6 +457,7 @@ class StoryHTMLGenerator:
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
   <script src="styles/js/pages/base.js" type="module"></script>
+  {extra_scripts}
   <script src="styles/js/pages/prompt.js"></script>
 
 </body>
@@ -410,10 +476,24 @@ def main():
     # Use declared output filename if provided in TXT, else default
     output_file = generator.file_name if generator.file_name else "output.html"
 
+    # Save output to parent directory of this script (../) when a relative name is provided
     out_path = Path(output_file)
+    if not out_path.is_absolute():
+        base_dir = Path(__file__).resolve().parent.parent
+        out_path = (base_dir / out_path)
+
+    # If file exists, prompt for confirmation before overwriting
     if out_path.exists():
-        stem = out_path.stem + ".generated"
-        out_path = out_path.with_name(stem + out_path.suffix)
+        try:
+            resp = input(f"File '{out_path}' exists. Overwrite? [y/N]: ").strip().lower()
+        except EOFError:
+            resp = ''
+        if resp not in ('y', 'yes'):
+            print("Aborted: existing file not overwritten.")
+            sys.exit(0)
+
+    # Ensure parent directory exists
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(html)

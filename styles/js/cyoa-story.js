@@ -1,16 +1,44 @@
-// CYOA Story Engine
+// Generic CYOA Story Engine
 class CYOAStory {
     constructor() {
-        this.currentScene = 'scene1';
-        this.storyData = null;
-        this.choiceHistory = [];
+        // Cache important elements first (needed by getStoryConfig)
         this.dialogueStage = document.getElementById('dialogue-stage');
         this.skipButton = document.getElementById('skip-button');
+
+        // Debug: log dialogue-stage presence and dataset
+        console.log('CYOAStory:init dialogue-stage exists?', !!this.dialogueStage);
+        if (!this.dialogueStage) {
+            console.warn('CYOAStory:init dialogue-stage element not found');
+        }
+
+        // Get story configuration from HTML data attributes
+        this.storyConfig = this.getStoryConfig();
+
+        this.currentScene = this.storyConfig?.startScene;
+        this.storyData = null;
+        this.choiceHistory = [];
         this.currentDialogueIndex = 0;
         this.currentSceneDialogueIndex = 0;
         this.isRevealing = false;
+        this.suppressScroll = false; // disable auto-scrolls after skipping
+        this.skipActivated = false;  // prevent further click-to-reveal after skipping
         
         this.init();
+    }
+
+    getStoryConfig() {
+        // Get configuration from the dialogue-stage element or fall back to defaults
+        const el = this.dialogueStage;
+        if (!el) {
+            console.warn('CYOAStory:getStoryConfig no dialogue-stage element');
+            return { storyFile: undefined, startScene: undefined, endSections: undefined };
+        }
+        const cfg = {
+            storyFile: el.dataset.storyFile,
+            startScene: el.dataset.startScene,
+            endSections: el.dataset.endSections + ',end-of-prologue,quest-section'
+        };
+        return cfg;
     }
 
     async init() {
@@ -26,22 +54,47 @@ class CYOAStory {
 
     async loadStoryData() {
         try {
-            // Load story data from external JSON file
-            const response = await fetch('Story HTML Generator/CYOA/cyoa-story-data.json');
+            // Load story data from the configured JSON file
+            const response = await fetch(this.storyConfig.storyFile);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             this.storyData = await response.json();
         } catch (error) {
             console.error('Error loading story data:', error);
+            // Show error message to user
+            this.showErrorMessage();
+        }
+    }
+
+    showErrorMessage() {
+        if (this.dialogueStage) {
+            this.dialogueStage.innerHTML = `
+                <div class="alert alert-danger">
+                    <h5>Error Loading Story</h5>
+                    <p>Unable to load story data from: ${this.storyConfig.storyFile}</p>
+                    <p>Please check that the file exists and is accessible.</p>
+                </div>
+            `;
         }
     }
 
     setupEventListeners() {
         // Skip button functionality
         if (this.skipButton) {
-            this.skipButton.addEventListener('click', () => {
+            this.skipButton.addEventListener('click', (e) => {
+                // Stop this click from triggering any other listeners
+                if (e) { e.preventDefault?.(); e.stopPropagation?.(); }
+
+                // Lock further auto-reveals and page auto-scrolls
+                this.skipActivated = true;
+                this.suppressScroll = true;
+
+                // Reveal quest/end sections and disable any remaining choices
                 this.showQuestSection();
+                if (this.dialogueStage) {
+                    this.disableAllChoices(this.dialogueStage);
+                }
             });
         }
 
@@ -56,8 +109,8 @@ class CYOAStory {
                 return;
             }
 
-            // Don't trigger if we're in the middle of revealing content
-            if (this.isRevealing) {
+            // Don't trigger if we're in the middle of revealing content or skip is active
+            if (this.isRevealing || this.skipActivated) {
                 return;
             }
 
@@ -73,7 +126,7 @@ class CYOAStory {
         }
 
         // Create a scene separator if this isn't the first scene
-        if (this.currentScene !== 'scene1') {
+        if (this.currentScene !== this.storyConfig.startScene) {
             const separator = document.createElement('hr');
             separator.className = 'scene-separator';
             separator.setAttribute('data-scene', sceneId);
@@ -114,15 +167,11 @@ class CYOAStory {
             }
         });
 
-
-
         // Scroll to the new content
         const lastElement = this.dialogueStage.lastElementChild;
-        if (lastElement) {
+        if (lastElement && !this.suppressScroll) {
             lastElement.scrollIntoView({ behavior: 'smooth' });
         }
-        
-
     }
 
     showNextDialogue() {
@@ -138,7 +187,6 @@ class CYOAStory {
             this.currentSceneDialogueIndex++;
             
             // Find the next dialogue element by looking at the current scene's elements
-            // Use data-scene attribute to identify elements belonging to the current scene
             const allElements = Array.from(this.dialogueStage.children);
             const currentSceneElements = allElements.filter(child => 
                 child.getAttribute('data-scene') === this.currentScene
@@ -157,14 +205,18 @@ class CYOAStory {
                 nextContainer.classList.add('dialogue-visible');
                 
                 // Scroll to center the new dialogue
-                setTimeout(() => {
-                    nextContainer.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center',
-                        inline: 'nearest'
-                    });
+                if (!this.suppressScroll) {
+                    setTimeout(() => {
+                        nextContainer.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center',
+                            inline: 'nearest'
+                        });
+                        this.isRevealing = false;
+                    }, 100);
+                } else {
                     this.isRevealing = false;
-                }, 100);
+                }
             } else {
                 this.isRevealing = false;
             }
@@ -172,8 +224,6 @@ class CYOAStory {
             // We're at the last dialogue, show choices if they exist
             const lastEntry = scene.dialogue[scene.dialogue.length - 1];
             if (lastEntry.choices) {
-                // Find the choices element by looking for the element with choices-element class
-                // Only look in the current scene's elements
                 const allElements = Array.from(this.dialogueStage.children);
                 const currentSceneElements = allElements.filter(child => 
                     child.getAttribute('data-scene') === this.currentScene
@@ -187,19 +237,20 @@ class CYOAStory {
                     choicesElement.classList.remove('dialogue-hidden');
                     choicesElement.classList.add('dialogue-visible');
                     
-
-                    
-                    setTimeout(() => {
-                        choicesElement.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'center',
-                            inline: 'nearest'
-                        });
+                    if (!this.suppressScroll) {
+                        setTimeout(() => {
+                            choicesElement.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center',
+                                inline: 'nearest'
+                            });
+                            this.isRevealing = false;
+                        }, 100);
+                    } else {
                         this.isRevealing = false;
-                    }, 100);
+                    }
                 }
             } else if (lastEntry['dice-choices']) {
-                // Find the dice choices element
                 const allElements = Array.from(this.dialogueStage.children);
                 const currentSceneElements = allElements.filter(child => 
                     child.getAttribute('data-scene') === this.currentScene
@@ -213,14 +264,18 @@ class CYOAStory {
                     diceChoicesElement.classList.remove('dialogue-hidden');
                     diceChoicesElement.classList.add('dialogue-visible');
                     
-                    setTimeout(() => {
-                        diceChoicesElement.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'center',
-                            inline: 'nearest'
-                        });
+                    if (!this.suppressScroll) {
+                        setTimeout(() => {
+                            diceChoicesElement.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center',
+                                inline: 'nearest'
+                            });
+                            this.isRevealing = false;
+                        }, 100);
+                    } else {
                         this.isRevealing = false;
-                    }, 100);
+                    }
                 }
             } else {
                 // No choices or dice choices, check if this is a final scene
@@ -233,8 +288,6 @@ class CYOAStory {
             this.isRevealing = false;
         }
     }
-
-
 
     createDialogueElement(entry) {
         const container = document.createElement('div');
@@ -365,7 +418,47 @@ class CYOAStory {
         });
         
         container.appendChild(rollButton);
-        
+
+        // Add a button to let the user choose the outcome manually
+        const chooseButton = document.createElement('button');
+        chooseButton.className = 'btn m-2 choose-outcome-button';
+        chooseButton.textContent = '😢 Choose outcome';
+
+        // Container for manual outcome options (hidden by default)
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'outcome-options';
+        optionsContainer.style.display = 'none';
+
+        // Toggle the options list when clicking the button
+        chooseButton.addEventListener('click', () => {
+            optionsContainer.style.display = optionsContainer.style.display === 'none' ? 'flex' : 'none';
+        });
+
+        // Build option buttons for each dice range
+        diceChoices.choices.forEach(choice => {
+            const label = `${choice['dice-min']}-${choice['dice-max']}` + (choice.text ? `: ${choice.text}` : '');
+            const optionButton = document.createElement('button');
+            optionButton.className = 'btn m-2 outcome-option-button';
+            optionButton.textContent = label;
+
+            optionButton.addEventListener('click', () => {
+                // Disable all controls once an option is selected
+                this.disableAllChoices(container);
+                // Visual feedback
+                optionButton.classList.add('selected');
+                optionButton.classList.add('btn-success');
+                // Proceed to the selected next scene
+                setTimeout(() => {
+                    this.makeChoice(choice.next);
+                }, 500);
+            });
+
+            optionsContainer.appendChild(optionButton);
+        });
+
+        container.appendChild(chooseButton);
+        container.appendChild(optionsContainer);
+
         return container;
     }
 
@@ -414,13 +507,29 @@ class CYOAStory {
         // Show all dialogues at once
         this.showAllContent();
         
-        // Show both the character showcase and quest section
+        // Show configured end sections
         this.showEndSections();
         
-        // Scroll to quest section
-        const questSection = document.getElementById('quest-section');
-        if (questSection) {
-            questSection.scrollIntoView({ behavior: 'smooth' });
+        // Prefer to scroll to the quest section; fall back to first available end section
+        const endSectionIds = (this.storyConfig.endSections || '')
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean);
+
+        let target = document.getElementById('quest-section');
+        if (!target) {
+            for (const id of endSectionIds) {
+                const el = document.getElementById(id);
+                if (el) { target = el; break; }
+            }
+        }
+
+        if (target) {
+            // Scroll immediately, then again shortly after to override any competing scrolls
+            target.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            setTimeout(() => {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            }, 200);
         }
     }
     
@@ -440,22 +549,17 @@ class CYOAStory {
         
         // Reset dialogue index to show all content
         this.currentSceneDialogueIndex = scene ? scene.dialogue.length - 1 : 0;
-        
-
     }
 
     showEndSections() {
-        // Show the character showcase
-        const characterSection = document.getElementById('end-of-prologue');
-        if (characterSection) {
-            characterSection.style.display = 'block';
-        }
-        
-        // Show the quest section
-        const questSection = document.getElementById('quest-section');
-        if (questSection) {
-            questSection.style.display = 'block';
-        }
+        // Show configured end sections
+        const endSectionIds = this.storyConfig.endSections.split(',');
+        endSectionIds.forEach(id => {
+            const section = document.getElementById(id.trim());
+            if (section) {
+                section.style.display = 'block';
+            }
+        });
     }
 
     // Get choice history for debugging or saving
@@ -465,7 +569,7 @@ class CYOAStory {
 
     // Reset story to beginning
     resetStory() {
-        this.currentScene = 'scene1';
+        this.currentScene = this.storyConfig.startScene;
         this.choiceHistory = [];
         this.displayScene(this.currentScene);
     }
@@ -475,5 +579,3 @@ class CYOAStory {
 document.addEventListener('DOMContentLoaded', () => {
     new CYOAStory();
 });
-
-

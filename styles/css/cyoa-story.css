@@ -124,3 +124,66 @@
 .character-portrait.hidden {
     display: none;
 }
+
+/* Choose Outcome Button - Speech bubble colors */
+.choose-outcome-button {
+    min-width: 250px;
+    font-size: 1.05rem;
+    padding: 0.6rem 1.25rem;
+    background-color: #F5E0C9; /* matches .speech-bubble */
+    border: 2px solid #C8A88C; /* darker outline */
+    color: #6B4E3F; /* darker text */
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    opacity: 0.25; /* slightly faded to indicate auxiliary option */
+}
+
+.choose-outcome-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    filter: brightness(0.98);
+    opacity: 0.9; /* a bit clearer on hover */
+}
+
+.choose-outcome-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* Manual outcome options */
+.outcome-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.outcome-option-button {
+    min-width: 180px;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    background-color: #F5E0C9; /* matches .speech-bubble */
+    border: 2px solid #C8A88C; /* darker outline */
+    color: #6B4E3F; /* darker text */
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    opacity: 0.85; /* slightly faded default */
+}
+
+.outcome-option-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+    filter: brightness(0.98);
+    opacity: 0.95;
+}
+
+.outcome-option-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.outcome-option-button.selected {
+    opacity: 0.85;
+}
