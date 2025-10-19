@@ -1,0 +1,203 @@
+{
+  "scenes": [
+    {
+      "scene": "scene1",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": " A newcomer stares up at the intimidating guild building, clutching their belongings, unsure whether to step inside. They take a deep breath and take a step towards it-<br><i>Ring-ding~!</i><br>A bell jingles behind them, and a voice calls out from across the street."
+        },
+        {
+          "name": "???",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "hidden": true,
+            "class": "dialogue-container"
+          },
+          "text": "Well, well, well~ Look who decided to show up! Ready for your first adventure, rookie?... dressed like <i>that?</i>"
+        },
+                {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<img src='https://img-l.ink/img/16xZoJO_EL0eZyFI95oZZd7cYXznK1gp4.png'>"
+        },
+        {
+          "name": "You",
+          "portrait": "https://img-l.ink/img/1IBEQIE22KVfU1zZ-jolJW5VHwbKbaaxg.png",
+          "modifiers": {
+            "class": "dialogue-container-right"
+          },
+          "text": "I think so... I'm a bit nervous though."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Poki gives you an encouraging smile and leans forward on the counter.",
+          "choices": [
+            {
+              "text": "Tell me about the quest",
+              "next": "scene2"
+            },
+            {
+              "text": "Lets gamble!",
+              "next": "scene3"
+            },
+            {
+              "text": "Can I meet your Puff partner?",
+              "next": "scene4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene2",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Ah, straight to business! I like that~ The quest is simple: you need to find a lost Puffling in the Whispering Woods.",
+          "choices": [
+            {
+              "text": "Lets gamble!",
+              "next": "scene3"
+            },
+            {
+              "text": "Can I meet your Puff partner?",
+              "next": "scene4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene3",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Time to gamble!~"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "She opens a cabinet behind the counter, revealing various supplies and equipment.",
+          "dice-choices": { 
+            "dice-min": 1,
+            "dice-max": 18,
+            "choices": [
+              { 
+                "dice-min": 1,
+                "dice-max": 6,
+                "next": "scene8"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene9"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene17"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene4",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Of course! Momo, come say hello to our new friend~"
+        },
+        {
+          "name": "Momo",
+          "portrait": "https://img-l.ink/img/18mDK0Hw_VU2Etn2x1qx1rCJFY_G8kM4s.png",
+          "modifiers": {
+            "class": "dialogue-container-right"
+          },
+          "text": "Fwooo~!"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "A small, fluffy Puffling with a cat-like face stretches and gives you a friendly wave."
+        }
+      ],
+        "final": true
+    },
+    {
+      "scene": "scene8",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Bad roll!~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "Better luck next time!~"
+        }
+      ],
+      "final": true
+    },
+        {
+      "scene": "scene9",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "medium roll!~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "Better luck next time!~"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene17",
+      "dialogue": [
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/1Q3qjsS9uIf08-D758jjrUQG1CK3SczJp.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "high roll!~"
+        },
+        {
+          "class": "dialogue-simple",
+          "text": "You've successfully completed the prologue and are ready to begin your first quest as a Puffling adventurer!"
+        }
+      ],
+      "final": true
+    }
+  ]
+}

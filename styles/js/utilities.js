@@ -431,7 +431,7 @@ charadex.importSheet = async (sheetPage, sheetId = charadex.sheet.id) => {
 
   // Check cache first
   const cacheKey = `charadex_${sheetId}_${sheetPage}`;
-  const cacheExpiry = 30 * 60 * 1000; // 30 minutes cache
+  const cacheExpiry = 5 * 60 * 1000; // 5 minutes cache
   
   try {
     const cached = localStorage.getItem(cacheKey);
