@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <!-- ----------------------------------------------------------------- -->
+  <!-- About Your Site                                                   -->
+  <!-- ----------------------------------------------------------------- -->
+  <link rel="shortcut icon" type="image/png" href="assets/favicon.png" />
+  <title>MYO Slot Masterlist</title>
+  <meta name="title" content="Pufflings MYO Slot Masterlist" />
+  <meta name="type" content="website" />
+  <meta name="url" content="https://pufflings.github.io/Masterlist/masterlist-myo-slot.html" />
+  <meta name="image" content="assets/meta.png" />
+  <meta name="description" content="Welcome to the Puffling ARPG! Pufflings are a mysterious, fluffy creature, believed to be a descendants of legendary dragons.">
+
+  <!-- No AI scraping directives -->
+  <meta name="robots" content="noai">
+  <meta name="robots" content="noimageai">
+
+
+  <!-- ----------------------------------------------------------------- -->
+  <!-- Styles                                                            -->
+  <!-- ----------------------------------------------------------------- -->
+
+  <!-- Bootstrap CSS -->
+  <!-- Using Bootstrap 4.5 because its closest to Toyhou.se's current version -->
+  <!-- https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  
+  <!-- Multiselect CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+
+  <!-- ----------------------------------------------------------------- -->
+  <!-- Optional Styles                                                   -->
+  <!-- ----------------------------------------------------------------- -->
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="styles/css/charadex.css">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400|Comfortaa:500" rel="stylesheet">
+
+
+</head>
+
+<body id="charadex-body" data-design-type-filter="MYO Slot">
+
+
+  <!-- --------------------------------------------------------------------
+  <-- Header
+  <-------------------------------------------------------------------- -->
+  <div class="load-html" id="header" data-source="includes/header.html"></div>
+
+
+  <!-- --------------------------------------------------------------------
+  <-- Main List
+  <-------------------------------------------------------------------- -->
+  <div class="container" id="main-container">
+    <div id="charadex-gallery">
+
+      <!-- Top Card Container
+      <!-- ----------------------------------------------------------------- -->
+      <div class="card p-md-5 p-4 mb-4">
+
+        <!-- Title
+        <!-- --------------------------------------------------------------- -->
+        <h3 class="mb-0"><a href="masterlist-myo-slot.html">MYO Slot Masterlist</a></h3>
+
+        <!-- Faux Folders
+        <!-- --------------------------------------------------------------- -->
+        <div style="display:none;" id="charadex-folder-container">
+          <hr>
+          <div class="row no-gutters m-n1" id="charadex-folders"></div>
+          <!-- Buttons -->
+          <div style="display:none;">
+            <div class="col-lg-3 col-md-4 col-sm-6 p-1" id="charadex-folder">
+              <a class="btn btn-primary d-block" href=""></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters
+        <!-- --------------------------------------------------------------- -->
+        <div style="display:none;" id="charadex-filter-container">
+          <hr>
+          <div class="row no-gutters m-n1" id="charadex-filters"></div>
+          <!-- Filters -->
+          <div style="display: none;">
+            <div class="col-md-4 col-12 p-1" id="charadex-filter">
+              <label class="px-2"></label>
+              <select class="form-control" multiple></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search
+        <!-- --------------------------------------------------------------- -->
+        <div style="display:none;" id="charadex-search-container">
+          <hr>
+          <div class="row no-gutters m-n1">
+            <!-- Search Filter -->
+            <div class="col-md-4 col-6 p-1" style="display: none;">
+              <select class="form-control" id="charadex-search-filter"></select>
+            </div>
+            <!-- Search Bar -->
+            <div class="col d-flex p-1">
+              <input class="form-control search" type="search" placeholder="Search" id="charadex-search">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Gallery Thumbnails
+      <!-- ----------------------------------------------------------------- -->
+      <div class="row no-gutters charadex-gallery" id="charadex-list-gallery">
+
+        <!-- Gallery Item
+        <!-- ----------------------------------------------------------------- -->
+        <div class="col-md-3 col-sm-6 p-1" id="charadex-list-gallery-item">
+          <div class="card text-left softload">
+            <img class="image card-img-top" />
+            <div class="card-body">
+              <div class="row no-gutters mb-4">
+
+                <!-- Name
+                <!-- ----------------------------------------------------------- -->
+                <div class="col-9">
+                  <h5 class="text-primary mb-1">
+                    <a class="profilelink"></a>
+                  </h5>
+                  <ul class="list-unstyled">
+                    <li class="cdn"><small>Design Type: <span class="designtype"></span></small></li>
+                    <li class="ownerline"><small>Owner: <a class="ownerlink"></a></small></li>
+                    <li class="statusline"><small>Status: <span class="status"></span></small></li>
+                    <li class="seeker-row" style="display: none;"><small>Seeker: <a class="seekerlink"></a></small></li>
+                  </ul>
+                </div>
+
+                <!-- Badge
+                <!-- ----------------------------------------------------------- -->
+                <div class="col-3 text-right">
+                  <span class="charadex-badge text-uppercase raritybadge"></span>
+                </div>
+              </div>
+
+              <!-- Traits
+              <!-- ------------------------------------------------------------- -->
+              <div class="row no-gutters">
+                <div class="col-12 traitline">
+                  <small class="text-muted">Traits:</small>
+                  <div class="traits cd-text-pre"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery Pagination
+      <!-- ----------------------------------------------------------------- -->
+      <div style="display: none;">
+        <nav aria-label="..." id="charadex-pagination-nav">
+          <ul class="pagination pagination-sm charadex-pagination"></ul>
+        </nav>
+      </div>
+
+      <!-- Profile
+      <!-- ----------------------------------------------------------------- -->
+      <div id="charadex-profile">
+        <div class="card p-md-5 p-4 softload">
+
+          <div class="row">
+
+            <!-- Profile Picture
+            <!-- ----------------------------------------------------------- -->
+            <div class="col-md-6 pr-md-5 pr-0 mb-md-0 mb-4">
+              <div class="cd-profile-image-container">
+                <img class="image img-fluid">
+              </div>
+            </div>
+
+
+            <!-- Profile Information
+            <!-- ----------------------------------------------------------- -->
+            <div class="col-md-6 pl-md-5 pl-0">
+
+              <!-- Top Bar -->
+              <div class="row mb-4">
+                <div class="col-md-7 col-sm-12">
+                  <h3 class="text-primary mb-0 profiletitle"></h3>
+                  <div class="mb-2 cdn">Design Type: <span class="designtype"></span></div>
+                  <div class="mb-2 ownerline">Owner: <a class="ownerlink"></a></div>
+                  <div class="mb-2 statusline">Status: <span class="status"></span></div>
+                  <div class="mb-2 seeker-row" style="display: none;">Seeker: <a class="seekerlink"></a></div>
+                </div>
+                <div class="col-md-5 col-sm-12 text-md-right text-left">
+                  <div class="badge badge-pill badge-primary text-uppercase raritybadge"></div>
+                </div>
+              </div>
+
+              <!-- Profile Body -->
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <small>Creation Log</small>
+                  <div class="creation upgrades cd-text-pre"></div>
+                </div>
+                <div class="col-12 mb-2 ownerline">
+                  <small>Owner Log</small>
+                  <div class="owner history cd-text-pre"></div>
+                </div>
+                <div class="col-12">
+                  <small>Traits</small>
+                  <div class="traits cd-text-pre"></div>
+                </div>
+              </div>
+
+              <!-- Relationship Gauge -->
+              <div class="relationship-row" style="display: none;">
+                <div class="relationship-container">
+                  <div class="relationship-header">
+                    <span>Relationship Gauge</span>
+                  </div>
+                  <div class="gauge-container">
+                    <div class="gauge-background">
+                      <div class="gauge-fill" style="width: 0%"></div>
+                      <span class="gauge-text">0 / 50</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="heart-container">
+                  <img class="heart-icon" src="https://img-l.ink/img/1TaODk3Jf_y1ocsNfTzUWOFrURFaXJVJi.png" alt="Heart">
+                </div>
+              </div>
+
+              <hr>
+
+              <!-- Item -->
+              <div class="d-flex no-gutters mb-2">
+                <b class="text-muted col-md-5 col-6">Value</b>
+                <span>$<span class="value"></span></span>
+              </div>
+
+              <!-- Item -->
+              <div class="d-flex no-gutters mb-2">
+                <b class="text-muted col-md-5 col-6">Status</b>
+                <span class="status"></span>
+              </div>
+
+              <hr>
+              
+              <!-- Item -->
+              <div>
+                <b class="text-muted">Notes</b>
+                <div class="px-4 cd-text-pre notes"></div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- ----------------------------------------------------------------- -->
+  <!-- JS                                                                -->
+  <!-- ----------------------------------------------------------------- -->
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  
+  <!-- Bootstrap Multiselect -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+  <!-- Charadex Script -->
+  <script src="styles/js/pages/masterlist.js" type="module"></script>
+  <script src="styles/js/pages/base.js" type="module"></script>
+
+  <script>
+// Show seeker row if seeker is present
+$(document).on('cd-profile-loaded', function(e, data) {
+  var seeker = data && data.seekername;
+  var seekerlink = data && data.seekerlink;
+  if (seeker && seekerlink) {
+    var row = document.querySelector('.seeker-row');
+    if (row) {
+      row.style.display = '';
+      var link = row.querySelector('.seekerlink');
+      link.textContent = seeker;
+      link.href = seekerlink;
+    }
+  }
+});
+</script>
+
+</body>
+
+</html>
