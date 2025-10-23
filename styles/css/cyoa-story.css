@@ -67,6 +67,12 @@
   font-size: 6px;
 }
 
+.speech-bubble p,
+.speech-bubble-right p,
+.dialogue-simple p {
+  margin: 0 0 1rem;
+}
+
 /* Hidden Dialogue Elements */
 .dialogue-hidden {
   opacity: 0 !important;
