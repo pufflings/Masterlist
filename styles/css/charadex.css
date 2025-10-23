@@ -980,6 +980,7 @@ p:last-child {
   position: relative;
   color: #6B4E3F;
   font-family: var(--cd-body-font-family);
+  font-size: 20px;
   line-height: 1.6;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -1066,6 +1067,7 @@ p:last-child {
   margin: 1.5rem 0;
   color: #6B4E3F;
   font-family: var(--cd-body-font-family);
+  font-size: 20px;
   line-height: 1.6;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -1148,6 +1150,7 @@ p:last-child {
   position: relative;
   color: #6B4E3F;
   font-family: var(--cd-body-font-family);
+  font-size: 20px;
   line-height: 1.6;
 }
 
@@ -1160,6 +1163,7 @@ p:last-child {
   position: relative;
   color: #6B4E3F;
   font-family: var(--cd-body-font-family);
+  font-size: 20px;
   line-height: 1.6;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -1200,6 +1204,42 @@ p:last-child {
 .speech-bubble-right strong {
   color: #6B4E3F;
   font-weight: 600;
+}
+
+.speech-bubble .big,
+.speech-bubble-right .big,
+.dialogue-simple .big {
+  font-size: 24px;
+}
+
+.speech-bubble .bigger,
+.speech-bubble-right .bigger,
+.dialogue-simple .bigger {
+  font-size: 30px;
+}
+
+.speech-bubble .bigest,
+.speech-bubble-right .bigest,
+.dialogue-simple .bigest {
+  font-size: 40px;
+}
+
+.speech-bubble .small,
+.speech-bubble-right .small,
+.dialogue-simple .small {
+  font-size: 14px;
+}
+
+.speech-bubble .smaller,
+.speech-bubble-right .smaller,
+.dialogue-simple .smaller {
+  font-size: 10px;
+}
+
+.speech-bubble .smallest,
+.speech-bubble-right .smallest,
+.dialogue-simple .smallest {
+  font-size: 6px;
 }
 
 .dialogue-container-right .speech-bubble p {
