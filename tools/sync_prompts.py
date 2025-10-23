@@ -12,11 +12,13 @@ import os
 import re
 import shutil
 import sys
+import time
 from pathlib import Path
 import importlib.util
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 
 
@@ -28,6 +30,8 @@ TMP_DIR = ROOT / ".cache" / "google_docs_txt"
 
 DOC_MIMETYPE = "application/vnd.google-apps.document"
 TXT_MIMETYPE = "text/plain"
+RETRY_STATUS_CODES = {429, 500, 502, 503}
+MAX_DOWNLOAD_RETRIES = 5
 
 
 def load_module(path, module_name):
@@ -111,6 +115,23 @@ def download_docs(folder_id: str, out_dir: Path):
             base_name = sanitize_filename(meta["name"], f"{file_id}.txt")
             txt_path = ensure_suffix(out_dir / base_name, ".txt")
 
+            content = download_with_retry(service, meta)
+            txt_path.write_bytes(content)
+            downloaded.append(txt_path)
+            print(f"Saved {meta['name']} -> {txt_path}")
+        page_token = response.get("nextPageToken")
+        if not page_token:
+            break
+    return downloaded
+
+
+def download_with_retry(service, meta):
+    file_id = meta["id"]
+    mime = meta["mimeType"]
+    name = meta["name"]
+
+    for attempt in range(1, MAX_DOWNLOAD_RETRIES + 1):
+        try:
             if mime == DOC_MIMETYPE:
                 request = service.files().export_media(
                     fileId=file_id, mimeType=TXT_MIMETYPE
@@ -124,14 +145,19 @@ def download_docs(folder_id: str, out_dir: Path):
             while not done:
                 status, done = downloader.next_chunk()
                 if status:
-                    print(f"Downloading {meta['name']}... {int(status.progress() * 100)}%")
-            txt_path.write_bytes(fh.getvalue())
-            downloaded.append(txt_path)
-            print(f"Saved {meta['name']} -> {txt_path}")
-        page_token = response.get("nextPageToken")
-        if not page_token:
-            break
-    return downloaded
+                    print(f"Downloading {name}... {int(status.progress() * 100)}%")
+            return fh.getvalue()
+        except HttpError as err:
+            status_code = getattr(err.resp, "status", None)
+            if status_code not in RETRY_STATUS_CODES or attempt == MAX_DOWNLOAD_RETRIES:
+                raise
+            wait_seconds = min(30, 2 ** attempt)
+            print(
+                f"Retrying {name} after HTTP {status_code} "
+                f"(attempt {attempt}/{MAX_DOWNLOAD_RETRIES}) in {wait_seconds}s"
+            )
+            time.sleep(wait_seconds)
+    raise RuntimeError(f"Failed to download {name} after {MAX_DOWNLOAD_RETRIES} attempts")
 
 
 def generate_outputs(txt_path: Path):
