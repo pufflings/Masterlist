@@ -280,10 +280,10 @@ def main():
         print("Aborted: Type is not 'dice'.")
         sys.exit(0)
 
-    # Determine output path: ./CYOA/<File name>.json relative to this script
+    # Determine output path relative to this script directory
     out_name = (gen.file_name or Path(input_file).stem) + '.json'
     base_dir = Path(__file__).resolve().parent
-    out_path = base_dir / 'CYOA' / out_name
+    out_path = base_dir / out_name
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     # If exists, ask to overwrite
