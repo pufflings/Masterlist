@@ -29,7 +29,7 @@
             Browse every prompt-friendly HTML file that lives in this folder. The list refreshes itself by checking the repository,
             so adding or renaming files here updates the directory automatically.
           </p>
-          <div id="prompt-directory" class="mt-3" data-github-owner="pufflings" data-github-repo="Masterlist_v2" data-github-branch="main">
+          <div id="prompt-directory" class="mt-3">
             <div id="prompt-status" class="alert alert-info mb-3" role="status">Loading prompt index…</div>
             <div id="prompt-list" class="list-group"></div>
           </div>
@@ -94,12 +94,8 @@
     const listEl = document.getElementById('prompt-list');
 
     if (directoryEl && statusEl && listEl) {
-      const owner = directoryEl.dataset.githubOwner || 'pufflings';
-      const repo = directoryEl.dataset.githubRepo || 'Masterlist_v2';
-      const branch = directoryEl.dataset.githubBranch || 'main';
-      const cacheKey = 'pufflings_prompt_index_cache_v1';
-
-      const renderList = (files, fromCache = false) => {
+      const manifestUrl = './prompt-index.json';
+      const renderList = (files) => {
         listEl.innerHTML = '';
         const sorted = [...files].sort((a, b) => a.localeCompare(b));
         if (sorted.length === 0) {
@@ -108,14 +104,9 @@
           return;
         }
 
-        const statusParent = statusEl.parentElement;
-        statusEl.remove();
-        if (fromCache && statusParent) {
-          const note = document.createElement('div');
-          note.className = 'alert alert-warning mb-3';
-          note.textContent = 'Showing cached prompt list (live update unavailable right now).';
-          statusParent.prepend(note);
-        }
+        statusEl.classList.remove('alert-info', 'alert-warning', 'alert-danger');
+        statusEl.classList.add('alert-success');
+        statusEl.textContent = 'Prompt list loaded.';
 
         for (const name of sorted) {
           const link = document.createElement('a');
@@ -127,43 +118,21 @@
         }
       };
 
-      const fetchFromGitHub = async () => {
-        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/prompts?ref=${encodeURIComponent(branch)}`;
-        const response = await fetch(apiUrl, {
-          headers: { Accept: 'application/vnd.github.v3+json' }
-        });
-        if (!response.ok) {
-          throw new Error(`GitHub API error ${response.status}`);
-        }
-        const data = await response.json();
-        return data
-          .filter(entry => entry.type === 'file' && entry.name.toLowerCase().endsWith('.html'))
-          .map(entry => entry.name);
-      };
-
-      const cached = (() => {
-        try {
-          const raw = localStorage.getItem(cacheKey);
-          if (!raw) return null;
-          return JSON.parse(raw);
-        } catch {
-          return null;
-        }
-      })();
-
       (async () => {
         try {
-          const files = await fetchFromGitHub();
-          renderList(files);
-          localStorage.setItem(cacheKey, JSON.stringify({ files, timestamp: Date.now() }));
-        } catch (error) {
-          console.warn('Prompt index fetch failed:', error);
-          if (cached?.files?.length) {
-            renderList(cached.files, true);
-          } else {
-            statusEl.classList.replace('alert-info', 'alert-warning');
-            statusEl.textContent = 'Unable to load prompt list right now.';
+          const response = await fetch(manifestUrl, { cache: 'no-cache' });
+          if (!response.ok) {
+            throw new Error(`Manifest fetch failed (${response.status})`);
           }
+          const files = await response.json();
+          if (!Array.isArray(files)) {
+            throw new Error('Invalid manifest format');
+          }
+          renderList(files);
+        } catch (error) {
+          console.warn('Prompt index load failed:', error);
+          statusEl.classList.replace('alert-info', 'alert-warning');
+          statusEl.textContent = 'Unable to load prompt list right now. Run “python tools/update_prompt_index.py” to refresh the manifest.';
         }
       })();
     }

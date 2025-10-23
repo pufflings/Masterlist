@@ -41,14 +41,77 @@ charadex.tools = {
     return options;
   },
 
+  // Determine how many directory levels away from the site root the current page is
+  getBasePath() {
+    if (this._cachedBasePath !== undefined) return this._cachedBasePath;
+
+    const path = window.location.pathname.replace(/\\/g, '/');
+    const segments = path.split('/').filter(Boolean);
+    const rootMarkers = ['Masterlist_v2', 'Masterlist'];
+    let rootIndex = -1;
+
+    for (const marker of rootMarkers) {
+      const candidate = segments.lastIndexOf(marker);
+      if (candidate !== -1) {
+        rootIndex = candidate;
+        break;
+      }
+    }
+
+    let depth = 0;
+    if (rootIndex !== -1) {
+      depth = Math.max(segments.length - (rootIndex + 1) - 1, 0);
+    } else if (path.toLowerCase().includes('/prompts/')) {
+      depth = 1;
+    }
+
+    this._cachedBasePath = depth > 0 ? '../'.repeat(depth) : '';
+    return this._cachedBasePath;
+  },
+
+  // Prefix relative URLs with the current base path
+  resolveRelativeUrl(url) {
+    if (!url) return url;
+    if (/^(?:[a-z]+:|\/\/|#|\?|mailto:|tel:)/i.test(url)) return url;
+    if (url.startsWith('../') || url.startsWith('./') || url.startsWith('/')) return url;
+    return this.getBasePath() + url;
+  },
+
+  // Apply the base path adjustments to anchor and image elements within the supplied root
+  applyBasePath(root) {
+    const scope = root && typeof root.querySelectorAll === 'function' ? root : document;
+    const adjustAttribute = (selector, attr) => {
+      scope.querySelectorAll?.(selector).forEach((element) => {
+        const current = element.getAttribute(attr);
+        const resolved = charadex.tools.resolveRelativeUrl(current);
+        if (resolved && resolved !== current) {
+          element.setAttribute(attr, resolved);
+        }
+      });
+    };
+
+    adjustAttribute('a[href]', 'href');
+    adjustAttribute('img[src]', 'src');
+    adjustAttribute('link[rel$="icon"][href]', 'href');
+  },
+
   // Load files via include
   // Will replace the entire div
   loadIncludedFiles() {
+    const applyBasePath = charadex.tools.applyBasePath.bind(charadex.tools);
     $(".load-html").each(function () {
       const target = $(this);
-      $.get(this.dataset.source, function (data) {
-        target.replaceWith(data);
-      });
+      $.get(this.dataset.source)
+        .done(function (data) {
+          const wrapper = document.createElement('div');
+          wrapper.innerHTML = data;
+          applyBasePath(wrapper);
+          target.replaceWith(wrapper.innerHTML);
+          applyBasePath(document);
+        })
+        .fail(function (error) {
+          console.error('Failed to load include:', error);
+        });
     });
   },
 
