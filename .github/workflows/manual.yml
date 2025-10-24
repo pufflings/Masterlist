@@ -2,6 +2,9 @@ name: Regenerate Story Assets
 
 on:
   workflow_dispatch: {}
+  
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -30,7 +33,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add prompts "Story HTML Generator/CYOA"
+          git add prompts
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else

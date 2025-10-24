@@ -1,0 +1,614 @@
+{
+  "scenes": [
+    {
+      "scene": "scene1",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "You waltz into the Adventurer's Guild with your puffling in tow. It’s early, but the floorboards are already sticky with ale and mud."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<img src=\"https://img-l.ink/img/1oqIVXuP2ceENlbEQTYrGW-6RbcGKE2sA.png\">"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "You scan the quest board. <br> Goblin nest? Too annoying. <br>Escort mission? Too boring. <br>\"Hunt slimes in my farm.\" Now that sounds easy enough. <br>The quest's from a local farmer. Apparently, the slimes have been nesting in their orchard again. Maybe you can sneak out some apples and blame it on the slimes. Heh. What do you do next?",
+          "choices": [
+            {
+              "text": "Go straight to the farm",
+              "next": "scene2"
+            },
+            {
+              "text": "Go to the market to buy supplies",
+              "next": "scene13"
+            },
+            {
+              "text": "Go to the library to research",
+              "next": "scene24"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene2",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "You stroll into the farm with a dull blade, bad boots, and a puffling full of confidence. Up ahead, three slimes jiggle ominously around a tree stump. What do you do?",
+          "choices": [
+            {
+              "text": "Rush in swinging",
+              "next": "scene3"
+            },
+            {
+              "text": "Try to intimidate them",
+              "next": "scene4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene3",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Why be cautious when you can be fast? You rush in, screaming at the top of your lungs.",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene5"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene6"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene7"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene8"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene4",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "You puff up your chest and stomp forward, trying to look like the biggest, scariest adventurer those slimes have ever seen.",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene9"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene10"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene11"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene12"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene5",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical failure!* <br> You trip over your own sword. Your Puffling takes over while you sit in the mud blinking at the sky… In the chaos, you also manage to destroy three apple trees. The farmer chases you out of the orchard with a cane, yelling about “youths these days\".."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene6",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Failure!* <br> Your Puffling handles everything while you fumble to unsheathe your blade for a solid five minutes. By the time you join the fight, it’s already over. The farmer gives puffling a firm handshake, and you a pitiful look."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene7",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Mixed Success!* <br> You clear the orchard in one noisy charge. There’s slime in your boots, your sleeves, and somehow in your mouth, but the job is done. The farmer gives you a whole apple!"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene8",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical Success!* <br> You look cool, feel cool, and didn’t even get dirty. You even found time to pose dramatically on a tree stump! The farmer keeps casually mentioning he has “a daughter your age” and insists you take a whole basket of apples."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene9",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical failure!* <br> You roar. One slime jiggles slightly. Another jumps onto your face, and you fall back in the mud. Your puffling stands to the side, pretending not to know you. The farmer doesn't even come outside."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene10",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Failure!* <br> You yell loud and long. The slimes respond by jiggling aggressively and charging you as a group. You spend the next ten minutes fighting the very battle you meant to avoid, only now you're out of breath and covered in grass and slime."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene11",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Mixed Success!* <br> You manage a solid stomp and a sharp glare. Two slimes ooze off nervously... The other is easy cleanup for your Puffling."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene12",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical Success!* <br> You say nothing. Just stare. One by one, the slimes slowly retreat. Your puffling whispers, “Did you always have this power?”. The farmer rewards you with homemade jam in total silence, eyes wide."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene13",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "You detour to the market. You’ve got just enough coin for one item. What do you get?",
+          "choices": [
+            {
+              "text": "New weapon for your seeker",
+              "next": "scene14"
+            },
+            {
+              "text": "New *cool* accessory for your puff",
+              "next": "scene15"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene14",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Being well-armed is the best. You make your way to the farm feeling confident.",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene16"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene17"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene18"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene19"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene15",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "You could get new gear, but you could also look sleek while hunting. You equip your puff and head to the farm.",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene20"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene21"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene22"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene23"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene16",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical failure!* <br> You drop your weapon on your foot during the first swing.\nYour puffling winces and sighs. You spend the rest of the job hobbling and using a tree branch to support yourself as your puff cleans up your mess. The farmer recommends a new career path."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene17",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Failure!* <br> The new weapon works well… when you hit. Which is not often.\nPuffling carries the fight while you mostly just try not to stab yourself, but still manage to get completely covered in slime. At least the job is done, and the farmer gives you a pat on the back."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene18",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Mixed Success!* <br> Your strikes land true, though a few slimes slip past before your puffling finishes them off. The field ends up mostly clear, just a few globs left clinging to the grass, trees, and you. The farmer wipes his brow, impressed enough to hand you an orange in gratitude."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene19",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical Success!* <br> You finish with a perfect spin-cut, your blade slicing clean through the last slime in a shimmer of green and gold. Your puffling slow claps, and the farmer lets out a low whistle and mutters, “Elegant.” They disappear into their cottage for a moment, then return with a basket full of oranges, pressing them into your hands with a grin."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene20",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical failure!* <br> You strap the new bow on upside down. Your puffling immediately trips and faceplants. The farmer comments on the ribbon, saying something about those being so last year. Your puffling refuses to fight. You do the job alone while both of them watch in silent judgment."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene21",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Failure!* <br> You get your puffling some fake tattoos. Your puffling starts whispering about a cursed arm, muttering, “Forgive me, but I must unleash it… just this once.” Then proceeds to run dramatically into a slime pile while screaming. You’re not sure if it's acting or not. The farmer claps anyway. The slimes mostly ignore your puff, and you silently hunt them."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene22",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Mixed Success!* <br> Slimes go down fast. Your puffling zips and spins like a stylish whirlwind of destruction, wearing their new sunglasses, completely disregarding you getting covered in slime. By the end, they lean against a tree and eat an apple dramatically, staring into the sunset."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene23",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical Success!* <br> You get your puffling a new cape. An artist walking past stops to sketch puffling mid-fight. The drawing ends up framed in the farmer's house, labeled “The Whirl.”\nThe puffling adopts the title on the spot and gives the farmer an autograph. The farmer smiles and sighs and fans themself with their hat."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene24",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "You decide to do the unthinkable: research in the local library. You flip through a bestiary so old the ink’s faded. Still, you learn to differentiate slimes by color. Choose how you’ll apply your slime wisdom.",
+          "choices": [
+            {
+              "text": "Go after the safest slimes",
+              "next": "scene25"
+            },
+            {
+              "text": "Go after the most dangerous slimes",
+              "next": "scene26"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene25",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Battle prowess is nothing without strategy. You decide to focus on the easier slimes, guaranteeing your safety.",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene27"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene28"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene29"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene30"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene26",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Armed with knowledge, you’re sure that you can defeat any challenge that comes your way.",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene31"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene32"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene33"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene34"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene27",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical failure!* <br> You carefully avoid every blue, green, and yellow slime and focus only on the grays and browns… Except that one wasn’t brown, it was just dirty!  Turns out it was pink. It sticks to your leg and explodes, ruining your clothes."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene28",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Failure!* <br> You avoid the dangerous slimes so thoroughly that you spend eight hours chasing down the safest ones. Your puffling falls asleep halfway through.  The farmer’s already gone home, leaving the payment under a rock."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene29",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Mixed Success!* <br> You stick to greys and browns: slow, boring, but manageable.\nNo injuries and no surprises. The farmer offers a nod and a jar of pickles. You get home in time for dinner."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene30",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical Success!* <br> Your restraint is so precise, so smooth, so efficient that the farmer thinks you’re some kind of slime scholar. He gives you extra apples, and your puffling starts wearing a tiny pair of reading glasses and insisting you call them “Professor.”"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene31",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical failure!* <br> You charge toward the biggest blue slime you can find. It explodes. You fall into a nearby green slime, which splits, and those halves explode too. The blast sends you flying face-first into what you thought was a rock, but it's a pink slime. It also explodes. The farmer chases you out of the orchard, throwing leftover slimes at your head."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene32",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Failure!* <br> You try to chain some explosions together, but mistime it. A blue one knocks you into a yellow one, leaving you all sticky and unable to move. Then a pink one sneaks up and explodes, clearing the remaining slimes. The job is done, but so is your gear. The farmer laughs at your new hairdo."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene33",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Mixed Success!* <br> You manage the blue and green ones with decent timing, dodging expertly. Mid-fight, a pink slime appears. You freeze. Puffling freezes. It watches silently... then waddles away. You finish the job in fear."
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene34",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "*Critical Success!* <br> You set up a perfect sequence: blue explodes into green, which splits into yellow, which ricochets into a tree and squishes a pink slime that you didn't even know was there. You pause and nod as if that was all part of the plan. The farmer looks at you like you're some kind of war god and offers to name an apple variety after you."
+        }
+      ],
+      "final": true
+    }
+  ]
+}
