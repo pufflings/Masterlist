@@ -361,7 +361,7 @@ class StoryHTMLGenerator:
             <br>
             <p><strong>Rewards (first time only):</strong></p>
             <ul>
-              <li>10 <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></li>
+              <li>10 <img src="../assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></li>
             </ul>
             <div class="text-center mt-4">
                 <a href="#"><button class="btn btn-outline-secondary btn-sm">Accept quest!</button></a>
@@ -375,12 +375,12 @@ class StoryHTMLGenerator:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" type="image/png" href="assets/favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="../assets/favicon.png" />
   <title>Pufflings - {self.chapter_title}</title>
   <meta name="title" content="Pufflings - {self.chapter_title}" />
   <meta name="type" content="website" />
   <meta name="url" content="https://pufflings.github.io/Masterlist/" />
-  <meta name="image" content="assets/meta.png" />
+  <meta name="image" content="../assets/meta.png" />
   <meta name="description" content="Welcome to the Puffling ARPG! Pufflings are a mysterious, fluffy creature, believed to be descendants of legendary dragons.">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
@@ -390,7 +390,7 @@ class StoryHTMLGenerator:
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400|Comfortaa:500" rel="stylesheet">
 </head>
 <body id="charadex-body">
-  <div class="load-html" id="header" data-source="includes/header.html"></div>
+  <div class="load-html" id="header" data-source="../includes/header.html"></div>
   <div class="container" id="main-container">
     <div id="charadex-gallery">
       <!-- Top Card Container -->
@@ -430,26 +430,10 @@ class StoryHTMLGenerator:
       <div class="row no-gutters charadex-shop-list softload m-n2"></div>
     </div>
   </div>
-  <div class="load-html" id="footer" data-source="includes/footer.html"></div>
+  <div class="load-html" id="footer" data-source="../includes/footer.html"></div>
   
   <!-- Floating Scroll to Top Button -->
-  <button id="scroll-to-top" class="btn btn-primary" style="
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #007bff;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  " title="Scroll to top">
+   <button id="scroll-to-top" class="btn btn-primary" title="Scroll to top">
     ↑
   </button>
   
