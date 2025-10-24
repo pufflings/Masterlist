@@ -43,6 +43,9 @@ def load_module(path, module_name):
 
 HTML_MODULE = load_module(TOOLS_DIR / "storyHtmlGenerator.py", "story_html_generator")
 JSON_MODULE = load_module(TOOLS_DIR / "storyJsonGenerator.py", "story_json_generator")
+PROMPT_INDEX_MODULE = load_module(
+    TOOLS_DIR / "update_prompt_index.py", "update_prompt_index"
+)
 
 
 def decode_service_account():
@@ -212,9 +215,10 @@ def main():
         txt_files = download_docs(folder_id, TMP_DIR)
         if not txt_files:
             print("No documents found to process.")
-            return
-        for txt in txt_files:
-            generate_outputs(txt)
+        else:
+            for txt in txt_files:
+                generate_outputs(txt)
+        PROMPT_INDEX_MODULE.main()
     finally:
         shutil.rmtree(TMP_DIR, ignore_errors=True)
 
