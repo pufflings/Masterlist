@@ -100,14 +100,42 @@ charadex.tools = {
   loadIncludedFiles() {
     const applyBasePath = charadex.tools.applyBasePath.bind(charadex.tools);
     $(".load-html").each(function () {
-      const target = $(this);
-      $.get(this.dataset.source)
+      const placeholder = this;
+      const datasetCopy = { ...placeholder.dataset };
+      $.get(placeholder.dataset.source)
         .done(function (data) {
           const wrapper = document.createElement('div');
           wrapper.innerHTML = data;
           applyBasePath(wrapper);
-          target.replaceWith(wrapper.innerHTML);
+
+          const fragment = document.createDocumentFragment();
+          const nodes = Array.from(wrapper.childNodes);
+          for (const node of nodes) {
+            fragment.appendChild(node);
+          }
+
+          placeholder.replaceWith(fragment);
           applyBasePath(document);
+
+          const firstElement = nodes.find(node => node.nodeType === Node.ELEMENT_NODE) || null;
+          document.dispatchEvent(new CustomEvent('charadex:includeLoaded', {
+            detail: {
+              source: datasetCopy.source || '',
+              dataset: datasetCopy,
+              nodes,
+              root: firstElement
+            }
+          }));
+
+          const hasNestedIncludes = nodes.some((node) => {
+            if (node.nodeType !== Node.ELEMENT_NODE) return false;
+            if (node.classList?.contains('load-html')) return true;
+            return typeof node.querySelector === 'function' && node.querySelector('.load-html');
+          });
+
+          if (hasNestedIncludes) {
+            setTimeout(() => charadex.tools.loadIncludedFiles(), 0);
+          }
         })
         .fail(function (error) {
           console.error('Failed to load include:', error);
@@ -498,13 +526,16 @@ charadex.importSheet = async (sheetPage, sheetId = charadex.sheet.id) => {
   
   try {
     const cached = localStorage.getItem(cacheKey);
-          if (cached) {
-        const cachedData = JSON.parse(cached);
-        if (Date.now() - cachedData.timestamp < cacheExpiry) {
-          charadex.tools.performance.end(`Loading ${sheetPage}`);
-          return cachedData.data;
+    if (cached) {
+      const cachedData = JSON.parse(cached);
+      if (Date.now() - cachedData.timestamp < cacheExpiry) {
+        charadex.tools.performance.end(`Loading ${sheetPage}`);
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+          console.log(`Sheet page "${sheetPage}" served from cache:`, cachedData.data);
         }
+        return cachedData.data;
       }
+    }
   } catch (error) {
     console.warn('Cache read failed:', error);
   }
@@ -556,6 +587,10 @@ charadex.importSheet = async (sheetPage, sheetId = charadex.sheet.id) => {
   }
 
   charadex.tools.performance.end(`Loading ${sheetPage}`);
+
+  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    console.log(`Sheet page "${sheetPage}" loaded:`, publicData);
+  }
 
   // Return Data
   return publicData;

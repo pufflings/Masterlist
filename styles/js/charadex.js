@@ -23,6 +23,13 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
   // Set up
   let selector = config.dexSelector;
   let pageUrl = customPageUrl || charadex.url.getPageUrl(config.sitePage);
+  const setControlsVisibility = (shouldShow) => {
+    if (!config.hideControlsOnProfile) return;
+    const controls = document.querySelector(`#${selector}-gallery .charadex-controls`);
+    if (!controls) return;
+    controls.style.display = shouldShow ? '' : 'none';
+  };
+  const hideProfileControls = () => setControlsVisibility(false);
 
   // Add folders, filters & search
   let folders = config.fauxFolder?.toggle ?? false ? charadex.listFeatures.fauxFolders(pageUrl, typeof config.fauxFolder.parameters === 'function' ? config.fauxFolder.parameters() : config.fauxFolder.parameters, selector) : false;
@@ -103,6 +110,7 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
     }
     
     /* Create Profile */
+    hideProfileControls();
     let profileList = list.initializeProfile(profileArr);
 
     // Return those values on Callback
@@ -125,6 +133,8 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
 
   // Create Gallery
   const createGallery = async () => {
+
+    setControlsVisibility(true);
 
     // Add additional list junk
     let additionalListConfigs = {};
