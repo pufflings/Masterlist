@@ -27,6 +27,12 @@ class StoryHTMLGenerator:
         raw = raw.replace('\r\n', '\n').replace('\r', '\n')
         lines = raw.split('\n')
 
+        first_content_line = next((ln.strip() for ln in lines if ln.strip()), '')
+        if not first_content_line.lower().startswith('file name'):
+            raise ValueError(
+                f"Invalid format in {self.input_file!r}: expected to start with 'File name'."
+            )
+
         section = None
         char_lines = []
         dialogue_lines = []
@@ -193,6 +199,9 @@ class StoryHTMLGenerator:
             return f'''<div class="dialogue-simple">
     <img src="{url}">
 </div>'''
+
+        if header_content.lower() == 'scene break':
+            return '<hr class="dialogue-scene-break">'
 
         # parse speaker header: [name | display name | modifiers]
         cols = [p.strip() for p in header_content.split('|')]
@@ -455,7 +464,11 @@ def main():
 
     input_file = sys.argv[1]
     generator = StoryHTMLGenerator(input_file)
-    html = generator.generate_html()
+    try:
+        html = generator.generate_html()
+    except ValueError as exc:
+        print(exc)
+        sys.exit(1)
 
     # Use declared output filename if provided in TXT, else default
     output_file = generator.file_name if generator.file_name else "output.html"
