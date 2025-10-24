@@ -254,12 +254,12 @@ class StoryHTMLGenerator:
         # Extra scripts (e.g., for dice/CYOA behavior)
         extra_scripts = ''
         if self.story_type == 'dice':
-            extra_scripts = '\n  <script src="styles/js/cyoa-story.js"></script>'
+            extra_scripts = '\n  <script src="../styles/js/cyoa-story.js"></script>'
 
         # Extra styles (only for dice/CYOA pages)
         extra_head_links = ''
         if self.story_type == 'dice':
-            extra_head_links = '\n  <link rel="stylesheet" type="text/css" href="styles/css/cyoa-story.css">'
+            extra_head_links = '\n  <link rel="stylesheet" type="text/css" href="../styles/css/cyoa-story.css">'
 
         # Prepare dialogue container attributes/inner content
         dialogue_data_attrs = ''
@@ -385,7 +385,7 @@ class StoryHTMLGenerator:
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" type="text/css" href="styles/css/charadex.css">
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex.css">
   {extra_head_links}
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400|Comfortaa:500" rel="stylesheet">
 </head>
@@ -440,9 +440,9 @@ class StoryHTMLGenerator:
   <script src="https://code.jquery.com/jquery-3.6.0.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-  <script src="styles/js/pages/base.js" type="module"></script>
+  <script src="../styles/js/pages/base.js" type="module"></script>
   {extra_scripts}
-  <script src="styles/js/pages/prompt.js"></script>
+  <script src="../styles/js/pages/prompt.js"></script>
 
 </body>
 </html>'''
