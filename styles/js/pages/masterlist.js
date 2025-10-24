@@ -3,11 +3,103 @@
 ======================================================================= */
 import { charadex } from '../charadex.js';
 
+const MASTERLIST_BASE_INCLUDE = 'includes/masterlist-base.html';
+
+let currentMasterlistPageUrl = (window?.location?.pathname?.split('/')?.pop?.() || 'masterlist.html');
+
+const waitForElement = (selector) => new Promise((resolve) => {
+  const element = document.querySelector(selector);
+  if (element) {
+    resolve(element);
+    return;
+  }
+  const observer = new MutationObserver(() => {
+    const found = document.querySelector(selector);
+    if (found) {
+      observer.disconnect();
+      resolve(found);
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+
+const updateSeekerRow = (data) => {
+  if (!data) return;
+  const seekerName = data.seekername || data.seekerName;
+  const seekerLink = data.seekerlink || data.seekerLink;
+  if (!seekerName || !seekerLink) return;
+
+  const row = document.querySelector('.seeker-row');
+  if (!row) return;
+
+  row.style.display = '';
+  const link = row.querySelector('.seekerlink');
+  if (link) {
+    link.textContent = seekerName;
+    link.href = seekerLink;
+  }
+};
+
+const registerProfileLoadedHandler = () => {
+  const handler = (event, payload) => {
+    const data = payload || event?.detail;
+    updateSeekerRow(data || {});
+  };
+
+  if (window?.$?.fn?.on) {
+    $(document).on('cd-profile-loaded', handler);
+  } else {
+    document.addEventListener('cd-profile-loaded', (event) => handler(event, event.detail));
+  }
+};
+
+document.addEventListener('charadex:includeLoaded', (event) => {
+  const detail = event?.detail;
+  if (!detail || detail.source !== MASTERLIST_BASE_INCLUDE) return;
+
+  const dataset = detail.dataset || {};
+  const root = detail.root || (detail.nodes?.find?.(node => node.nodeType === Node.ELEMENT_NODE) ?? null);
+  if (!root) return;
+
+  const title = dataset.masterlistTitle || 'Masterlist';
+  const link = dataset.masterlistLink || 'masterlist.html';
+
+  const linkElement = root.querySelector('.charadex-controls-link');
+  if (linkElement) {
+    linkElement.textContent = title;
+    linkElement.setAttribute('href', link);
+  }
+
+  currentMasterlistPageUrl = link;
+
+  const isProfileView = (() => {
+    try {
+      const params = charadex?.url?.getUrlParameters?.();
+      return params ? Boolean(params.get('profile')) : false;
+    } catch (err) {
+      console.warn('Failed to inspect URL parameters for profile view:', err);
+      return false;
+    }
+  })();
+
+  if (isProfileView) {
+    const controlsCard = root.classList?.contains('charadex-controls')
+      ? root
+      : root.querySelector?.('.charadex-controls');
+    if (controlsCard) {
+      controlsCard.style.display = 'none';
+    }
+  }
+});
+
 
 /* ==================================================================== */
 /* Load
 ======================================================================= */
 document.addEventListener("DOMContentLoaded", async () => {
+
+  await waitForElement('#charadex-gallery');
+  registerProfileLoadedHandler();
 
   const designTypeFilters = (() => {
     const body = document.body || {};
@@ -39,30 +131,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // Process traits for each masterlist entry
       for (let entry of data) {
-        // Use the correct field name based on the sheet page name
-        entry.masterlistTraits = entry.pufflingtraits;
-        if (charadex.tools.checkArray(entry.masterlistTraits)) {
-          // Filter out hidden traits
-          let visibleTraits = entry.masterlistTraits.filter(trait => !trait.hide || trait.hide.toLowerCase() !== 'true');
-          
-          // Format traits for display as a list of links
-          let traitsHtml = '';
-          if (visibleTraits.length > 0) {
-            traitsHtml = '<ul style="padding-left: 1.2em; margin-bottom: 0;">';
-            for (let trait of visibleTraits) {
-              if (trait.trait) {
-                // Split "ID NAME" to get just the name
-                let parts = trait.trait.split(' ');
-                let traitName = parts.slice(1).join(' ');
-                let profile = traitName.toLowerCase().replace(/\s+/g, '');
-                let note = trait.notes ? ` - ${trait.notes}` : '';
-                traitsHtml += `<li><a href="traits.html?profile=${profile}">${traitName}</a>${note}</li>`;
-              }
-            }
-            traitsHtml += '</ul>';
-          } else {
-            traitsHtml = '<em>No traits listed</em>';
+        const rawTraits = typeof entry.traits === 'string' ? entry.traits : '';
+        const traitNames = rawTraits
+          .split(/[,;\n]+/)
+          .map(trait => trait.trim())
+          .filter(Boolean);
+
+        if (traitNames.length > 0) {
+          let traitsHtml = '<ul style="padding-left: 1.2em; margin-bottom: 0;">';
+          for (let traitName of traitNames) {
+            const profile = charadex.tools.scrub(traitName);
+            traitsHtml += `<li><a href="traits.html?profile=${profile}">${traitName}</a></li>`;
           }
+          traitsHtml += '</ul>';
           entry.traits = traitsHtml;
         } else {
           entry.traits = '<em>No traits listed</em>';
@@ -97,15 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Directly update the Seeker row in the DOM
         const data = listData.profileArray[0];
-        if (data && data.seekername && data.seekerlink) {
-          var row = document.querySelector('.seeker-row');
-          if (row) {
-            row.style.display = '';
-            var link = row.querySelector('.seekerlink');
-            link.textContent = data.seekername;
-            link.href = data.seekerlink;
-          }
-        }
+        updateSeekerRow(data);
         
         // Update Relationship Gauge if data exists
         if (data && data.relationship) {
@@ -186,7 +259,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
 
-    }
+    },
+    currentMasterlistPageUrl
   );
 
   charadex.tools.loadPage('.softload', 500);

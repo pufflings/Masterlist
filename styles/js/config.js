@@ -36,7 +36,6 @@ charadex.sheet = {
 
   pages: {
     masterlist: "Pufflings",
-    masterlistTraits: "Puffling Traits",
     masterlistLog: "masterlist log",
     seekers: "seekers",
     inventory: "inventory",
@@ -150,6 +149,7 @@ charadex.page.items = {
   sitePage: 'items',
   dexSelector: 'charadex',
   profileProperty: 'item',
+  hideControlsOnProfile: true,
 
   sort: {
     toggle: true,
@@ -165,7 +165,7 @@ charadex.page.items = {
   },
 
   filters: {
-    toggle: true,
+    toggle: false,
     parameters: () => ({
       'Type': charadex.sheet.options.itemTypes,
       'Rarity': charadex.sheet.options.rarity,
@@ -173,9 +173,9 @@ charadex.page.items = {
   },
 
   fauxFolder: {
-    toggle: false,
-    folderProperty: 'Type',
-    parameters: () => charadex.sheet.options.itemTypes,
+    toggle: true,
+    folderProperty: 'Rarity',
+    parameters: () => charadex.sheet.options.rarity,
   },
 
   search: {
@@ -199,6 +199,7 @@ charadex.page.traits = {
   sitePage: 'traits',
   dexSelector: 'charadex',
   profileProperty: 'trait',
+  hideControlsOnProfile: true,
 
   sort: {
     toggle: true,
@@ -486,6 +487,7 @@ charadex.page.masterlist = {
   sitePage: 'masterlist',
   dexSelector: 'charadex',
   profileProperty: 'design',
+  hideControlsOnProfile: true,
 
   sort: {
     toggle: true,
@@ -550,30 +552,6 @@ charadex.page.masterlist = {
         amount: 12,
       },
 
-    },
-
-    [charadex.sheet.pages.masterlistTraits]: {
-
-      sheetPage: charadex.sheet.pages.masterlistTraits,
-      primaryProperty: 'design',
-      relatedProperty: 'id',
-      dexSelector: 'traits',
-      profileProperty: 'trait',
-      profileToggle: false,
-
-      sort: {
-        toggle: true,
-        key: "trait",
-        order: "asc",
-        parameters: []
-      },
-
-      pagination: {
-        toggle: false,
-        bottomToggle: false,
-        amount: 50,
-      },
-
     }
 
   }
@@ -588,6 +566,7 @@ charadex.page.seekers = {
   sitePage: 'seekers',
   dexSelector: 'charadex',
   profileProperty: 'design',
+  hideControlsOnProfile: true,
 
   sort: {
     toggle: true,
@@ -638,6 +617,7 @@ charadex.page.inventory = {
   sitePage: 'inventories',
   dexSelector: 'charadex',
   profileProperty: 'username',
+  hideControlsOnProfile: true,
 
   // Dex Options
   sort: {

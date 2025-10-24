@@ -216,8 +216,18 @@ def main():
         if not txt_files:
             print("No documents found to process.")
         else:
+            skipped = 0
             for txt in txt_files:
-                generate_outputs(txt)
+                try:
+                    generate_outputs(txt)
+                except ValueError as exc:
+                    skipped += 1
+                    print(f"Skipping {txt}: {exc}", file=sys.stderr)
+                except Exception as exc:
+                    skipped += 1
+                    print(f"Skipping {txt} because of unexpected error: {exc}", file=sys.stderr)
+            if skipped:
+                print(f"Skipped {skipped} document(s) due to errors.", file=sys.stderr)
         PROMPT_INDEX_MODULE.main()
     finally:
         shutil.rmtree(TMP_DIR, ignore_errors=True)
@@ -225,3 +235,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
