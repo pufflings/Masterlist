@@ -12,6 +12,9 @@ import json
 from pathlib import Path
 
 
+def log(message: str) -> None:
+    print(f"[update_prompt_index] {message}")
+
 ROOT = Path(__file__).resolve().parents[1]
 PROMPTS_DIR = ROOT / "prompts"
 OUTPUT_FILE = PROMPTS_DIR / "prompt-index.json"
@@ -32,9 +35,11 @@ def write_manifest(files: list[str]) -> None:
 
 
 def main() -> None:
+    log(f"Starting prompt index rebuild from {PROMPTS_DIR}")
     files = collect_prompt_files()
     write_manifest(files)
     print(f"Wrote {len(files)} prompt entries to {OUTPUT_FILE}")
+    log(f"Completed prompt index rebuild -> {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
