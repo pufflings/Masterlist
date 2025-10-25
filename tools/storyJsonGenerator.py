@@ -4,6 +4,11 @@ import json
 from pathlib import Path
 
 
+
+
+def log(message: str) -> None:
+    print(f"[storyJsonGenerator] {message}")
+
 class StoryJSONGenerator:
     def __init__(self, input_file):
         self.input_file = input_file
@@ -271,28 +276,34 @@ def main():
         print("Usage: python storyJsonGenerator.py <input_file.txt>")
         sys.exit(1)
 
-    input_file = sys.argv[1]
-    gen = StoryJSONGenerator(input_file)
-    gen.parse()
+    input_arg = sys.argv[1]
+    input_path = Path(input_arg).resolve()
+    log(f"Starting processing for {input_path}")
 
-    # Enforce dice-only as requested
+    gen = StoryJSONGenerator(str(input_path))
+    try:
+        gen.parse()
+    except Exception as exc:
+        log(f"Unexpected error while parsing {input_path}: {exc}")
+        raise
+
     if gen.story_type != 'dice':
-        print("Aborted: Type is not 'dice'.")
+        print(f"Aborted: Type is '{gen.story_type}' (expected 'dice').")
+        log(f"Completed without JSON for {input_path}: story type '{gen.story_type}'")
         sys.exit(0)
 
-    # Determine output path relative to this script directory
-    out_name = (gen.file_name or Path(input_file).stem) + '.json'
+    out_name = (gen.file_name or input_path.stem) + '.json'
     base_dir = Path(__file__).resolve().parent
     out_path = base_dir / out_name
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # If exists, ask to overwrite
     if out_path.exists():
         try:
             resp = input(f"File '{out_path}' exists. Overwrite? [y/N]: ").strip().lower()
         except EOFError:
             resp = ''
         if resp not in ('y', 'yes'):
+            log(f"Skipped writing JSON for {input_path}: user declined overwrite of {out_path}")
             print("Aborted: existing file not overwritten.")
             sys.exit(0)
 
@@ -300,7 +311,7 @@ def main():
         f.write(gen.to_json())
 
     print(f"JSON generated successfully: {out_path}")
-
+    log(f"Completed processing for {input_path} -> {out_path}")
 
 if __name__ == '__main__':
     main()

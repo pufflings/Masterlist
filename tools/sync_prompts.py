@@ -48,6 +48,9 @@ PROMPT_INDEX_MODULE = load_module(
 )
 
 
+def log(message: str) -> None:
+    print(f"[sync_prompts] {message}")
+
 def decode_service_account():
     raw = os.environ.get("GOOGLE_SERVICE_ACCOUNT")
     if not raw:
@@ -164,7 +167,7 @@ def download_with_retry(service, meta):
 
 
 def generate_outputs(txt_path: Path):
-    print(f"Processing {txt_path}")
+    log(f"Starting processing for {txt_path}")
     html_gen = HTML_MODULE.StoryHTMLGenerator(str(txt_path))
     html_text = html_gen.generate_html()
     declared_html = sanitize_filename(
@@ -177,12 +180,13 @@ def generate_outputs(txt_path: Path):
     if target_html.exists():
         target_html.unlink()
     shutil.move(str(staging_html), str(target_html))
-    print(f"-> HTML written to {target_html}")
+    log(f"Wrote HTML to {target_html}")
 
     json_gen = JSON_MODULE.StoryJSONGenerator(str(txt_path))
     json_gen.parse()
     if json_gen.story_type != "dice":
-        print("   (skipped JSON: Type is not 'dice')")
+        log(f"Skipped JSON for {txt_path}: story type '{json_gen.story_type}' (expected 'dice')")
+        log(f"Completed processing for {txt_path}")
         return
     json_text = json_gen.to_json()
     declared_json = sanitize_filename(
@@ -196,7 +200,8 @@ def generate_outputs(txt_path: Path):
     if target_json.exists():
         target_json.unlink()
     shutil.move(str(staging_json), str(target_json))
-    print(f"-> JSON written to {target_json}")
+    log(f"Wrote JSON to {target_json}")
+    log(f"Completed processing for {txt_path}")
 
 
 def main():
@@ -207,6 +212,8 @@ def main():
         print("Provide the Drive folder ID via GOOGLE_DRIVE_FOLDER_ID or CLI.", file=sys.stderr)
         sys.exit(1)
 
+    log(f"Starting sync run for folder {folder_id}")
+
     if TMP_DIR.exists():
         shutil.rmtree(TMP_DIR)
     TMP_DIR.mkdir(parents=True, exist_ok=True)
@@ -214,7 +221,7 @@ def main():
     try:
         txt_files = download_docs(folder_id, TMP_DIR)
         if not txt_files:
-            print("No documents found to process.")
+            log("No documents found to process.")
         else:
             skipped = 0
             for txt in txt_files:
@@ -222,15 +229,24 @@ def main():
                     generate_outputs(txt)
                 except ValueError as exc:
                     skipped += 1
-                    print(f"Skipping {txt}: {exc}", file=sys.stderr)
+                    msg = f"Skipping {txt}: {exc}"
+                    print(msg, file=sys.stderr)
+                    log(msg)
                 except Exception as exc:
                     skipped += 1
-                    print(f"Skipping {txt} because of unexpected error: {exc}", file=sys.stderr)
+                    msg = f"Skipping {txt} because of unexpected error: {exc}"
+                    print(msg, file=sys.stderr)
+                    log(msg)
             if skipped:
-                print(f"Skipped {skipped} document(s) due to errors.", file=sys.stderr)
+                msg = f"Skipped {skipped} document(s) due to errors."
+                print(msg, file=sys.stderr)
+                log(msg)
+        log("Updating prompt index")
         PROMPT_INDEX_MODULE.main()
+        log("Prompt index updated")
     finally:
         shutil.rmtree(TMP_DIR, ignore_errors=True)
+        log("Sync run finished")
 
 
 if __name__ == "__main__":

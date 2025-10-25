@@ -3,6 +3,11 @@ import re
 import sys
 from pathlib import Path
 
+
+
+def log(message: str) -> None:
+    print(f"[storyHtmlGenerator] {message}")
+
 class StoryHTMLGenerator:
     def __init__(self, input_file):
         self.input_file = input_file
@@ -30,7 +35,7 @@ class StoryHTMLGenerator:
         first_content_line = next((ln.strip() for ln in lines if ln.strip()), '')
         if not first_content_line.lower().startswith('file name'):
             raise ValueError(
-                f"Invalid format in {self.input_file!r}: expected to start with 'File name'."
+                f"Invalid format in {self.input_file!r}: expected to start with 'File name', found {first_content_line!r}."
             )
 
         section = None
@@ -462,40 +467,45 @@ def main():
         print("Usage: python generate_html.py <input_file.txt>")
         sys.exit(1)
 
-    input_file = sys.argv[1]
-    generator = StoryHTMLGenerator(input_file)
+    input_arg = sys.argv[1]
+    input_path = Path(input_arg).resolve()
+    log(f"Starting processing for {input_path}")
+
+    generator = StoryHTMLGenerator(str(input_path))
     try:
         html = generator.generate_html()
     except ValueError as exc:
+        log(f"Aborted while processing {input_path}: {exc}")
         print(exc)
         sys.exit(1)
+    except Exception as exc:
+        log(f"Unexpected error while processing {input_path}: {exc}")
+        raise
 
-    # Use declared output filename if provided in TXT, else default
     output_file = generator.file_name if generator.file_name else "output.html"
 
-    # Save output to the directory containing this script when a relative name is provided
     out_path = Path(output_file)
     if not out_path.is_absolute():
         base_dir = Path(__file__).resolve().parent
-        out_path = (base_dir / out_path)
+        out_path = base_dir / out_path
 
-    # If file exists, prompt for confirmation before overwriting
     if out_path.exists():
         try:
             resp = input(f"File '{out_path}' exists. Overwrite? [y/N]: ").strip().lower()
         except EOFError:
             resp = ''
         if resp not in ('y', 'yes'):
+            log(f"Skipped writing output for {input_path}: user declined overwrite of {out_path}")
             print("Aborted: existing file not overwritten.")
             sys.exit(0)
 
-    # Ensure parent directory exists
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(html)
 
     print(f"HTML generated successfully: {out_path}")
+    log(f"Completed processing for {input_path} -> {out_path}")
 
 if __name__ == "__main__":
     main()
