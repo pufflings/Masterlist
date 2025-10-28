@@ -609,9 +609,9 @@ charadex.page.seekers = {
   },
 
   fauxFolder: {
-    toggle: false,
+    toggle: true,
     folderProperty: 'Type',
-    parameters: () => charadex.sheet.options.designTypes,
+    parameters: () => ['All', 'NPC', 'MYO'],
   },
 
   search: {
