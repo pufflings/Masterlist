@@ -128,15 +128,20 @@ class StoryHTMLGenerator:
             parts = [p.strip() for p in line.split('|')]
             if len(parts) >= 3:
                 name = parts[0]
-                full_body = parts[1] if parts[1] != '-' else None
-                portrait = parts[2] if parts[2] != '-' else None
+                full_body = parts[1] if parts[1] and parts[1] != '-' else None
+                portrait = parts[2] if parts[2] and parts[2] != '-' else None
                 profile = parts[3] if len(parts) >= 4 and parts[3] and parts[3] != '-' else None
                 description = parts[4] if len(parts) >= 5 and parts[4] and parts[4] != '-' else None
+                include_in_showcase = not (
+                    len(parts) >= 6 and parts[5] and parts[5].strip().lower() == 'unlisted'
+                )
+
                 self.characters[name] = {
                     'full_body': full_body,
                     'portrait': portrait,
                     'profile': profile,
-                    'description': description
+                    'description': description,
+                    'include_in_showcase': include_in_showcase
                 }
 
     def _parse_dialogue(self, text):
@@ -289,6 +294,8 @@ class StoryHTMLGenerator:
         # Characters showcase: only those with full-body, link image and name if profile present
         character_showcase = ""
         for name, data in self.characters.items():
+            if not data.get('include_in_showcase', True):
+                continue
             fb = data.get('full_body')
             if not fb:
                 continue
