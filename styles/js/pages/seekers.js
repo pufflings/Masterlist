@@ -19,8 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     (data) => {     
       // Process data for each seekers entry
       for (let entry of data) {
-        // Set name for gallery and profile
-        entry.name = entry.name || '';
         // Set image: prefer Preview, then Image, then Image URL
         entry.image = entry.preview || entry.image || entry['image url'] || '';
         // Process owner link to point to inventories page
@@ -40,12 +38,19 @@ document.addEventListener("DOMContentLoaded", async () => {
           // Load all Pufflings from the masterlist
           const allPufflings = await charadex.importSheet(charadex.sheet.pages.masterlist);
           // Try both 'Seeker' and 'seeker' fields
+          const seekerDesignKey = charadex.tools.scrub(seekerDesign);
           const filteredPufflings = allPufflings.filter(p => {
-            const seekerField = p.seeker;
-            if (!seekerField) return false;
-            const designId = String(seekerField).split(' ')[0];
-            const match = charadex.tools.scrub(designId) === charadex.tools.scrub(seekerDesign);
-            return match;
+            const rawSeeker =
+              p.Seeker ??
+              p.seeker ??
+              p.seekerid ??
+              p.seekerId ??
+              p.seekerdesign ??
+              p.seekerDesign ??
+              '';
+            const seekerId = rawSeeker ? String(rawSeeker).trim() : '';
+            if (!seekerId) return false;
+            return charadex.tools.scrub(seekerId) === seekerDesignKey;
           });
           if (filteredPufflings.length > 0) {
             // Show the Pufflings section
@@ -54,6 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Custom config for gallery without filters/search
             const seekerPufflingsGalleryConfig = {
               ...charadex.page.masterlist,
+              hideControlsOnProfile: false,
               filters: { toggle: false, parameters: () => ({}) },
               fauxFolder: { toggle: false, folderProperty: '', parameters: [] },
               search: { toggle: false, filterToggle: false, parameters: [] },
@@ -65,8 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               seekerPufflingsGalleryConfig,
               null,
               null,
-              false,
-              'pufflings-gallery'
+              false
             );
           }
         }

@@ -23,36 +23,6 @@ const waitForElement = (selector) => new Promise((resolve) => {
   observer.observe(document.body, { childList: true, subtree: true });
 });
 
-const updateSeekerRow = (data) => {
-  if (!data) return;
-  const seekerName = data.seekername || data.seekerName;
-  const seekerLink = data.seekerlink || data.seekerLink;
-  if (!seekerName || !seekerLink) return;
-
-  const row = document.querySelector('.seeker-row');
-  if (!row) return;
-
-  row.style.display = '';
-  const link = row.querySelector('.seekerlink');
-  if (link) {
-    link.textContent = seekerName;
-    link.href = seekerLink;
-  }
-};
-
-const registerProfileLoadedHandler = () => {
-  const handler = (event, payload) => {
-    const data = payload || event?.detail;
-    updateSeekerRow(data || {});
-  };
-
-  if (window?.$?.fn?.on) {
-    $(document).on('cd-profile-loaded', handler);
-  } else {
-    document.addEventListener('cd-profile-loaded', (event) => handler(event, event.detail));
-  }
-};
-
 document.addEventListener('charadex:includeLoaded', (event) => {
   const detail = event?.detail;
   if (!detail || detail.source !== MASTERLIST_BASE_INCLUDE) return;
@@ -99,7 +69,6 @@ document.addEventListener('charadex:includeLoaded', (event) => {
 document.addEventListener("DOMContentLoaded", async () => {
 
   await waitForElement('#charadex-gallery');
-  registerProfileLoadedHandler();
 
   const designTypeFilters = (() => {
     const body = document.body || {};
@@ -156,12 +125,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         // Process seeker link if present
         if (entry.seeker) {
-          // Split into design and name
-          let parts = entry.seeker.split(/\s+/, 2);
-          let design = parts[0];
-          let name = entry.seeker.substring(design.length).trim();
-          entry.seekerlink = `seekers.html?profile=${encodeURIComponent(design)}`;
-          entry.seekername = name || entry.seeker;
+          let seekerProfile = entry.seeker.toLowerCase().replace(/\s+/g, '');
+          entry.seekerlink = `seekers.html?profile=${seekerProfile}`;
         }
       }
     },
@@ -176,9 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           );
         }
 
-        // Directly update the Seeker row in the DOM
         const data = listData.profileArray[0];
-        updateSeekerRow(data);
         
         // Update Relationship Gauge if data exists
         if (data && data.relationship) {

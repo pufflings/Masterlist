@@ -188,6 +188,24 @@ charadex.page.items = {
     toggle: true,
   },
 
+  relatedData: {
+    [charadex.sheet.pages.masterlist]: {
+      ...charadex.page.masterlist,
+      sheetPage: charadex.sheet.pages.masterlist,
+      sitePage: 'masterlist',
+      primaryProperty: 'design',
+      relatedProperty: 'seeker',
+      dexSelector: 'pufflings-gallery',
+      profileProperty: 'design',
+      profileToggle: false,
+      hideControlsOnProfile: false,
+      filters: { toggle: false, parameters: () => ({}) },
+      fauxFolder: { toggle: false, folderProperty: '', parameters: [] },
+      search: { toggle: false, filterToggle: false, parameters: [] },
+      pagination: { toggle: false, bottomToggle: false, amount: 100 },
+    },
+  },
+
 };
 
 
