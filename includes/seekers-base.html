@@ -1,0 +1,236 @@
+  <div class="container" id="main-container">
+    <div id="charadex-gallery">
+
+      <!-- Top Card Container
+      <!-- ----------------------------------------------------------------- -->
+      <div class="card p-md-5 p-4 mb-4 charadex-controls">
+
+        <!-- Title
+        <!-- --------------------------------------------------------------- -->
+        <h3 class="mb-0"><a class="seekers-controls-link" href="seekers.html">Seekers</a></h3>
+
+        <!-- Faux Folders
+        <!-- --------------------------------------------------------------- -->
+        <div style="display:none;" id="charadex-folder-container">
+          <hr>
+          <div class="row no-gutters m-n1" id="charadex-folders"></div>
+          <!-- Buttons -->
+          <div style="display:none;">
+            <div class="col-lg-3 col-md-4 col-sm-6 p-1" id="charadex-folder">
+              <a class="btn btn-primary d-block" href=""></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters
+        <!-- --------------------------------------------------------------- -->
+        <div style="display:none;" id="charadex-filter-container">
+          <hr>
+          <div class="row no-gutters m-n1" id="charadex-filters"></div>
+          <!-- Filters -->
+          <div style="display: none;">
+            <div class="col-md-4 col-12 p-1" id="charadex-filter">
+              <label class="px-2"></label>
+              <select class="form-control" multiple></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search
+        <!-- --------------------------------------------------------------- -->
+        <div style="display:none;" id="charadex-search-container">
+          <hr>
+          <div class="row no-gutters m-n1">
+            <!-- Search Filter -->
+            <div class="col-md-4 col-6 p-1" style="display: none;">
+              <select class="form-control" id="charadex-search-filter"></select>
+            </div>
+            <!-- Search Bar -->
+            <div class="col d-flex p-1">
+              <input class="form-control search" type="search" placeholder="Search" id="charadex-search">
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination
+        <!-- --------------------------------------------------------------- -->
+        <div style="display: none;" class="charadex-pagination-container">
+          <hr class="mb-4 mt-4">
+          <div class="nav d-flex justify-content-center mb-n4">
+            <div class="btn-prev page-item"><a class="page-link"><i class="fa fa-chevron-left"></i></a></div>
+            <ul class="pagination charadex-pagination charadex-pagination-top justify-content-center m-0"></ul>
+            <div class="btn-next page-item"><a class="page-link"><i class="fa fa-chevron-right"></i></a></div>
+          </div>
+        </div>
+
+        <!-- Prev & Next Topbar
+        <!-- --------------------------------------------------------------- -->
+        <div style="display: none;" id="charadex-prevnext-container">
+          <hr>
+          <div class="row no-gutters px-2 text-uppercase">
+            <div class="col-6 px-1">
+              <a id="entryPrev" href=""><i class="fas fa-chevron-left mr-2"></i><b><span></span></b></a>
+            </div>
+            <div class="col-6 px-1 text-right order-md-1">
+              <a id="entryNext" href=""><b><span></span></b><i class="fas fa-chevron-right ml-2"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- List Items Render Here
+      <!-- --------------------------------------------------------------- -->
+      <div class="row no-gutters charadex-list softload m-n2"></div>
+
+      <!-- Pagination
+      <!-- --------------------------------------------------------------- -->
+      <div style="display: none;" class="charadex-pagination-container">
+        <div class="card px-3 py-1 mt-4">
+          <div class="nav d-flex justify-content-center">
+            <div class="btn-prev page-item"><a class="page-link"><i class="fa fa-chevron-left"></i></a></div>
+            <ul class="pagination charadex-pagination charadex-pagination-bottom justify-content-center m-0"></ul>
+            <div class="btn-next page-item"><a class="page-link"><i class="fa fa-chevron-right"></i></a></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- --------------------------------------------------------------------
+  <-- Footer
+  <-------------------------------------------------------------------- -->
+  <div class="load-html" id="footer" data-source="includes/footer.html"></div>
+
+  <!-- --------------------------------------------------------------------
+  <-- Repeat Items
+  <-- Do not remove 'display:none;'
+  <-------------------------------------------------------------------- -->
+  <div style="display:none;">
+
+
+    <!-- Gallery Items
+    <!-- --------------------------------------------------------------- -->
+    <div class="col-lg-3 col-sm-6 p-2" id="charadex-gallery-item">
+      <div class="card h-100">
+
+        <!-- Header -->
+        <div class="card-header text-center">
+          <h5 class="mb-0">
+            <a class="profileid profilelink" href=""></a>
+          </h5>
+        </div>
+
+        <!-- Image-->
+        <div class="card-body cd-gallery-card d-flex flex-fill">
+          <a class="imageprofilelink" href=""><img class="image img-fluid m-auto" src="" ></a>
+        </div>
+
+        <!-- Owner -->
+        <div class="card-footer text-center">
+          <a class="owner ownerlink small" href=""></a>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Gallery Profile
+    <!-- --------------------------------------------------------------- -->
+    <div class="col-12 p-2" id="charadex-profile">
+      <div class="card">
+
+        <!-- Header -->
+        <div class="card-header p-4 text-center">
+          <h3 class="mb-0 pr-2"><a class="profilelink profileid"></a></h3> 
+          <div class="text-muted">(#<span class="id"></span>)</div>
+        </div>
+
+        <!-- Image -->
+        <div class="cd-profile-image-container p-md-5 p-4 text-center" >
+          <img class="image img-fluid" src="">
+        </div>
+
+        <!-- Main Info -->
+        <div class="p-md-5 p-4 tab-content">
+          <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <h4 class="text-primary">Profile</h4>
+          <div class="row no-gutters m-n2">
+            <div class="col-md-6 p-2">
+              <div class="card bg-faded p-4 h-100">
+                <!-- Owner -->
+                <div class="d-flex no-gutters mb-2">
+                  <b class="text-muted col-md-5 col-6">Owner</b>
+                  <a class="owner ownerlink"></a>
+                </div>
+                <!-- Type -->
+                <div class="d-flex no-gutters mb-2">
+                  <b class="text-muted col-md-5 col-6">Type</b>
+                  <span class="type text-break d-block flex-grow-1"></span>
+                </div>
+                <!-- Artist -->
+                <div class="d-flex no-gutters mb-2">
+                  <b class="text-muted col-md-5 col-6">Artist</b>
+                  <span class="artist text-break d-block flex-grow-1"></span>
+                </div>
+                <!-- Designer -->
+                <div class="d-flex no-gutters mb-2">
+                  <b class="text-muted col-md-5 col-6">Designer</b>
+                  <span class="designer text-break d-block flex-grow-1"></span>
+                </div>
+              </div>
+            </div>
+              <div class="col-md-6 p-2">
+                <div class="card bg-faded p-4 h-100">
+                  <!-- Notes -->
+                  <div>
+                    <b class="text-muted">Notes</b>
+                    <div class="px-4 cd-text-pre notes"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card bg-faded py-2 px-3 mt-3 small text-center">
+            <b>If you need to update this entry, please do so <a href="https://discord.gg/7tEmPWBe8q">here</a>.</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pufflings Gallery -->
+    <div class="col-12 p-2" id="pufflings-gallery-section" style="display:none;">
+      <div class="card">
+        <div class="card-header text-center">
+          <h4 class="mb-0">Bonded pufflings</h4>
+        </div>
+        <div class="card-body">
+          <div id="pufflings-gallery">
+            <div class="row no-gutters pufflings-list softload m-n2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="display:none;">
+    <!-- Pufflings Gallery Item -->
+    <div class="col-lg-3 col-sm-6 p-2" id="pufflings-gallery-item">
+      <div class="card bg-faded h-100">
+        <div class="card-header bg-faded text-center">
+          <h5 class="mb-0">
+            <a class="profileid profilelink" href=""></a>
+          </h5>
+        </div>
+        <div class="card-body cd-gallery-card bg-faded d-flex flex-fill">
+          <a class="imageprofilelink" href=""><img class="image img-fluid m-auto" src=""></a>
+        </div>
+        <div class="card-footer bg-faded text-center">
+          <a class="owner ownerlink small" href=""></a>
+        </div>
+      </div>
+    </div>
+  </div>

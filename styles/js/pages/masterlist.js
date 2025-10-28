@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (designTypeFilters.length) {
         for (let i = data.length - 1; i >= 0; i--) {
           const entry = data[i];
-          const entryDesignType = entry.Type || entry.type || entry['Design Type'] || entry.designType || entry.designtype || '';
+          const entryDesignType = entry.type || '';
           const entryTypeKey = charadex.tools.scrub(entryDesignType);
           if (!designTypeFilters.includes(entryTypeKey)) {
             data.splice(i, 1);
@@ -181,7 +181,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Set Design Type
-        const designType = data.Type || data.type || data['Design Type'] || data.designType || '';
+        const designType = data.type || '';
+        const normalizedDesignType = typeof designType === 'string' ? designType.toLowerCase().trim() : '';
+        const isNpcDesign = normalizedDesignType.includes('npc');
         const designTypeElem = document.querySelector('.designtype');
         if (designTypeElem) designTypeElem.textContent = designType;
 
@@ -192,26 +194,43 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (data.humanoidimage) {
             // Check if heartboundcrystal is true to determine lock status
             const isHeartbound = data.heartboundcrystal === true || data.heartboundcrystal === 'true';
-            const lockIcon = isHeartbound ? '' : ' 🔒';
-            const humanoidTabClass = isHeartbound ? '' : 'locked-humanoid-tab';
-            
+            const shouldLockHumanoid = !isNpcDesign && !isHeartbound;
+            const lockTooltip = 'You need to reach relationship 50 and get a Heartbound Crystal to unlock';
+            const humanoidTabClasses = shouldLockHumanoid ? ' locked-humanoid-tab locked-overlay-target' : '';
+            const tabLockMarkup = shouldLockHumanoid
+              ? `<span class="locked-tab-icon" title="${lockTooltip}" aria-hidden="true">&#128274;</span>`
+              : '';
+            const humanoidTabAriaLabel = shouldLockHumanoid
+              ? `Humanoid image locked. ${lockTooltip}`
+              : 'Humanoid image';
+            const humanoidLockContainerClass = shouldLockHumanoid
+              ? 'locked-humanoid-container locked-overlay-container'
+              : 'locked-humanoid-container';
+            const humanoidLockOverlay = shouldLockHumanoid
+              ? `<div class="locked-humanoid-overlay locked-overlay has-message" role="note" aria-live="polite">
+                  <span class="locked-overlay-icon" aria-hidden="true">&#128274;</span>
+                  <span class="locked-overlay-message">${lockTooltip}</span>
+                </div>`
+              : '';
+            const lockIcon = shouldLockHumanoid ? tabLockMarkup : '';
+
             imageContainer.innerHTML = `
               <ul class="nav nav-tabs justify-content-center mb-3" id="imageTab" role="tablist">
                 <li class="nav-item">
                   <a class="nav-link active" id="main-image-tab" data-toggle="tab" href="#main-image" role="tab" aria-controls="main-image" aria-selected="true">Puffling</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" id="alt-image-tab" data-toggle="tab" href="#alt-image" role="tab" aria-controls="alt-image" aria-selected="false">Humanoid${lockIcon}</a>
+                  <a class="nav-link" id="alt-image-tab" data-toggle="tab" href="#alt-image" role="tab" aria-controls="alt-image" aria-selected="false" aria-label="${humanoidTabAriaLabel}"${shouldLockHumanoid ? ` title="${lockTooltip}"` : ''}>Humanoid${lockIcon}</a>
                 </li>
               </ul>
               <div class="tab-content" id="imageTabContent">
                 <div class="tab-pane fade show active" id="main-image" role="tabpanel" aria-labelledby="main-image-tab">
                   <img class="image img-fluid" src="${data.image}">
                 </div>
-                <div class="tab-pane fade ${humanoidTabClass}" id="alt-image" role="tabpanel" aria-labelledby="alt-image-tab">
-                  <div class="locked-humanoid-container">
+                <div class="tab-pane fade${humanoidTabClasses}" id="alt-image" role="tabpanel" aria-labelledby="alt-image-tab">
+                  <div class="${humanoidLockContainerClass}">
                     <img class="alt-image img-fluid" src="${data.humanoidimage}">
-                    ${!isHeartbound ? '<div class="locked-humanoid-overlay">🔒</div>' : ''}
+                    ${humanoidLockOverlay}
                   </div>
                 </div>
               </div>

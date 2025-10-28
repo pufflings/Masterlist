@@ -795,7 +795,8 @@ p:last-child {
 }
 
 /* News horizontal scrolling */
-.news-scroll-container {
+.news-scroll-container,
+.design-scroll-container {
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -803,24 +804,29 @@ p:last-child {
   scrollbar-color: var(--cd-border-color) transparent;
 }
 
-.news-scroll-container::-webkit-scrollbar {
+.news-scroll-container::-webkit-scrollbar,
+.design-scroll-container::-webkit-scrollbar {
   height: 8px;
 }
 
-.news-scroll-container::-webkit-scrollbar-track {
+.news-scroll-container::-webkit-scrollbar-track,
+.design-scroll-container::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.news-scroll-container::-webkit-scrollbar-thumb {
+.news-scroll-container::-webkit-scrollbar-thumb,
+.design-scroll-container::-webkit-scrollbar-thumb {
   background-color: var(--cd-border-color);
   border-radius: 4px;
 }
 
-.news-scroll-container::-webkit-scrollbar-thumb:hover {
+.news-scroll-container::-webkit-scrollbar-thumb:hover,
+.design-scroll-container::-webkit-scrollbar-thumb:hover {
   background-color: var(--cd-text-color);
 }
 
-.news-list {
+.news-list,
+.design-list {
   gap: 1rem;
   padding: 0.5rem 0;
 }
@@ -828,6 +834,11 @@ p:last-child {
 .news-item {
   flex: 0 0 350px;
   max-width: 350px;
+}
+
+.design-item {
+  flex: 0 0 280px;
+  max-width: 280px;
 }
 
 /* Add fade-out effect to news background images */
@@ -921,6 +932,66 @@ p:last-child {
   opacity: 0.4;
   filter: grayscale(0.5);
   transition: opacity 0.3s, filter 0.3s;
+}
+
+.item-stock-callout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #f2c785;
+  border-radius: 0.85rem;
+  background: linear-gradient(135deg, #fff8ea 0%, #ffe9c5 100%);
+  color: #6b4e3f;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 12px rgba(107, 78, 63, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.item-stock-callout:hover,
+.item-stock-callout:focus {
+  color: #6b4e3f;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(107, 78, 63, 0.22);
+}
+
+.item-stock-callout__icon,
+.item-stock-callout__chevron {
+  font-size: 1.1rem;
+  color: #b66b2d;
+}
+
+.item-stock-callout__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  line-height: 1.2;
+}
+
+.item-stock-callout__cta {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 480px) {
+  .item-stock-callout {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .item-stock-callout__icon,
+  .item-stock-callout__chevron {
+    font-size: 1rem;
+  }
+
+  .item-stock-callout__cta {
+    font-size: 0.8rem;
+  }
 }
 
 /* ============================================================= */
@@ -1655,7 +1726,7 @@ a:hover img {
 }
 
 /* ============================================================= */
-/* Locked Humanoid Image Styles
+/* Locked Image Styles
 =============================================================== */
 
 .locked-humanoid-container {
@@ -1663,20 +1734,66 @@ a:hover img {
   display: inline-block;
 }
 
-.locked-humanoid-overlay {
+.locked-overlay-container {
+  position: relative;
+}
+
+.locked-humanoid-overlay,
+.locked-overlay {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 8em;
-  color: white;
+  color: #fff;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.locked-overlay-icon {
+  font-size: 8rem;
+  line-height: 1;
+}
+
+.locked-overlay.has-message {
+  background-color: rgba(15, 18, 23, 0.8);
+  padding: 1.2rem 1.8rem;
+  border-radius: 1.5rem;
+  max-width: min(420px, 90%);
+  text-shadow: none;
+  gap: 0.75rem;
+}
+
+.locked-overlay.has-message .locked-overlay-icon {
+  font-size: 2.5rem;
+}
+
+.locked-overlay-message {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.locked-overlay-target {
+  filter: grayscale(75%) opacity(0.8);
 }
 
 .locked-humanoid-tab {
-  background-color: rgb(114, 114, 114, 0.5);
+  background-color: rgba(114, 114, 114, 0.5);
   padding: 20px;
   border-radius: 8px;
   filter: grayscale(70%) opacity(0.7);
+}
+
+.locked-tab-icon {
+  margin-left: 0.35rem;
+  cursor: help;
+}
+
+.locked-overlay[title] {
+  cursor: help;
 }

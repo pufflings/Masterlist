@@ -48,7 +48,6 @@ charadex.sheet = {
     staff: "mods",
     options: "OptionsSheet", 
     carousel: "carousel",
-    traitItems: "Trait items",
     news: "news",
   },
 
@@ -609,7 +608,7 @@ charadex.page.seekers = {
   },
 
   fauxFolder: {
-    toggle: true,
+    toggle: false,
     folderProperty: 'Type',
     parameters: () => ['All', 'NPC', 'MYO'],
   },
