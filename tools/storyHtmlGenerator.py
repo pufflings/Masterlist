@@ -132,9 +132,7 @@ class StoryHTMLGenerator:
                 portrait = parts[2] if parts[2] and parts[2] != '-' else None
                 profile = parts[3] if len(parts) >= 4 and parts[3] and parts[3] != '-' else None
                 description = parts[4] if len(parts) >= 5 and parts[4] and parts[4] != '-' else None
-                include_in_showcase = not (
-                    len(parts) >= 6 and parts[5] and parts[5].strip().lower() == 'unlisted'
-                )
+                include_in_showcase = bool(full_body)
 
                 self.characters[name] = {
                     'full_body': full_body,
