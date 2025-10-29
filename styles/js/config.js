@@ -71,10 +71,20 @@ charadex.loadOptions = async () => {
     const optionsData = await charadex.importSheet(charadex.sheet.pages.options);
     
     // Process the options data
-    optionsData.forEach(({ optiontype, values }) => {
-      const parsedValues = ['All', ...values.split(',').map(value => value.trim())];
-      charadex.sheet.options[optiontype] = parsedValues;
-    });
+    for (let option of optionsData) {
+      if (option.optiontype && option.values) {
+        const optionType = option.optiontype.replace(/\s/g, "");
+        const values = option.values.split(',').map(v => v.trim());
+        
+        // Add 'All' option to the beginning of each array
+        values.unshift('All');
+        
+        // Update the options in charadex.sheet.options
+        if (charadex.sheet.options.hasOwnProperty(optionType)) {
+          charadex.sheet.options[optionType] = values;
+        }
+      }
+    }
     
     // Only log in development mode
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
