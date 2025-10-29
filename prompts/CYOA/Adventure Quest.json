@@ -157,7 +157,7 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<p><b>*Failure!*</b> <br> Your Puff eagerly shares a fun little dream it had, speaking with such seriousness that you can’t help but listen closely. </p>\n<p>It’s a small dream.... but a good one nonetheless.</p>"
+          "text": "<p><b>*Small Success!*</b> <br> Your Puff eagerly shares a fun little dream it had, speaking with such seriousness that you can’t help but listen closely. </p>\n<p>It’s a small dream.... but a good one nonetheless.</p>"
         },
         {
           "modifiers": {
@@ -229,7 +229,7 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<b>*Failure!*</b> <br> When you try to recall the good old days, you can barely remember anything. Your Puff has to remind you: <i>“How could you forget something that important?”</i> Then the topic drifts into something else entirely."
+          "text": "<b>*Small Success!*</b> <br> When you try to recall the good old days, you can barely remember anything. Your Puff has to remind you: <i>“How could you forget something that important?”</i> Then the topic drifts into something else entirely."
         },
         {
           "modifiers": {
@@ -396,7 +396,7 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<p><b>*Failure!*</b> <br> A faint spark flickers briefly before fading out with a <i>thud… oof!</i> Your Puff falls flat on its back, panting heavily.</p>\n<p>“It’s alright. You’ll get it next time, keep trying.”</p>\n\n<p>You gently pat its head, and the two of you keep practising for the rest of the day</p>"
+          "text": "<p><b>*Small Success!*</b> <br> A faint spark flickers briefly before fading out with a <i>thud… oof!</i> Your Puff falls flat on its back, panting heavily.</p>\n<p>“It’s alright. You’ll get it next time, keep trying.”</p>\n\n<p>You gently pat its head, and the two of you keep practising for the rest of the day</p>"
         },
         {
           "modifiers": {
@@ -468,7 +468,7 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<p><b>*Failure!*</b> <br> You and your Puff clash fiercely in the training yard, neither side giving in. After a heated exchange, both of you end up collapsing together.</p>\n<p>“Let’s just call it a draw!” you say with a tired smile.<br><i>(A draw? Against a Puff… really?)</i></p>"
+          "text": "<p><b>*Small Success!*</b> <br> You and your Puff clash fiercely in the training yard, neither side giving in. After a heated exchange, both of you end up collapsing together.</p>\n<p>“Let’s just call it a draw!” you say with a tired smile.<br><i>(A draw? Against a Puff… really?)</i></p>"
         },
         {
           "modifiers": {
@@ -635,7 +635,7 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<p><b>*Failure!*</b> <br> Your Puff tries to help by wiping the table, but accidentally knocks over a glass jar.</p>\n<p>“Oh no! That was my collection!”</p>\n\n<p>You lunge forward to catch it, but slip your head and bump into the Puff, sending another pile of stuff crashing down!</p>"
+          "text": "<p><b>*Small Success!*</b> <br> Your Puff tries to help by wiping the table, but accidentally knocks over a glass jar.</p>\n<p>“Oh no! That was my collection!”</p>\n\n<p>You lunge forward to catch it, but slip your head and bump into the Puff, sending another pile of stuff crashing down!</p>"
         },
         {
           "modifiers": {
@@ -707,7 +707,7 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<p><b>*Failure!*</b> <br> After a long struggle, you finally manage to catch your Puff and put it in the tub. It sits perfectly still, clearly displeased. Its eyes are plotting to begin revenge once the bath is over.</p>\n<p>“Don’t make that face, it’ll be over soon!” you laugh nervously.</p>"
+          "text": "<p><b>*Small Success!*</b> <br> After a long struggle, you finally manage to catch your Puff and put it in the tub. It sits perfectly still, clearly displeased. Its eyes are plotting to begin revenge once the bath is over.</p>\n<p>“Don’t make that face, it’ll be over soon!” you laugh nervously.</p>"
         },
         {
           "modifiers": {
