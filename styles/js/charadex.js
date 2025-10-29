@@ -258,7 +258,10 @@ charadex.initialize.groupGallery = async function (config, dataArray, groupBy, c
     charadexData = charadex.manageData.filterByPageParameters(charadexData);
 
     // Group data
-    let groupArray = Object.groupBy(charadexData, obj => obj[groupBy]);
+    const groupArray = charadex.tools.groupBy(
+      charadexData,
+      entry => entry[groupBy]
+    );
 
     // Create base selectors
     let itemSelector =  { item: `${selector}-gallery-item` };

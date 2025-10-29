@@ -283,7 +283,7 @@ class StoryHTMLGenerator:
         dialogue_inner = dialogue_html
         if self.story_type == 'dice':
             story_json_name = Path(self.input_file).stem + '.json'
-            story_json_path = f"prompts/CYOA/{story_json_name}"
+            story_json_path = f"CYOA/{story_json_name}"
             start_names = ', '.join(sorted(self.dice_start_sections))
             end_names = ', '.join(sorted(self.dice_end_sections))
             dialogue_data_attrs = f'data-story-file="{story_json_path}" data-start-scene="{start_names}" data-end-sections="{end_names}"'

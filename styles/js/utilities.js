@@ -127,6 +127,18 @@ charadex.tools = {
     return this.getBasePath() + url;
   },
 
+  // Group an array by a key generator callback
+  groupBy(collection, getKey) {
+    if (!Array.isArray(collection) || typeof getKey !== 'function') return {};
+    return collection.reduce((groups, item) => {
+      const rawKey = getKey(item);
+      const key = rawKey === undefined ? 'undefined' : rawKey === null ? 'null' : String(rawKey);
+      if (!Object.prototype.hasOwnProperty.call(groups, key)) groups[key] = [];
+      groups[key].push(item);
+      return groups;
+    }, {});
+  },
+
   // Apply the base path adjustments to anchor and image elements within the supplied root
   applyBasePath(root) {
     const scope = root && typeof root.querySelectorAll === 'function' ? root : document;
@@ -518,9 +530,27 @@ charadex.manageData = {
     const items = await charadex.importSheet(charadex.sheet.pages.items);
     const inventoryData = [];
 
-    for (const [property, value] of Object.entries(profileArray)) {
+    for (const [propertyKey, value] of Object.entries(profileArray)) {
       if (value === '' || value === null || value === undefined) continue;
-      const match = items.find(item => item.item === property);
+      const normalizedProperty = String(propertyKey).toLowerCase();
+      const scrubbedProperty = charadex.tools.scrub(propertyKey);
+      const keyedProperty = charadex.tools.createKey(propertyKey);
+
+      const match = items.find(item => {
+        if (!item) return false;
+        const itemId = item.id != null ? String(item.id).toLowerCase() : null;
+        const itemIdScrubbed = itemId ? itemId.replace(/[^a-z0-9]/g, '') : null;
+        const itemName = item.item ?? '';
+        const itemNameScrubbed = charadex.tools.scrub(itemName);
+        const itemNameKeyed = charadex.tools.createKey(itemName);
+
+        return (
+          (itemId && itemId === normalizedProperty) ||
+          (itemIdScrubbed && itemIdScrubbed === scrubbedProperty) ||
+          (itemNameScrubbed && itemNameScrubbed === scrubbedProperty) ||
+          (itemNameKeyed && itemNameKeyed === keyedProperty)
+        );
+      });
       if (!match) continue;
 
       const entry = {
