@@ -671,13 +671,13 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<p><b>*Critical Success!*</b> <br> “Don’t like water, huh? Or is it the soap?” you tease with a laugh.</p>\n<p>“How about this, let’s take a warm bath together?”</p>\n<p>This time, Puff seems to agree, relaxing peacefully by your side.</p>"
+          "text": "<p><b>*Critical Success!*</b> <br>You and your Puff clean the room until everything shines, even the Puff itself is sparkling! The room looks bigger than before, and you even find some money you’d hidden ages ago."
         },
         {
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "Create a scene: <i>“A cozy bath shared with the Puff.”</i>"
+          "text": "Create a scene: <i>“A spotless room and smiles of victory.”</i>"
         }
       ],
       "final": true
@@ -689,13 +689,13 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<b>*Critical failure!*</b><br>\nYou and your Puff clean until everything shines, even the Puff itself is sparkling! The room looks bigger than before, and you even find some money you’d hidden ages ago."
+          "text": "<b>*Critical failure!*</b><br>\nThe bath war has begun!<br>\nYou chase your Puff around the room with a bucket of water while the Puff runs for its life, scrambles up the shelves, and leaps straight into the soap bucket! <br>\nIn the end, you’re soaked head to toe, while Puff dashes out the window and disappears to who-knows-where."
         },
         {
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "Create a scene: <i>“A spotless room and smiles of victory.”</i>"
+          "text": "Create a scene: <i>“A failed bath—Puff escapes!”</i>"
         }
       ],
       "final": true
