@@ -1,0 +1,209 @@
+/* =============================================================
+   Charadex Masterlist Styles
+   Styling for masterlist and seeker profile views, including
+   rarity badges, trait scrollers, relationship gauges, and
+   locked-image handling.
+   ============================================================= */
+
+.cd-traits-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.badge-common {
+  background-color: var(--cd-rarity-common-bg);
+  color: var(--cd-rarity-common-txt);
+}
+
+.badge-uncommon {
+  background-color: var(--cd-rarity-uncommon-bg);
+  color: var(--cd-rarity-uncommon-txt);
+}
+
+.badge-rare {
+  background-color: var(--cd-rarity-rare-bg);
+  color: var(--cd-rarity-rare-txt);
+}
+
+.badge-superrare {
+  background-color: var(--cd-rarity-superrare-bg);
+  color: var(--cd-rarity-superrare-txt);
+}
+
+.badge-exclusive,
+.badge-mythic {
+  background-color: var(--cd-rarity-exclusive-bg);
+  color: var(--cd-rarity-exclusive-txt);
+}
+
+#imageTab .nav-link {
+  color: var(--cd-secondary-text-color);
+  background-color: var(--cd-primary-color);
+  border: 1px solid var(--cd-primary-color);
+  margin-right: 2px;
+  border-radius: 8px 8px 0 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+#imageTab .nav-link.active {
+  color: var(--cd-primary-text-color);
+  background-color: var(--cd-secondary-color);
+  border-bottom: 2px solid var(--cd-primary-color);
+}
+
+.relationship-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.relationship-gauge-container {
+  flex: 2;
+  min-width: 0;
+}
+
+.heart-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.relationship-gauge {
+  position: relative;
+}
+
+.gauge-background {
+  width: 100%;
+  height: 24px;
+  background-color: var(--cd-secondary-color);
+  border: 1px solid var(--cd-border-color);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gauge-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cd-rarity-uncommon-bg), var(--cd-rarity-rare-bg));
+  border-radius: 12px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.gauge-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cd-rarity-common-txt);
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.heart-icon {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  filter: grayscale(100%) brightness(0.6);
+  transition: filter 0.3s ease;
+}
+
+.heart-icon.heartbound {
+  filter: none;
+}
+
+@media (max-width: 768px) {
+  .relationship-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .relationship-gauge-container {
+    flex: none;
+    text-align: center;
+  }
+
+  .heart-container {
+    flex: none;
+    justify-content: center;
+  }
+
+  .relationship-row .heart-icon {
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+.locked-humanoid-container {
+  position: relative;
+  display: inline-block;
+}
+
+.locked-overlay-container {
+  position: relative;
+}
+
+.locked-humanoid-overlay,
+.locked-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.locked-overlay-icon {
+  font-size: 8rem;
+  line-height: 1;
+}
+
+.locked-overlay.has-message {
+  background-color: rgba(15, 18, 23, 0.8);
+  padding: 1.2rem 1.8rem;
+  border-radius: 1.5rem;
+  max-width: min(420px, 90%);
+  text-shadow: none;
+  gap: 0.75rem;
+}
+
+.locked-overlay.has-message .locked-overlay-icon {
+  font-size: 2.5rem;
+}
+
+.locked-overlay-message {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.locked-overlay-target {
+  filter: grayscale(75%) opacity(0.8);
+}
+
+.locked-humanoid-tab {
+  background-color: rgba(114, 114, 114, 0.5);
+  padding: 20px;
+  border-radius: 8px;
+  filter: grayscale(70%) opacity(0.7);
+}
+
+.locked-tab-icon {
+  margin-left: 0.35rem;
+  cursor: help;
+}
+
+.locked-overlay[title] {
+  cursor: help;
+}

@@ -1,0 +1,53 @@
+/* =============================================================
+   Charadex Prompts Styles
+   Styles for prompt cards, gallery previews, and archived state
+   shared by prompts, main story, and landing page sections.
+   ============================================================= */
+
+.cd-prompt-background {
+  background-position: center;
+  background-size: cover;
+  min-height: 150px;
+  position: relative;
+  overflow: hidden;
+}
+
+.prompt-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.col-md-6 .cd-prompt-background::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, var(--cd-content-background-color));
+  pointer-events: none;
+}
+
+.col-12 .cd-prompt-background::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, rgba(218, 197, 170, 0.3));
+  pointer-events: none;
+}
+
+.card.h-100[data-folder="Archived"] .card-header a {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.shop-card-fade {
+  opacity: 0.4;
+  filter: grayscale(0.5);
+  transition: opacity 0.3s, filter 0.3s;
+}

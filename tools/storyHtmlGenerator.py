@@ -273,10 +273,12 @@ class StoryHTMLGenerator:
         if self.story_type == 'dice':
             extra_scripts = '\n  <script src="../styles/js/cyoa-story.js"></script>'
 
-        # Extra styles (only for dice/CYOA pages)
-        extra_head_links = ''
+        # Extra styles - always include story and prompts CSS, add CYOA CSS for dice type
+        extra_head_links = '''
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex-story.css">
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex-prompts.css">'''
         if self.story_type == 'dice':
-            extra_head_links = '\n  <link rel="stylesheet" type="text/css" href="../styles/css/cyoa-story.css">'
+            extra_head_links += '\n  <link rel="stylesheet" type="text/css" href="../styles/css/cyoa-story.css">'
 
         # Prepare dialogue container attributes/inner content
         dialogue_data_attrs = ''
