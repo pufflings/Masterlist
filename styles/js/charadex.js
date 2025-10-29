@@ -103,7 +103,41 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
     if (config.profileToggle !== undefined && !config.profileToggle) return false;
 
     let profileArr = list.getProfile(charadexData);
-    if (!profileArr) return false;
+    if (!profileArr) {
+      charadex.tools.resetPageTitle();
+      return false;
+    }
+
+    const profileEntry = profileArr[0] || null;
+    if (profileEntry) {
+      const titleProperties = [
+        config.profileTitleProperty,
+        config.profileProperty,
+        'profileid',
+        'title',
+        'name'
+      ];
+      let profileTitle = '';
+      for (const key of titleProperties) {
+        if (!key) continue;
+        const value = profileEntry[key];
+        if (value) {
+          profileTitle = value;
+          break;
+        }
+      }
+      if (typeof config.profileTitleFormatter === 'function') {
+        try {
+          const formatted = config.profileTitleFormatter(profileEntry, profileTitle);
+          if (formatted) profileTitle = formatted;
+        } catch (error) {
+          console.warn('profileTitleFormatter failed:', error);
+        }
+      }
+      charadex.tools.setPageTitleSuffix(profileTitle);
+    } else {
+      charadex.tools.resetPageTitle();
+    }
 
     if (config.prevNext?.toggle ?? false) {
       charadex.listFeatures.prevNextLink(pageUrl, charadexData, profileArr, selector);
@@ -134,6 +168,7 @@ charadex.initialize.page = async (dataArr, config, dataCallback, listCallback, c
   // Create Gallery
   const createGallery = async () => {
 
+    charadex.tools.resetPageTitle();
     setControlsVisibility(true);
 
     // Add additional list junk

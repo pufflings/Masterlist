@@ -12,22 +12,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load options from sheet first
   await charadex.loadOptions();
 
-  const toBoolean = (value) => (
-    value === true ||
-    value === "true" ||
-    value === 1 ||
-    value === "1" ||
-    value === "yes" ||
-    value === "Yes"
-  );
-
-  const isOutOfStock = (value) => value === 0 || value === "0";
-
   const buildStockCallout = (item) => {
-    if (!item) return '';
+    if (!item || item.stockedinshop !== true) return '';
 
-    const stocked = toBoolean(item.stockedinshop);
-    if (!stocked || isOutOfStock(item.stockquantity)) return '';
+    const quantity = Number(item.stockquantity ?? 0);
+    if (!Number.isFinite(quantity) || quantity <= 0) return '';
 
     const shopUrl = charadex.tools.resolveRelativeUrl('shop.html');
     return `
@@ -48,30 +37,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     (itemsArray) => {
       if (!Array.isArray(itemsArray)) return;
       for (const entry of itemsArray) {
-        entry.stockcallout = buildStockCallout(entry);
+        entry.stockcallout = '';
       }
     },
     (listData) => {
       if (listData.type !== 'profile' || !listData.profileArray || !listData.profileArray[0]) return;
 
       const item = listData.profileArray[0];
+      const stockCalloutMarkup = buildStockCallout(item);
 
-      const tradeable = item.tradeable ?? '';
-      let tradeableText = 'No';
-      if (tradeable === true || tradeable === "true" || tradeable === 1 || tradeable === "1" || tradeable === "yes" || tradeable === "Yes") {
-        tradeableText = 'Yes';
+      if (listData.list && Array.isArray(listData.list.items) && listData.list.items[0]) {
+        const listItem = listData.list.items[0];
+        listItem.values({ stockcallout: stockCalloutMarkup });
+        const stockNode = listItem.elm?.querySelector?.('.stockcallout');
+        if (stockNode) {
+          stockNode.style.display = stockCalloutMarkup ? '' : 'none';
+        }
+      } else {
+        const profileStockCallout = $("#charadex-profile .stockcallout");
+        profileStockCallout.html(stockCalloutMarkup);
+        profileStockCallout.toggle(!!stockCalloutMarkup);
       }
+
+      const tradeableText = item.tradeable === true ? 'Yes' : 'No';
       $(".tradeable").text(tradeableText);
 
-      const itemType = (item.type || '').trim().toLowerCase();
-      if (itemType !== 'trait') {
+      if (item.type !== 'Trait') {
         $("#related-trait-row").hide();
         $("#related-trait-row .related-trait-label").text('');
         $("#related-trait-row .related-trait").empty();
         return;
       }
 
-      const traitValue = (item.trait || '').trim();
+      const traitValue = item.trait || '';
       if (!traitValue) {
         $("#related-trait-row").show();
         $("#related-trait-row .related-trait-label").text('Related trait');
@@ -80,9 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       const traitMatch = traits.find(t => {
-        const byName = (t.trait || '').trim().toLowerCase() === traitValue.toLowerCase();
-        const byId = (t.id || '').toString().trim().toLowerCase() === traitValue.toLowerCase();
-        return byName || byId;
+        return t.trait === traitValue || String(t.id) === traitValue;
       });
 
       $("#related-trait-row").show();
@@ -93,10 +89,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      const traitName = (traitMatch.trait || traitValue).trim();
+      const traitName = traitMatch.trait || traitValue;
       const profile = traitName ? traitName.toLowerCase().replace(/\s+/g, '') : '';
       const link = profile ? `traits.html?profile=${profile}` : '';
-      const image = (traitMatch.image || '').trim();
+      const image = traitMatch.image || '';
 
       let html = '';
       if (image) {

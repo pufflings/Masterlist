@@ -135,48 +135,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   });
     await charadex.loadOptions();
-  
-      /* Carousel
-  ===================================================================== */
-    // Load carousel data from sheet
-    const carouselData = await charadex.importSheet(charadex.sheet.pages.carousel);
-  
-    // Filter out hidden images (hide: TRUE or 'TRUE' or true)
-    const visibleSlides = carouselData.filter(slide =>
-      !slide.hide || slide.hide === 'FALSE' || slide.hide === false || slide.hide === 'false' || slide.hide === 0 || slide.hide === '0'
-    );
-  
-    // Build carousel indicators and items
-    let indicators = '';
-    let items = '';
-    visibleSlides.forEach((slide, i) => {
-      // indicators += `<li data-target="#pufflingCarousel" data-slide-to="${i}"${i === 0 ? ' class="active"' : ''}></li>`;
-      items += `
-        <div class="carousel-item${i === 0 ? ' active' : ''}">
-          <a href="${slide.link || '#'}" target="_blank">
-            <img src="${slide.image}" class="d-block w-100 rounded" alt="${slide.alt || ''}">
-          </a>
-        </div>
-      `;
-    });
-  
-    // Insert into the DOM
-    const ind = document.getElementById('pufflingCarouselIndicators');
-    const inn = document.getElementById('pufflingCarouselInner');
-    if (ind && inn) {
-      // Dispose of any previous carousel instance
-      if ($('#pufflingCarousel').data('bs.carousel')) {
-        $('#pufflingCarousel').carousel('dispose');
-      }
-      // Insert new HTML
-      // ind.innerHTML = indicators;
-      inn.innerHTML = items;
-      // Initialize carousel
-      $('#pufflingCarousel').carousel({ interval: 5000, wrap: true });
-      $('#pufflingCarousel').carousel(0); // Go to the first slide
-    } else {
-      console.error('Carousel container elements not found in DOM!');
-    }
 
 
   /* Load Page

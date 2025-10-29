@@ -16,6 +16,9 @@ window.charadex = charadex;
 ======================================================================= */
 charadex.tools = {
 
+  // Store canonical page title so we can restore it later
+  basePageTitle: null,
+
   // Scrub
   // Scrubs data so its all lowercase with no spaces
   scrub(str) {
@@ -39,6 +42,53 @@ charadex.tools = {
       options.push(`<option value="${charadex.tools.scrub(value)}">${value}</option>`);
     };
     return options;
+  },
+
+  // Fetch the current <title> element
+  _getTitleElement() {
+    return document.querySelector('title');
+  },
+
+  // Capture and return the original page title
+  getBasePageTitle() {
+    if (typeof this.basePageTitle === 'string' && this.basePageTitle.length > 0) {
+      return this.basePageTitle;
+    }
+    const titleElement = this._getTitleElement();
+    const currentTitle = (titleElement?.textContent || document.title || '').trim();
+    this.basePageTitle = currentTitle;
+    return this.basePageTitle;
+  },
+
+  // Update the document title and matching meta tag
+  setPageTitle(newTitle = '') {
+    const safeTitle = (newTitle || '').toString();
+    const titleElement = this._getTitleElement();
+    if (titleElement) {
+      titleElement.textContent = safeTitle;
+    }
+    document.title = safeTitle;
+    const metaTitle = document.querySelector('meta[name="title"]');
+    if (metaTitle) {
+      metaTitle.setAttribute('content', safeTitle);
+    }
+  },
+
+  // Apply a suffix to the base page title (e.g., profile views)
+  setPageTitleSuffix(suffix, separator = ' - ') {
+    const baseTitle = this.getBasePageTitle();
+    if (!baseTitle) return;
+    const trimmedSuffix = typeof suffix === 'string' ? suffix.trim() : suffix;
+    const fullTitle = trimmedSuffix ? `${baseTitle}${separator}${trimmedSuffix}` : baseTitle;
+    this.setPageTitle(fullTitle);
+  },
+
+  // Restore page title to its original value
+  resetPageTitle() {
+    const baseTitle = this.getBasePageTitle();
+    if (baseTitle) {
+      this.setPageTitle(baseTitle);
+    }
   },
 
   // Determine how many directory levels away from the site root the current page is
@@ -465,32 +515,27 @@ charadex.manageData = {
   /* Fixes old style of inventories
   ===================================================================== */
   async inventoryFix(profileArray) {
+    const items = await charadex.importSheet(charadex.sheet.pages.items);
+    const inventoryData = [];
 
-    let itemArr = await charadex.importSheet(charadex.sheet.pages.items);
-  
-    let inventoryData = [];
-    for (let property in profileArray) {
-      for (let item of itemArr) {
-        const scrubbedItemName = charadex.tools.scrub(item.item);
-        const scrubbedProperty = charadex.tools.scrub(property);
-        if (item.profilelink){
-          item.imageprofilelink = item.profilelink;
-        }
-        if (scrubbedProperty === scrubbedItemName && profileArray[property] !== '' && profileArray[property] !== null && profileArray[property] !== undefined) {
-          inventoryData.push({
-            ... item,
-            ... {
-              quantity: profileArray[property]
-            }
-          });
-        }
+    for (const [property, value] of Object.entries(profileArray)) {
+      if (value === '' || value === null || value === undefined) continue;
+      const match = items.find(item => item.item === property);
+      if (!match) continue;
+
+      const entry = {
+        ...match,
+        quantity: value
+      };
+
+      if (entry.profilelink) {
+        entry.imageprofilelink = entry.profilelink;
       }
+
+      inventoryData.push(entry);
     }
 
-    console.log("inventoryData", inventoryData);
-  
     return inventoryData;
-  
   },
   
   /* Adds profile links

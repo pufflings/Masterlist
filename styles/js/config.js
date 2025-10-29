@@ -47,7 +47,6 @@ charadex.sheet = {
     faq: "faq",
     staff: "mods",
     options: "OptionsSheet", 
-    carousel: "carousel",
     news: "news",
   },
 
@@ -72,20 +71,10 @@ charadex.loadOptions = async () => {
     const optionsData = await charadex.importSheet(charadex.sheet.pages.options);
     
     // Process the options data
-    for (let option of optionsData) {
-      if (option.optiontype && option.values) {
-        const optionType = option.optiontype.replace(/\s/g, "");
-        const values = option.values.split(',').map(v => v.trim());
-        
-        // Add 'All' option to the beginning of each array
-        values.unshift('All');
-        
-        // Update the options in charadex.sheet.options
-        if (charadex.sheet.options.hasOwnProperty(optionType)) {
-          charadex.sheet.options[optionType] = values;
-        }
-      }
-    }
+    optionsData.forEach(({ optiontype, values }) => {
+      const parsedValues = ['All', ...values.split(',').map(value => value.trim())];
+      charadex.sheet.options[optiontype] = parsedValues;
+    });
     
     // Only log in development mode
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
@@ -253,6 +242,25 @@ charadex.page.traits = {
 
   prevNext: {
     toggle: true,
+  },
+
+  relatedData: {
+    [charadex.sheet.pages.masterlist]: {
+      ...charadex.page.masterlist,
+      sheetPage: charadex.sheet.pages.masterlist,
+      sitePage: 'masterlist',
+      primaryProperty: 'trait',
+      relatedProperty: 'traits',
+      dexSelector: 'trait-pufflings',
+      profileProperty: 'design',
+      profileToggle: false,
+      hideControlsOnProfile: false,
+      filters: { toggle: false, parameters: () => ({}) },
+      fauxFolder: { toggle: true, folderProperty: 'Species',parameters: () => charadex.sheet.options.species },
+      search: { toggle: false, filterToggle: false, parameters: [] },
+      pagination: { toggle: true, bottomToggle: true, amount: 4 },
+      relatedData: null,
+    },
   },
 
 };
@@ -621,6 +629,25 @@ charadex.page.seekers = {
 
   prevNext: {
     toggle: true,
+  },
+
+  relatedData: {
+    [charadex.sheet.pages.masterlist]: {
+      ...charadex.page.masterlist,
+      sheetPage: charadex.sheet.pages.masterlist,
+      sitePage: 'masterlist',
+      primaryProperty: 'design',
+      relatedProperty: 'seeker',
+      dexSelector: 'pufflings',
+      profileProperty: 'design',
+      profileToggle: false,
+      hideControlsOnProfile: false,
+      filters: { toggle: false, parameters: () => ({}) },
+      fauxFolder: { toggle: false, folderProperty: '', parameters: [] },
+      search: { toggle: false, filterToggle: false, parameters: [] },
+      pagination: { toggle: true, bottomToggle: true, amount: 12 },
+      relatedData: null,
+    },
   },
 
 };

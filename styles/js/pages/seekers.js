@@ -81,6 +81,55 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load options from sheet first
   await charadex.loadOptions();
 
+  const basePufflingsConfig =
+    charadex.page.seekers?.relatedData?.[charadex.sheet.pages.masterlist];
+
+  const defaultPufflingsConfig = {
+    ...charadex.page.masterlist,
+    sheetPage: charadex.sheet.pages.masterlist,
+    sitePage: 'masterlist',
+    filters: { toggle: false, parameters: () => ({}) },
+    fauxFolder: { toggle: false, folderProperty: '', parameters: [] },
+    search: { toggle: false, filterToggle: false, parameters: [] },
+    pagination: { toggle: true, bottomToggle: true, amount: 12 },
+    relatedData: null,
+  };
+
+  const pufflingsGalleryConfig = {
+    ...(basePufflingsConfig || defaultPufflingsConfig),
+  };
+
+  pufflingsGalleryConfig.dexSelector = 'pufflings';
+  pufflingsGalleryConfig.profileToggle = false;
+  pufflingsGalleryConfig.hideControlsOnProfile =
+    pufflingsGalleryConfig.hideControlsOnProfile ?? false;
+  pufflingsGalleryConfig.relatedData = null;
+  pufflingsGalleryConfig.sheetPage =
+    pufflingsGalleryConfig.sheetPage || charadex.sheet.pages.masterlist;
+  pufflingsGalleryConfig.sitePage =
+    pufflingsGalleryConfig.sitePage || 'masterlist';
+
+  const decoratePufflings = (entries = []) => {
+    return entries.map(entry => {
+      const decorated = { ...entry };
+
+      if (decorated.owner) {
+        const ownerProfile = decorated.owner.toLowerCase().replace(/\s+/g, '');
+        decorated.ownerlink = `inventories.html?profile=${ownerProfile}`;
+      }
+
+      if (decorated.seeker) {
+        const seekerProfile = decorated.seeker.toLowerCase().replace(/\s+/g, '');
+        decorated.seekerlink = `seekers.html?profile=${seekerProfile}`;
+      }
+
+      const image = decorated.image || '';
+      decorated.image = image.trim();
+
+      return decorated;
+    });
+  };
+
   let dex = await charadex.initialize.page(
     null,
     charadex.page.seekers,
@@ -89,8 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (typeFilters.length) {
         for (let i = data.length - 1; i >= 0; i--) {
           const entry = data[i];
-          const entryType = entry.type ?? '';
-          const entryTypeKey = charadex.tools.scrub(entryType);
+          const entryTypeKey = charadex.tools.scrub(entry.type);
           if (!typeFilters.includes(entryTypeKey)) {
             data.splice(i, 1);
           }
@@ -98,8 +146,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       // Process data for each seekers entry
       for (let entry of data) {
-        // Set image: prefer Preview, then Image, then Image URL
-        entry.image = entry.preview || entry.image || entry['image url'] || '';
+        entry.image = entry.image || '';
         // Process owner link to point to inventories page
         if (entry.owner) {
           let ownerProfile = entry.owner.toLowerCase().replace(/\s+/g, '');
@@ -114,69 +161,52 @@ document.addEventListener("DOMContentLoaded", async () => {
         const profile = listData.profileArray[0];
         if (!profile) return;
 
-        const seekerDesign = profile.design || '';
-        const seekerTypeRaw = profile.type ?? '';
-        const normalizedSeekerType = typeof seekerTypeRaw === 'string' ? seekerTypeRaw.toLowerCase() : '';
-        const isMyoSeeker = normalizedSeekerType.includes('myo');
-        let hasLinkedPufflings = false;
-        if (seekerDesign) {
-          // Load all Pufflings from the masterlist
-          const allPufflings = await charadex.importSheet(charadex.sheet.pages.masterlist);
+        const isMyoSeeker = profile.type === 'MYO';
 
-          const seekerDesignKey = charadex.tools.scrub(seekerDesign);
-          const filteredPufflings = allPufflings.filter(p => {
-            const rawSeeker = p.seeker ?? '';
-            const seekerId = rawSeeker ? String(rawSeeker).trim() : '';
-            if (!seekerId) return false;
-            return charadex.tools.scrub(seekerId) === seekerDesignKey;
-          });
-          if (filteredPufflings.length > 0) {
-            hasLinkedPufflings = true;
-            // Ensure the Pufflings section is visible and part of the profile layout
-            const pufflingsSection = document.getElementById('pufflings-gallery-section');
-            if (pufflingsSection) {
-              const charadexList = document.querySelector('#charadex-gallery .charadex-list');
-              if (charadexList && !pufflingsSection.dataset.inserted) {
-                charadexList.appendChild(pufflingsSection);
-                pufflingsSection.dataset.inserted = 'true';
-              }
-              pufflingsSection.style.display = '';
+        const pufflingsSection = document.getElementById('pufflings-gallery-section');
+        const pufflingsListContainer = document.querySelector('#pufflings-gallery .pufflings-list');
+        const relatedPufflings = decoratePufflings(profile.pufflings || []);
+        const hasLinkedPufflings = relatedPufflings.length > 0;
 
-              const pufflingsHeading = pufflingsSection.querySelector('.card-header h4');
-              if (pufflingsHeading) {
-                pufflingsHeading.textContent = 'Bonded pufflings';
-              }
+        if (pufflingsSection) {
+          if (hasLinkedPufflings) {
+            const charadexList = document.querySelector('#charadex-gallery .charadex-list');
+            if (charadexList && !pufflingsSection.dataset.inserted) {
+              charadexList.appendChild(pufflingsSection);
+              pufflingsSection.dataset.inserted = 'true';
             }
-            // Custom config for gallery without filters/search
-            const seekerPufflingsGalleryConfig = {
-              ...charadex.page.masterlist,
-              dexSelector: 'pufflings',
-              hideControlsOnProfile: false,
-              profileToggle: false,
-              filters: { toggle: false, parameters: () => ({}) },
-              fauxFolder: { toggle: false, folderProperty: '', parameters: [] },
-              search: { toggle: false, filterToggle: false, parameters: [] },
-              pagination: { toggle: false, bottomToggle: false, amount: 100 },
-            };
-            // Render the gallery using the masterlist config
+            pufflingsSection.style.display = '';
+
+            const pufflingsHeading = pufflingsSection.querySelector('.card-header h4');
+            if (pufflingsHeading) {
+              pufflingsHeading.textContent = 'Bonded pufflings';
+            }
+
+            if (pufflingsListContainer) {
+              pufflingsListContainer.innerHTML = '';
+            }
+
             await charadex.initialize.page(
-              filteredPufflings,
-              seekerPufflingsGalleryConfig,
+              relatedPufflings,
+              pufflingsGalleryConfig,
               null,
               null,
               false
             );
           } else {
-            const pufflingsSection = document.getElementById('pufflings-gallery-section');
-            if (pufflingsSection) {
-              pufflingsSection.style.display = 'none';
-              const galleryContainer = pufflingsSection.querySelector('#pufflings-gallery');
-              if (galleryContainer) {
-                galleryContainer.innerHTML = '';
-              }
+            pufflingsSection.style.display = 'none';
+            if (pufflingsListContainer) {
+              pufflingsListContainer.innerHTML = '';
             }
+            const paginationContainers = pufflingsSection.querySelectorAll('.pufflings-pagination-container');
+            paginationContainers.forEach(container => {
+              container.style.display = 'none';
+              const paginationList = container.querySelector('.pufflings-pagination');
+              if (paginationList) paginationList.innerHTML = '';
+            });
           }
         }
+
         const shouldLockSeekerImage = isMyoSeeker && !hasLinkedPufflings;
         const seekerLockMessage = "This seeker can't be used for guild activities until a puffling is registered with them.";
         const imageContainer = document.querySelector('.cd-profile-image-container');

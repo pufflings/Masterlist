@@ -170,35 +170,28 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             // Update heart icon based on heartboundcrystal
             const heartIcon = relationshipRow.querySelector('.heart-icon');
-            if (heartIcon) {
-              if (data.heartboundcrystal === true || data.heartboundcrystal === 'true') {
-                heartIcon.classList.add('heartbound');
-              } else {
-                heartIcon.classList.remove('heartbound');
-              }
-            }
+            if (heartIcon) heartIcon.classList.toggle('heartbound', data.heartboundcrystal === true);
           }
         }
 
         // Set Design Type
         const designType = data.type || '';
-        const normalizedDesignType = typeof designType === 'string' ? designType.toLowerCase().trim() : '';
-        const isNpcDesign = normalizedDesignType.includes('npc');
+        const isNpcDesign = designType === 'NPC';
         const designTypeElem = document.querySelector('.designtype');
         if (designTypeElem) designTypeElem.textContent = designType;
 
         // Render profile image(s)
         const imageContainer = document.querySelector('.cd-profile-image-container');
-        if (imageContainer) {
-          imageContainer.innerHTML = '';
-          if (data.humanoidimage) {
-            // Check if heartboundcrystal is true to determine lock status
-            const isHeartbound = data.heartboundcrystal === true || data.heartboundcrystal === 'true';
-            const shouldLockHumanoid = !isNpcDesign && !isHeartbound;
-            const lockTooltip = 'You need to reach relationship 50 and get a Heartbound Crystal to unlock';
-            const humanoidTabClasses = shouldLockHumanoid ? ' locked-humanoid-tab locked-overlay-target' : '';
-            const tabLockMarkup = shouldLockHumanoid
-              ? `<span class="locked-tab-icon" title="${lockTooltip}" aria-hidden="true">&#128274;</span>`
+          if (imageContainer) {
+            imageContainer.innerHTML = '';
+            if (data.humanoidimage) {
+              // Check if heartboundcrystal is true to determine lock status
+              const isHeartbound = data.heartboundcrystal === true;
+              const shouldLockHumanoid = !isNpcDesign && !isHeartbound;
+              const lockTooltip = 'You need to reach relationship 50 and get a Heartbound Crystal to unlock';
+              const humanoidTabClasses = shouldLockHumanoid ? ' locked-humanoid-tab locked-overlay-target' : '';
+              const tabLockMarkup = shouldLockHumanoid
+                ? `<span class="locked-tab-icon" title="${lockTooltip}" aria-hidden="true">&#128274;</span>`
               : '';
             const humanoidTabAriaLabel = shouldLockHumanoid
               ? `Humanoid image locked. ${lockTooltip}`

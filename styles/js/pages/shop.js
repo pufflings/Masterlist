@@ -5,40 +5,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load all items from the Items sheet
   const allItems = await charadex.importSheet(charadex.sheet.pages.items);
 
-  // Filter for items with 'stockedinshop' set to true, 'true', 1, or '1'
-  const shopItems = allItems.filter(item => 
-    item.stockedinshop === true ||
-    item.stockedinshop === "true" ||
-    item.stockedinshop === 1 ||
-    item.stockedinshop === "1"
-  );
+  // Filter for items marked as stocked in the shop
+  const shopItems = allItems.filter(item => item.stockedinshop === true);
 
   const $list = $("div.charadex-shop-list");
   $list.empty();
 
   shopItems.forEach(item => {
     const rarity = item.rarity || '';
-    const rarityBadge = rarity ? `<span class="badge badge-pill badge-${rarity.toLowerCase().replace(/\s/g, '')}">${rarity}</span>` : "";
+    const rarityBadge = rarity
+      ? `<span class="badge badge-pill badge-${charadex.tools.scrub(rarity)}">${rarity}</span>`
+      : "";
     const price = item.price || '';
-    const stock = item.stockquantity || '';
-    const image = item.image || item.imageurl || 'assets/favicon.png';
+    const stockNumber = Number(item.stockquantity ?? 0);
+    const stock = Number.isFinite(stockNumber) ? stockNumber : 0;
+    const image = item.image || 'assets/favicon.png';
     const name = item.item || '';
     const description = item.description || '';
     
-    // Handle Tradeable field
-    const tradeable = item.tradeable || item.Tradeable || '';
-    let tradeableText = 'No';
-    let tradeableClass = 'text-muted';
-    if (tradeable === true || tradeable === "true" || tradeable === 1 || tradeable === "1" || tradeable === "yes" || tradeable === "Yes") {
-      tradeableText = 'Yes';
-      tradeableClass = 'text-success';
-    }
+    const tradeableText = item.tradeable === true ? 'Yes' : 'No';
+    const tradeableClass = item.tradeable === true ? 'text-success' : 'text-muted';
     
     // Create profile link (lowercase, remove spaces and special characters)
-    const profile = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const profile = charadex.tools.scrub(name);
     let nameLink = `<a href="items.html?profile=${profile}">${name}</a>`;
     let cardFadeClass = '';
-    if (stock === 0 || stock === '0') {
+    if (stock <= 0) {
       nameLink = `<s>${nameLink}</s>`;
       cardFadeClass = 'shop-card-fade';
     }
