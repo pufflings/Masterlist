@@ -23,10 +23,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install packaging google-api-python-client google-auth google-auth-httplib2 google-auth-oauthlib
 
-    - name: Clear prompts folder (except example.html)
-      run: |
-        find prompts -mindepth 1 -not -name 'example.html' -delete
-        echo "Prompts folder cleared except example.html."
+      - name: Clear prompts folder (except example.html)
+        run: |
+          find prompts -mindepth 1 -not -name 'example.html' -delete
+          echo "Prompts folder cleared except example.html."
 
 
       - name: Sync prompts from Google Docs
