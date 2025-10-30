@@ -1,0 +1,758 @@
+{
+  "scenes": [
+    {
+      "scene": "scene1",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>Today, you and your Partner have no missions to take on. So you decide to spend the whole day together.</p>\n<p> The morning sunlight streams gently through the window…</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "What should we do today?",
+          "choices": [
+            {
+              "text": "We could go outside!",
+              "next": "scene2"
+            },
+            {
+              "text": "Prepare ourselves for the future",
+              "next": "scene13"
+            },
+            {
+              "text": "Stay at home, we’ve got plenty of things to do",
+              "next": "scene24"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene2",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "The weather is so nice today that it feels like a waste to stay indoors. You invite your Puff to take a walk in the garden behind the city."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Sunlight filters through the treetops, glimmering on its soft, fluffy fur. After a while of strolling together, you sit down beneath a large tree by the path. As always, Puff hops over and settles down right beside you.",
+          "choices": [
+            {
+              "text": "Think about your dreams",
+              "next": "scene3"
+            },
+            {
+              "text": "Reminiscing about the old days",
+              "next": "scene4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene3",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>A cool breeze drifts by as you gaze up at the sky.</p>\n<p>“I wonder... will our dreams ever come true someday?”</p>",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene5"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene6"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene7"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene8"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene4",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>You think back on old memories.</p>\n<p> “Do you remember the day we first met?” </p>",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene9"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene10"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene11"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene12"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene5",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Critical failure!*</b> <br> As you talk, you can’t help but laugh at how ridiculous the story sounds.\n“Guess I’ll stop dreaming about that, better leave this one behind, haha!”"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A silly dream you’d rather forget.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene6",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Small Success!*</b> <br> Your Puff eagerly shares a fun little dream it had, speaking with such seriousness that you can’t help but listen closely. </p>\n<p>It’s a small dream.... but a good one nonetheless.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“Puff’s little dream.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene7",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Mixed Success!*</b> <br> You share your own dream sincerely. Your Puff listens quietly until the end, as if to say,<i>“I’ll stay with you… until that day comes.”</i>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“My dream for the future.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene8",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Critical Success!*</b> <br> You and your Puff share your dreams with each other—only to realise they’re the same.</p>\n<p>“Then let’s make a promise… We’ll reach that day together.”</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“Our shared dream with Puff.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene9",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Critical failure!*</b> <br> You try to recall the memory… but end up bringing up the time you had a fight instead. In the end, you really do start arguing again—and stay upset for days. <br>How unfortunate…"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A bad memory between you and your Puff.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene10",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Small Success!*</b> <br> When you try to recall the good old days, you can barely remember anything. Your Puff has to remind you: <i>“How could you forget something that important?”</i> Then the topic drifts into something else entirely."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“An ordinary day’s memory with your Puff.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene11",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Mixed Success!*</b> <br> While reminiscing, you offer the snack in your hand to your Puff. The two of you laugh over the silly moments you’ve been through together, laughing so much that you forget all about the first day you met."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A funny memory you and Puff once shared.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene12",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Critical Success!*</b> <br> Both you and Puff remember that day vividly. The words you shared, the things you did together — it all flows back to you like it was just yesterday.</p>\n<p>What once was just a simple conversation now feels like one of your dearest memories.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“The moment you first met your Puff.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene13",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>Even on a quiet day like this, a true Seeker always stays prepared.</p>\n<p><i>\"You never know what tomorrow might bring, so let’s be prepared!\"</i></p>",
+          "choices": [
+            {
+              "text": "Let’s do Magic Training!",
+              "next": "scene14"
+            },
+            {
+              "text": "Let’s do Combat Training!",
+              "next": "scene15"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene14",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>You and Puff decide to practice magic together.</p>\n<p>“All right, show me the spell you’re best at!”</p>",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene16"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene17"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene18"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene19"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene15",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>You and Puff decide to train in combat today.</p>\n<p>“Come at me, you little furball! Give me everything you’ve got!”</p>",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene20"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene21"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene22"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene23"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene16",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Critical failure!*</b> <br> <b><i>BOOM!</b></i> A loud explosion echoes throughout the training room, and your Puff tumbles to the other side as smoke fills the air."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“Magic training gone wrong.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene17",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Small Success!*</b> <br> A faint spark flickers briefly before fading out with a <i>thud… oof!</i> Your Puff falls flat on its back, panting heavily.</p>\n<p>“It’s alright. You’ll get it next time, keep trying.”</p>\n\n<p>You gently pat its head, and the two of you keep practising for the rest of the day</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“Failed magic training filled with effort.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene18",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Mixed Success!*</b> <br> The magic light begins to take shape, your Puff closes its eyes tightly, focusing with all its might. The spell shimmers and sparkles throughout the room.</p>\n<p>“See? I told you you could do it!” you cheer, nearly bouncing with excitement.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“Puff successfully casting magic.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene19",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Critical Success!*</b> <br> The spell succeeds flawlessly! A radiant light bursts forth, dazzling even the Puff itself.  “That was amazing! With this, we’ve got nothing to fear anymore!”  You and your Puff laugh together amid the warm glow filling the room."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“The perfect magic training.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene20",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Critical failure!*</b> <br> Before the spar even begins, you slip and twist your ankle!\nYour Puff rolls out of the way just in time, then taps you lightly on the head.</p>\n<p>“Ouch… we didn’t even start yet!”</p>\n<p> Your Puff lets out a triumphant cheer, proud of its victory.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“Losing a sparring match against Puff.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene21",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Small Success!*</b> <br> You and your Puff clash fiercely in the training yard, neither side giving in. After a heated exchange, both of you end up collapsing together.</p>\n<p>“Let’s just call it a draw!” you say with a tired smile.<br><i>(A draw? Against a Puff… really?)</i></p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A training match that ends in a tie.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene22",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Mixed Success!*</b> <br> The training intensifies—you narrowly dodge your Puff’s attacks and counter with the tip of your weapon, poking its belly lightly.</p>\n<p>“Got you!”</p>\n\n<p>Your Puff stares in shock, then smiles, accepting defeat.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“Winning the training match against Puff.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene23",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Critical Success!*</b> <br> You and your Puff move in perfect sync, as if you’ve trained together since forever. Gentle sparks of magic flow between strikes and dodges, each movement filled with strength and trust.</p>\n<p>Your Puff attacks up close with its fists and from afar with stones, while you deflect with graceful precision.  As you spar, your eyes meet, and you both smile in pure joy.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A powerful, beautiful sparring match full of trust and friendship.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene24",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>Alright then, since we’ve got some free time today... what should we do around the room?</p>\n<p>You look around, there’s dust, piles of stuff everywhere, and your Puff rolling on the floor. Looks like it’s going to be a long day of cleaning. </p>",
+          "choices": [
+            {
+              "text": "Tidy your room",
+              "next": "scene25"
+            },
+            {
+              "text": "Give your Puffling a bath",
+              "next": "scene26"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene": "scene25",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>Your room is cluttered with scraps of paper, potion bottles, and Puff’s fur scattered everywhere.</p>\n<p>“If I don’t clean this up today, we’ll have nowhere left to walk tomorrow.”</p>\n\n\n<p>You sigh softly, pick up a broom, and your Puff trots over, ready to help.</p>",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene27"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene28"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene29"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene30"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene26",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p>You notice your Puff’s fur is such a tangled mess that it looks like a living dust ball.</p>\n<p>“Come here, it’s bath time, you little stinker!”</p>\n\n</p>The Puff freezes, realising its fate—then bolts out, running for its <i>life!</i></p>",
+          "dice-choices": {
+            "dice-min": 1,
+            "dice-max": 20,
+            "choices": [
+              {
+                "dice-min": 1,
+                "dice-max": 1,
+                "next": "scene31"
+              },
+              {
+                "dice-min": 7,
+                "dice-max": 12,
+                "next": "scene32"
+              },
+              {
+                "dice-min": 13,
+                "dice-max": 18,
+                "next": "scene33"
+              },
+              {
+                "dice-min": 20,
+                "dice-max": 20,
+                "next": "scene34"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "scene": "scene27",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Critical failure!*</b><br>\nYour room is on fire....how did this even happen?! </p>\n<p>You and your Puff can only stare at each other in disbelief, wondering whose fault it was.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“The room burned down to ashes.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene28",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Small Success!*</b> <br> Your Puff tries to help by wiping the table, but accidentally knocks over a glass jar.</p>\n<p>“Oh no! That was my collection!”</p>\n\n<p>You lunge forward to catch it, but slip your head and bump into the Puff, sending another pile of stuff crashing down!</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A chaotic cleaning disaster.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene29",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Mixed Success!*</b> <br>Your Puff uses magic to clean the room in a flash.</p>\n<p>“You can’t just do that! We're supposed to clean it ourselves,” you say, scratching your head. But after seeing the spotless room, you sigh.</p>\n\n<p>“...Well, I guess this works too.”</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A magically cleaned room by Puff.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene30",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Critical Success!*</b> <br>You and your Puff clean the room until everything shines, even the Puff itself is sparkling! The room looks bigger than before, and you even find some money you’d hidden ages ago."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A spotless room and smiles of victory.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene31",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Critical failure!*</b><br>\nThe bath war has begun!<br>\nYou chase your Puff around the room with a bucket of water while the Puff runs for its life, scrambles up the shelves, and leaps straight into the soap bucket! <br>\nIn the end, you’re soaked head to toe, while Puff dashes out the window and disappears to who-knows-where."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A failed bath—Puff escapes!”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene32",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Small Success!*</b> <br> After a long struggle, you finally manage to catch your Puff and put it in the tub. It sits perfectly still, clearly displeased. Its eyes are plotting to begin revenge once the bath is over.</p>\n<p>“Don’t make that face, it’ll be over soon!” you laugh nervously.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A grumpy Puff during bath time.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene33",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<b>*Mixed Success!*</b> <br> With clever tricks and plenty of patience, you finally manage to bathe your Puff without trouble. Bubbles float all around, and the Puff seems to enjoy itself, playing happily with its favourite toy."
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A fun and cheerful bath time.”</i>"
+        }
+      ],
+      "final": true
+    },
+    {
+      "scene": "scene34",
+      "dialogue": [
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>*Critical Success!*</b> <br> “Don’t like water, huh? Or is it the soap?” you tease with a laugh.</p>\n<p>“How about this, let’s take a warm bath together?”</p>\n<p>This time, Puff seems to agree, relaxing peacefully by your side.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "Create a scene: <i>“A cozy bath shared with the Puff.”</i>"
+        }
+      ],
+      "final": true
+    }
+  ]
+}
