@@ -23,6 +23,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install packaging google-api-python-client google-auth google-auth-httplib2 google-auth-oauthlib
 
+      - name: Clear prompts folder
+        run: |
+          rm -rf prompts/*
+          echo "Prompts folder cleared."
+
       - name: Sync prompts from Google Docs
         env:
           GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
