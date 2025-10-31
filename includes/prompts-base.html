@@ -1,80 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-  <!-- ----------------------------------------------------------------- -->
-  <!-- About Your Site                                                   -->
-  <!-- ----------------------------------------------------------------- -->
-  <link rel="shortcut icon" type="image/png" href="assets/favicon.png" />
-  <title>Pufflings Main Story</title>
-  <meta name="title" content="Pufflings Main Story" />
-  <meta name="type" content="website" />
-  <meta name="url" content="https://pufflings.github.io/Masterlist/" />
-  <meta name="image" content="assets/meta.png" />
-  <meta name="description" content="Welcome to the Puffling ARPG! Pufflings are a mysterious, fluffy creature, believed to be a descendants of legendary dragons.">
-
-  <!-- No AI scraping directives -->
-  <meta name="robots" content="noai">
-  <meta name="robots" content="noimageai">
-
-
-  <!-- ----------------------------------------------------------------- -->
-  <!-- Styles                                                            -->
-  <!-- ----------------------------------------------------------------- -->
-
-  <!-- Bootstrap CSS -->
-  <!-- Using Bootstrap 4.5 because its closest to Toyhou.se's current version -->
-  <!-- https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-  
-  <!-- Multiselect CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-
-  <!-- ----------------------------------------------------------------- -->
-  <!-- Optional Styles                                                   -->
-  <!-- ----------------------------------------------------------------- -->
-
-  <!-- Custom CSS -->
-  <link rel="stylesheet" type="text/css" href="styles/css/charadex.css">
-  <link rel="stylesheet" type="text/css" href="styles/css/charadex-prompts.css">
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400|Comfortaa:500" rel="stylesheet">
-
-
-</head>
-
-<body id="charadex-body">
-
-
-  <!-- --------------------------------------------------------------------
-  <-- Header
-  <-------------------------------------------------------------------- -->
-  <div class="load-html" id="header" data-source="includes/header.html"></div>
-
-
-  <!-- --------------------------------------------------------------------
-  <-- Main List
-  <-------------------------------------------------------------------- -->
   <div class="container" id="main-container">
     <div id="charadex-gallery">
 
       <!-- Top Card Container
       <!-- ----------------------------------------------------------------- -->
-      <div class="card p-md-5 p-4 mb-4">
+      <div class="card p-md-5 p-4 mb-4 charadex-controls">
 
         <!-- Title
         <!-- --------------------------------------------------------------- -->
-        <h3 class="mb-0"><a href="mainstory.html">Main Story Prompts</a></h3>
+        <h3 class="mb-0 prompt-title"><a class="prompt-controls-link" href="prompts.html">Prompt Catalogue</a></h3>
+        <p class="prompt-subtitle text-muted mb-0" style="display:none;"></p>
 
         <!-- Faux Folders
         <!-- --------------------------------------------------------------- -->
@@ -193,6 +127,13 @@
         <!-- Body -->
         <div class="card-body d-flex flex-column flex-fill">
           <div class="description mb-auto"></div>
+          <div class="prompt-schedule-fields">
+            <hr class="mx-0">
+            <div class="row no-gutters text-muted m-n1 px-3 small">
+              <div class="col p-1 prompt-start-date"><b>Start Date:</b> <span class="startdate"></span></div>
+              <div class="col p-1 prompt-end-date"><b>End Date:</b> <span class="enddate"></span></div>
+            </div>
+          </div>
         </div>
         
         <!-- Footer -->
@@ -208,25 +149,3 @@
 
 
   </div>
-
-  <!-- ----------------------------------------------------------------- -->
-  <!-- JS                                                                -->
-  <!-- ----------------------------------------------------------------- -->
-
-  <!-- JQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-
-  <!-- Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-  
-  <!-- Bootstrap Multiselect -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-
-  <!-- Charadex Script -->
-  <script src="styles/js/pages/base.js" type="module"></script>
-  <script src="styles/js/pages/mainstory.js" type="module"></script>
-
-
-</body>
-
-</html>

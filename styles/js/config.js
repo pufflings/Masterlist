@@ -43,7 +43,6 @@ charadex.sheet = {
     items: "items",
     traits: "traits",
     prompts: "prompts",
-    mainstory: "Main Story",
     faq: "faq",
     staff: "mods",
     options: "OptionsSheet", 
@@ -308,55 +307,7 @@ charadex.page.prompts = {
   fauxFolder: {
     toggle: true,
     folderProperty: 'folder',
-    parameters: () => ['All', 'Active', 'Archived'],
-  },
-
-  search: {
-    toggle: true,
-    filterToggle: false,
-    parameters: ['Title']
-  },
-
-  prevNext: {
-    toggle: false,
-  },
-
-};
-
-
-/* Main Story
-/* --------------------------------------------------------------- */
-charadex.page.mainstory = {
-
-  sheetPage: charadex.sheet.pages.mainstory,
-  sitePage: 'mainstory',
-  dexSelector: 'charadex',
-  profileProperty: 'title',
-
-  sort: {
-    toggle: true,
-    key: "title",
-    order: "asc",
-    parameters: []
-  },
-
-  pagination: {
-    toggle: true,
-    bottomToggle: true,
-    amount: 12,
-  },
-
-  filters: {
-    toggle: false,
-    parameters: {
-      'new': ['New', 'Previous'],
-    }
-  },
-
-  fauxFolder: {
-    toggle: true,
-    folderProperty: 'folder',
-    parameters: () => ['All', 'New', 'Previous'],
+    parameters: () => ['All', 'New', 'Active', 'Archived'],
   },
 
   search: {
