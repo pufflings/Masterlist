@@ -52,7 +52,7 @@
   transition: opacity 0.3s, filter 0.3s;
 }
 
-.quest-body .quest-illustration {
+.quest-illustration {
   display: block;
   margin: 0 auto 1.5rem;
   width: 220px;
@@ -60,7 +60,7 @@
 }
 
 @media (max-width: 576px) {
-  .quest-body .quest-illustration {
+.quest-illustration {
     width: 150px;
   }
 }
