@@ -392,34 +392,42 @@ class CYOAStory {
         rollButton.textContent = '🎲 Roll the Dice!';
         
         rollButton.addEventListener('click', () => {
-            // Disable the roll button
+            // Disable the roll button while the roll resolves
             rollButton.disabled = true;
             rollButton.classList.add('selected');
-            rollButton.textContent = '🎲 Rolling...';
+            rollButton.textContent = 'Rolling...';
 
-            // Disable all controls once an option is selected
-                this.disableAllChoices(container);
-            
-            // Generate random number
-            const roll = Math.floor(Math.random() * diceChoices['dice-max']) + diceChoices['dice-min'];
-            
-            // Find which choice this roll corresponds to
-            const selectedChoice = diceChoices.choices.find(choice => 
-                roll >= choice['dice-min'] && roll <= choice['dice-max']
+            const min = Number.isFinite(Number(diceChoices['dice-min']))
+                ? Number(diceChoices['dice-min'])
+                : 1;
+            const max = Number.isFinite(Number(diceChoices['dice-max']))
+                ? Number(diceChoices['dice-max'])
+                : min;
+            const rollRange = Math.max((max - min) + 1, 1);
+            const roll = Math.floor(Math.random() * rollRange) + min;
+
+            const selectedChoice = diceChoices.choices.find(choice =>
+                roll >= Number(choice['dice-min']) && roll <= Number(choice['dice-max'])
             );
-            
-            if (selectedChoice) {
-                // Show the roll result
-                rollButton.textContent = `🎲 You rolled: ${roll}`;
-                rollButton.className = 'btn btn-success m-2';
-                
-                // Small delay to show the result, then proceed
-                setTimeout(() => {
-                    this.makeChoice(selectedChoice.next);
-                }, 1500);
+
+            if (!selectedChoice) {
+                console.warn(`dice-choices missing a range for roll ${roll}`, diceChoices);
+                rollButton.disabled = false;
+                rollButton.classList.remove('selected');
+                rollButton.className = 'btn btn-warning m-2 dice-roll-button';
+                rollButton.textContent = `Roll ${roll} not mapped. Try again.`;
+                return;
             }
+
+            // Choice resolved successfully; lock the controls and show the result
+            this.disableAllChoices(container);
+            rollButton.textContent = `You rolled: ${roll}`;
+            rollButton.className = 'btn btn-success m-2';
+
+            setTimeout(() => {
+                this.makeChoice(selectedChoice.next);
+            }, 1500);
         });
-        
         container.appendChild(rollButton);
 
         // Add a button to let the user choose the outcome manually
