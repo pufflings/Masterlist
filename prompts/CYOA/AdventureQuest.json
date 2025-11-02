@@ -76,13 +76,13 @@
                 "next": "scene5"
               },
               {
-                "dice-min": 7,
-                "dice-max": 12,
+                "dice-min": 2,
+                "dice-max": 10,
                 "next": "scene6"
               },
               {
-                "dice-min": 13,
-                "dice-max": 18,
+                "dice-min": 11,
+                "dice-max": 19,
                 "next": "scene7"
               },
               {
@@ -113,13 +113,13 @@
                 "next": "scene9"
               },
               {
-                "dice-min": 7,
-                "dice-max": 12,
+                "dice-min": 2,
+                "dice-max": 10,
                 "next": "scene10"
               },
               {
-                "dice-min": 13,
-                "dice-max": 18,
+                "dice-min": 11,
+                "dice-max": 19,
                 "next": "scene11"
               },
               {
@@ -315,13 +315,13 @@
                 "next": "scene16"
               },
               {
-                "dice-min": 7,
-                "dice-max": 12,
+                "dice-min": 2,
+                "dice-max": 10,
                 "next": "scene17"
               },
               {
-                "dice-min": 13,
-                "dice-max": 18,
+                "dice-min": 11,
+                "dice-max": 19,
                 "next": "scene18"
               },
               {
@@ -352,13 +352,13 @@
                 "next": "scene20"
               },
               {
-                "dice-min": 7,
-                "dice-max": 12,
+                "dice-min": 2,
+                "dice-max": 10,
                 "next": "scene21"
               },
               {
-                "dice-min": 13,
-                "dice-max": 18,
+                "dice-min": 11,
+                "dice-max": 19,
                 "next": "scene22"
               },
               {
@@ -554,13 +554,13 @@
                 "next": "scene27"
               },
               {
-                "dice-min": 7,
-                "dice-max": 12,
+                "dice-min": 2,
+                "dice-max": 10,
                 "next": "scene28"
               },
               {
-                "dice-min": 13,
-                "dice-max": 18,
+                "dice-min": 11,
+                "dice-max": 19,
                 "next": "scene29"
               },
               {
@@ -591,13 +591,13 @@
                 "next": "scene31"
               },
               {
-                "dice-min": 7,
-                "dice-max": 12,
+                "dice-min": 2,
+                "dice-max": 10,
                 "next": "scene32"
               },
               {
-                "dice-min": 13,
-                "dice-max": 18,
+                "dice-min": 11,
+                "dice-max": 19,
                 "next": "scene33"
               },
               {
