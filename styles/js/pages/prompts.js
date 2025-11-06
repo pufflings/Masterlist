@@ -26,10 +26,10 @@ document.addEventListener('charadex:includeLoaded', (event) => {
   const subtitleElement = root.querySelector('.prompt-subtitle');
   if (subtitleElement) {
     if (subtitleText) {
-      subtitleElement.textContent = subtitleText;
+      subtitleElement.innerHTML = subtitleText;
       subtitleElement.style.display = '';
     } else {
-      subtitleElement.textContent = '';
+      subtitleElement.innerHTML = '';
       subtitleElement.style.display = 'none';
     }
   }
