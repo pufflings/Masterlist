@@ -32,6 +32,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   const traits = await charadex.importSheet(charadex.sheet.pages.traits);
+  const variantDisplayMap = {
+    s: 'Souldbound',
+    t: 'Tradeable'
+  };
 
   await charadex.initialize.page(null, charadex.page.items,
     (itemsArray) => {
@@ -45,6 +49,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const item = listData.profileArray[0];
       const stockCalloutMarkup = buildStockCallout(item);
+      const urlParams = charadex.url.getUrlParameters();
+      const variantParam = (urlParams.get('variant') || '').trim().toLowerCase();
+      const variantOverride = variantParam === 's' || variantParam === 't' ? variantParam : null;
+      const variantDisplayText = variantOverride ? (variantDisplayMap[variantOverride] || variantOverride.toUpperCase()) : '';
+      const baseName = item.item ?? '';
+      const displayName = variantDisplayText ? `${baseName} (${variantDisplayText})` : baseName;
 
       if (listData.list && Array.isArray(listData.list.items) && listData.list.items[0]) {
         const listItem = listData.list.items[0];
@@ -59,7 +69,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         profileStockCallout.toggle(!!stockCalloutMarkup);
       }
 
-      const tradeableText = item.tradeable === true ? 'Yes' : 'No';
+      if (variantOverride && displayName.trim()) {
+        const profileLink = $("#charadex-profile .profileid");
+        const linkLabel = displayName.trim() ? displayName : profileLink.text();
+        if (linkLabel) {
+          profileLink.text(linkLabel);
+          charadex.tools.setPageTitleSuffix(linkLabel);
+        }
+      }
+
+      $("#charadex-profile .item").text(displayName.trim() ? displayName : (item.item ?? ''));
+
+      const isTradeable = variantOverride ? variantOverride === 't' : item.tradeable === true;
+      const tradeableText = isTradeable ? 'Yes' : 'No';
       $(".tradeable").text(tradeableText);
 
       if (item.type !== 'Trait') {

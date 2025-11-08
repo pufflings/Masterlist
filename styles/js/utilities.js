@@ -266,10 +266,22 @@ charadex.tools = {
     return newArr;
   },
   
-  // Adds profile links
+  // Adds profile links with optional display/parameter overrides
   addProfileLinks(entry, pageUrl, key = 1) {
-    entry.profileid = entry[key];
-    entry.profilelink = charadex.url.addUrlParameters(pageUrl, { profile: entry[key] });
+    if (!entry || !pageUrl || !key) return;
+
+    const profileParamValue = entry.profileParameterOverride ?? entry[key];
+    if (profileParamValue === undefined || profileParamValue === null || profileParamValue === '') return;
+
+    const profileLabelValue = entry.profileLabelOverride ?? entry[key] ?? profileParamValue;
+    let linkParams = { profile: profileParamValue };
+
+    if (entry.profileLinkParameters && typeof entry.profileLinkParameters === 'object') {
+      linkParams = { ...linkParams, ...entry.profileLinkParameters };
+    }
+
+    entry.profileid = profileLabelValue;
+    entry.profilelink = charadex.url.addUrlParameters(pageUrl, linkParams);
     entry.imageprofilelink = entry.profilelink;
     
   },
@@ -529,12 +541,25 @@ charadex.manageData = {
   async inventoryFix(profileArray) {
     const items = await charadex.importSheet(charadex.sheet.pages.items);
     const inventoryData = [];
+    const variantSuffixRegex = /\s*\(([st])\)\s*$/i;
+    const variantDisplayMap = {
+      s: 'Souldbound',
+      t: 'Tradeable'
+    };
 
     for (const [propertyKey, value] of Object.entries(profileArray)) {
       if (value === '' || value === null || value === undefined) continue;
-      const normalizedProperty = String(propertyKey).toLowerCase();
-      const scrubbedProperty = charadex.tools.scrub(propertyKey);
-      const keyedProperty = charadex.tools.createKey(propertyKey);
+
+      const propertyLabel = typeof propertyKey === 'string' ? propertyKey : String(propertyKey);
+      const variantMatch = propertyLabel.match(variantSuffixRegex);
+      const variantCode = variantMatch ? variantMatch[1].toLowerCase() : null;
+      const basePropertyKey = variantMatch ? propertyLabel.replace(variantMatch[0], '').trim() : propertyLabel;
+
+      if (!basePropertyKey) continue;
+
+      const normalizedProperty = basePropertyKey.toLowerCase();
+      const scrubbedProperty = charadex.tools.scrub(basePropertyKey);
+      const keyedProperty = charadex.tools.createKey(basePropertyKey);
 
       const match = items.find(item => {
         if (!item) return false;
@@ -555,8 +580,21 @@ charadex.manageData = {
 
       const entry = {
         ...match,
-        quantity: value
+        quantity: value,
+        inventorycolumn: propertyLabel
       };
+      const baseDisplayName = match.item || propertyLabel || basePropertyKey;
+      entry.profileLabelOverride = baseDisplayName;
+
+      if (variantCode) {
+        const variantDisplayText = variantDisplayMap[variantCode] || variantCode.toUpperCase();
+        entry.inventoryvariant = variantCode;
+        entry.inventoryvariantlabel = `(${variantDisplayText})`;
+        entry.inventoryvarianttradeable = variantDisplayText;
+        entry.tradeable = variantCode === 't';
+        entry.profileLinkParameters = { variant: variantCode };
+        entry.profileLabelOverride = `${baseDisplayName} (${variantDisplayText})`;
+      }
 
       if (entry.profilelink) {
         entry.imageprofilelink = entry.profilelink;
