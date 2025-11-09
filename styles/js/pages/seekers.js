@@ -162,6 +162,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!profile) return;
 
         const isMyoSeeker = profile.type === 'MYO';
+        const imageContainer = document.querySelector('.cd-profile-image-container');
+        let profileImageElement = null;
+        if (imageContainer) {
+          const imageSrc = profile.image ? String(profile.image).trim() : '';
+          profileImageElement = document.createElement('img');
+          profileImageElement.className = 'image img-fluid';
+          profileImageElement.src = imageSrc;
+          profileImageElement.alt = profile.profileid
+            ? `${profile.profileid} reference image`
+            : 'Seeker reference image';
+          imageContainer.innerHTML = '';
+          imageContainer.appendChild(profileImageElement);
+        }
 
         const pufflingsSection = document.getElementById('pufflings-gallery-section');
         const pufflingsListContainer = document.querySelector('#pufflings-gallery .pufflings-list');
@@ -209,10 +222,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const shouldLockSeekerImage = isMyoSeeker && !hasLinkedPufflings;
         const seekerLockMessage = "This seeker can't be used for guild activities until a puffling is registered with them.";
-        const imageContainer = document.querySelector('.cd-profile-image-container');
         if (imageContainer) {
           imageContainer.classList.toggle('locked-overlay-container', shouldLockSeekerImage);
-          const imageElement = imageContainer.querySelector('img.image');
+          const imageElement = profileImageElement || imageContainer.querySelector('img.image');
           if (imageElement) {
             imageElement.classList.toggle('locked-overlay-target', shouldLockSeekerImage);
           }

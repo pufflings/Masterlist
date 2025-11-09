@@ -720,6 +720,10 @@ p:last-child {
   max-height: 400px;
 }
 
+body.page-seekers .cd-profile-image-container > img {
+  max-height: none;
+}
+
 /* Makes sure your text formatting is preserved from the sheet */
 /* Best for large areas like notes */
 .cd-text-pre {
