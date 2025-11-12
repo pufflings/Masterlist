@@ -222,12 +222,12 @@
               Seekers
             </a>
           </li>
-          <!-- <li class="col p-1 nav-item" role="presentation">
+          <li class="col p-1 nav-item" role="presentation">
             <a class="nav-link w-100 btn btn-primary" id="logs-tab" data-toggle="tab" href="#logs" 
             aria-controls="logs" aria-selected="false">
               Logs
             </a>
-          </li> -->
+          </li>
         </ul>
         <hr class="my-0">
 
@@ -560,9 +560,11 @@
               <!-- List -->
               <!-- --------------------------------------------------------------- -->
               <div class="p-3">
-                <div class="row no-gutters">
-                  <div class="col-md-3"><b>Timestamp</b></div>
-                  <div class="col-md-9"><b>Reason</b></div>
+                <div class="row no-gutters font-weight-bold text-uppercase small">
+                  <div class="col-lg-3 col-md-5 mb-2 mb-md-0">Timestamp</div>
+                  <div class="col-lg-3 col-md-6 mb-2 mb-md-0">Reason</div>
+                  <div class="col-lg-2 col-md-6 mb-2 mb-md-0">Item</div>
+                  <div class="col-lg-2 col-md-3 mb-2 mb-lg-0 text-md-center">Quantity</div>
                 </div>
                 <hr class="my-2 mx-n2">
                 <div class="log-list"></div>
@@ -571,10 +573,12 @@
               <!-- List Item -->
               <!-- --------------------------------------------------------------- -->
               <div style="display: none;">
-                <div  id="log-gallery-item">
-                  <div class="row no-gutters">
-                    <div class="col-md-3"><span class="timestamp"></span></div>
-                    <div class="col-md-9"><span class="reason"></span></div>
+                <div id="log-gallery-item">
+                  <div class="row no-gutters text-break">
+                    <div class="col-lg-3 col-md-5 mb-2 mb-md-0"><span class="timestamp"></span></div>
+                    <div class="col-lg-3 col-md-6 mb-2 mb-md-0"><span class="reason"></span></div>
+                    <div class="col-lg-2 col-md-6 mb-2 mb-md-0"><span class="item"></span></div>
+                    <div class="col-lg-2 col-md-3 mb-2 mb-lg-0 text-md-center"><span class="quantity"></span></div>
                   </div>
                   <hr class="my-2 mx-n2">
                 </div>

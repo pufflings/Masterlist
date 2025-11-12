@@ -543,7 +543,7 @@ charadex.manageData = {
     const inventoryData = [];
     const variantSuffixRegex = /\s*\(([st])\)\s*$/i;
     const variantDisplayMap = {
-      s: 'Souldbound',
+      s: 'Soulbound',
       t: 'Tradeable'
     };
 

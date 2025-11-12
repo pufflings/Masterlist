@@ -48,12 +48,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Logs
-        // if (charadex.tools.checkArray(profile.inventorylog)) {
-        //   let logs = await charadex.initialize.page(
-        //     profile.inventorylog,
-        //     charadex.page.inventory.relatedData['inventory log'],
-        //   );
-        // }
+        if (charadex.tools.checkArray(profile.inventorylog)) {
+          const logsDescending = [...profile.inventorylog].reverse();
+          await charadex.initialize.page(
+            logsDescending,
+            charadex.page.inventory.relatedData[charadex.sheet.pages.inventoryLog],
+          );
+        }
 
 
       }

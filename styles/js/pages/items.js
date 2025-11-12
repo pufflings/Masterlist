@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const traits = await charadex.importSheet(charadex.sheet.pages.traits);
   const variantDisplayMap = {
-    s: 'Souldbound',
+    s: 'Soulbound',
     t: 'Tradeable'
   };
 
