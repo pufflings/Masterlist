@@ -1,26 +1,27 @@
-# Google Visualization API Refactoring Report
+# Google Visualization API Optimization Guide
 
-**Date:** November 13, 2025
-**Project:** Pufflings Masterlist
-**Current Implementation:** Google Visualization API (Basic Usage)
-
----
-
-## Executive Summary
-
-**Key Finding:** Your codebase is **already using** the Google Visualization API through the `/gviz/tq` endpoint. However, you're only utilizing a fraction of its capabilities. This report evaluates whether to:
-
-1. **Enhance** current Visualization API usage with advanced query features
-2. **Migrate** to Google Sheets API v4
-3. **Maintain** the current minimal implementation
-
-**Recommendation:** **Enhance current Visualization API usage** with targeted optimizations. A full migration to Sheets API v4 is not recommended for your use case.
+**Project:** Pufflings Masterlist - RPG Character Visualization
+**Context:** Solo dev, ~400 rows × 50 cols, thousands of requests/month
+**Date:** November 14, 2025
 
 ---
 
-## Current Implementation Analysis
+## TL;DR
 
-### What You're Using Now
+**You're already using Google Visualization API (GVIZ)** - you just need to use it better.
+
+**Your Real Problems:**
+1. Loading 400 rows × 50 columns = ~20,000 cells at once (SLOW)
+2. No pagination yet, but you need it as sheet grows
+3. Fetching all 50 columns when you only display ~5-10
+
+**Solution:** Use GVIZ's query language (SELECT, LIMIT, OFFSET) - it's perfect for this.
+
+**Should you migrate to Sheets API v4?** No. More work, no real benefits for your use case.
+
+---
+
+## Current Implementation
 
 **File:** `styles/js/utilities.js:657`
 
@@ -28,951 +29,399 @@
 https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&tq=WHERE A IS NOT NULL&sheet=${sheetPage}
 ```
 
-**Current Query:** `WHERE A IS NOT NULL` (only filters out empty rows)
+**Current query:** `WHERE A IS NOT NULL` (just filters empty rows)
 
-### Architecture Overview
-
-| Component | Implementation | Performance |
-|-----------|---------------|-------------|
-| **API** | Google Visualization API (gviz) | ✓ Already in use |
-| **Caching** | localStorage, 5-minute expiry | ⚠️ Too aggressive |
-| **Data Processing** | Full client-side processing | ⚠️ No server-side filtering |
-| **Preloading** | Parallel loading of 4 critical sheets | ✓ Good strategy |
-| **Request Deduplication** | None | ✗ Multiple simultaneous fetches possible |
-
-### Data Volume
-
-**Sheets Being Loaded:**
-- Pufflings (masterlist)
-- Seekers
-- Inventory
-- Items
-- Traits
-- Prompts
-- FAQ
-- News
-- Mods
-- Logs (multiple)
-- OptionsSheet
-
-**Access Patterns:**
-- 4 sheets preloaded on every page load
-- Inventory page: 6 sheets loaded simultaneously
-- Cache expires every 5 minutes
+**What you're missing:**
+- `SELECT A, B, C` (column selection)
+- `LIMIT 50` (pagination)
+- `ORDER BY A DESC` (server-side sorting)
+- `OFFSET 0` (pagination offset)
 
 ---
 
-## Google Visualization API: Deep Dive
+## Why NOT Migrate to Sheets API v4
 
-### What Is It?
+You mentioned rate limits aren't a concern - you're right, they aren't at your traffic level. But here's why I still recommend staying with GVIZ:
 
-The Google Visualization API Query Language (GVIZ) is a **SQL-like query language** that allows server-side data manipulation before returning results to your application.
+### API v4 Disadvantages for Your Use Case
 
-### Available Features (Not Currently Used)
+❌ **No query language**
+- Can't do `WHERE status = 'active'` or `LIMIT 50`
+- Have to fetch cell ranges like `A1:AX400` then filter client-side
+- Actually transfers MORE data than GVIZ with queries
 
-#### 1. **SELECT Clause** - Column Filtering
-**Current:** Fetching all columns
-**Potential:** Select only needed columns
+❌ **Pagination is harder**
+```javascript
+// GVIZ pagination (easy):
+LIMIT 50 OFFSET 0
 
+// API v4 pagination (manual):
+range: `A1:AX50` then `A51:AX100` then calculate row numbers...
+```
+
+❌ **OAuth complexity**
+- Service account setup
+- Token management
+- More code to maintain
+- No benefit for public data
+
+❌ **More code to write**
+- Complete rewrite of importSheet()
+- All pages need updates
+- ~20-30 hours of work
+
+### GVIZ Advantages
+
+✅ **Already working** - just needs enhancement
+✅ **SQL-like queries** - perfect for filtering/pagination
+✅ **No auth needed** - public sheets, simple
+✅ **2-hour fix** vs 20-hour rewrite
+
+### When You SHOULD Use API v4
+
+- Need to write data back to sheets (you don't)
+- Need private sheets with auth (you don't)
+- Need batch write operations (you don't)
+- Need advanced batch reads from multiple sheets in one call (you don't)
+
+**Bottom line:** API v4 solves problems you don't have, while making your actual problem (pagination) harder to solve.
+
+---
+
+## GVIZ Query Language Capabilities
+
+### What You Can Do (But Aren't)
+
+#### 1. SELECT - Column Filtering
 ```sql
--- Instead of fetching all columns:
+-- Instead of all 50 columns:
 SELECT *
 
--- Fetch only specific columns:
-SELECT A, B, C, F, G
+-- Just the 5-10 you display:
+SELECT A, B, C, D, E
+
+-- Payload reduction: 80-90% for your 50-column sheet
 ```
 
-**Benefit:** Reduces payload size by 30-70% depending on columns needed
-
-#### 2. **ORDER BY Clause** - Server-Side Sorting
-**Current:** Sorting in JavaScript client-side
-**Potential:** Sort on server before transmission
-
+#### 2. LIMIT/OFFSET - Pagination
 ```sql
-SELECT * WHERE A IS NOT NULL ORDER BY B DESC
-```
-
-**Benefit:** Reduces client-side processing, faster rendering
-
-#### 3. **LIMIT and OFFSET** - Pagination
-**Current:** Fetching entire sheet
-**Potential:** Implement pagination
-
-```sql
+-- Page 1 (first 50):
 SELECT * WHERE A IS NOT NULL LIMIT 50 OFFSET 0
+
+-- Page 2 (next 50):
+SELECT * WHERE A IS NOT NULL LIMIT 50 OFFSET 50
+
+-- 400 rows → 50 rows = 8x faster initial load
 ```
 
-**Benefit:** Dramatically reduces initial load time for large sheets
-
-#### 4. **GROUP BY and Aggregation**
-**Current:** Aggregating in JavaScript
-**Potential:** Server-side aggregation
-
+#### 3. ORDER BY - Server-Side Sorting
 ```sql
-SELECT A, COUNT(B) GROUP BY A
-SELECT A, SUM(C), AVG(D) GROUP BY A
+-- Sort before sending:
+SELECT * WHERE A IS NOT NULL ORDER BY A DESC LIMIT 50
+
+-- No client-side sorting needed
 ```
 
-**Available Aggregations:** COUNT, SUM, AVG, MIN, MAX
-
-**Benefit:** Reduces data transfer, faster dashboard/summary views
-
-#### 5. **WHERE Clause Enhancement**
-**Current:** `WHERE A IS NOT NULL`
-**Potential:** Complex filtering
-
+#### 4. WHERE - Filtering
 ```sql
-WHERE A IS NOT NULL AND B = 'active' AND C > 100
-WHERE A MATCHES '.*pattern.*'
-WHERE B IN ('value1', 'value2', 'value3')
+-- Active items only:
+WHERE A IS NOT NULL AND status = 'active'
+
+-- Pattern matching:
+WHERE name MATCHES '.*dragon.*'
+
+-- Multiple conditions:
+WHERE A IS NOT NULL AND type = 'weapon' AND cost < 100
 ```
 
-**Benefit:** Only fetch relevant data, perfect for filtered views
-
-#### 6. **LABEL Clause** - Column Renaming
+#### 5. Aggregations (bonus)
 ```sql
-SELECT A, B, C LABEL A 'Name', B 'Status', C 'Count'
+-- For stats/dashboards:
+SELECT category, COUNT(*) GROUP BY category
+SELECT owner, SUM(value) GROUP BY owner
 ```
 
-**Benefit:** Cleaner data structure, less mapping needed
+### What You CAN'T Do
 
-#### 7. **FORMAT Clause** - Server-Side Formatting
-```sql
-SELECT A, B FORMAT A 'MMM dd, yyyy', B '#,##0.00'
-```
-
-**Benefit:** Consistent formatting without client-side code
-
-### Query Language Limitations
-
-❌ No `HAVING` clause
-❌ No `JOIN` operations (single sheet per query)
+❌ No JOINs (one sheet per query)
 ❌ No subqueries
-❌ Limited string manipulation functions
-❌ No data modification (read-only)
+❌ No HAVING clause
+❌ Limited string functions
+❌ No writes (read-only)
+
+**But:** You don't need these. Your current architecture already handles multi-sheet relations client-side.
 
 ---
 
-## Alternative: Google Sheets API v4
+## Your Specific Use Case Analysis
 
-### What Is It?
+### Current Sheets
 
-The official REST API for Google Sheets with full read/write capabilities and OAuth authentication.
+From `styles/js/config.js:37-50`:
 
-### Key Differences
+| Sheet | Likely Rows | Likely Columns | Needs Pagination? | Cache Time |
+|-------|-------------|----------------|------------------|------------|
+| Pufflings (masterlist) | ~400 | ~50 | **YES** | 30 min |
+| Seekers | ~50? | ~30? | Maybe | 30 min |
+| Inventory | Varies | ~20? | If >100 | 5 min |
+| Items | ~100? | ~15? | Maybe | 30 min |
+| Traits | ~50? | ~10? | No | 30 min |
+| Prompts | ~20? | ~10? | No | 30 min |
+| News | ~10 | ~5 | No | 10 min |
 
-| Feature | Visualization API (Current) | Sheets API v4 |
-|---------|---------------------------|---------------|
-| **Authentication** | None (public sheets) | OAuth/Service Account required |
-| **Rate Limits** | Unlimited* | 300 reads/min/project |
-| **Query Language** | SQL-like (GVIZ) | Range-based retrieval |
-| **Cost** | Free | Free (within quotas) |
-| **Security** | Sheet must be public | Private sheets supported |
-| **Batch Operations** | No | Yes |
-| **Write Access** | No | Yes |
-| **Complexity** | Simple URL requests | Requires API setup |
+### Priority Fix: Pufflings Masterlist
 
-*Except GeoMap and GeoChart
+**Current:** 400 rows × 50 cols = 20,000 cells loaded at once
 
-### API v4 Advantages
+**Impact:**
+- Large payload (500KB - 2MB depending on content)
+- Slow parsing/rendering
+- Poor mobile experience
+- Will get worse as you add more characters
 
-✅ **Better Security:** OAuth authentication, private sheets
-✅ **Write Capabilities:** Can update sheets programmatically
-✅ **Batch Requests:** Multiple operations in one API call
-✅ **Better Error Handling:** Detailed error responses
-✅ **Official Support:** Google's primary Sheets API
-
-### API v4 Disadvantages
-
-❌ **Rate Limits:** 300 reads/min (problematic for high-traffic sites)
-❌ **Authentication Overhead:** OAuth flow or service account setup
-❌ **Complexity:** Significantly more code required
-❌ **No Query Language:** Must fetch ranges, filter client-side
-❌ **Quota Management:** Need to track and manage quotas
-
----
-
-## Viability Assessment
-
-### Option 1: Enhance Current GVIZ Usage ⭐ **RECOMMENDED**
-
-**Effort:** Low to Medium
-**Risk:** Low
-**Performance Gain:** Medium to High
-
-**Implementation Steps:**
-
-1. **Add Column Selection** (1-2 hours)
-   - Modify `importSheet()` to accept column specification
-   - Reduce payload sizes by 30-70%
-
-2. **Implement Query-Based Filtering** (2-4 hours)
-   - Add WHERE clause parameters for filtered views
-   - Eliminate client-side filtering for common cases
-
-3. **Add Pagination Support** (4-6 hours)
-   - Implement LIMIT/OFFSET for large sheets
-   - Add "Load More" functionality
-
-4. **Server-Side Sorting** (1-2 hours)
-   - Add ORDER BY parameters
-   - Reduce client-side processing
-
-**Code Changes Required:**
+**Quick Fix (30 minutes):**
 
 ```javascript
-// Current
-charadex.importSheet = async (sheetPage, sheetId) => {
-  const url = `${baseUrl}/gviz/tq?tqx=out:json&headers=1&tq=WHERE A IS NOT NULL&sheet=${sheetPage}`;
-  // ...
-}
+// For masterlist page display:
+await charadex.importSheet('Pufflings', {
+  columns: 'A, B, C, D, E, F, G, H, I, J',  // Only displayed columns
+  limit: 50,
+  offset: currentPage * 50,
+  orderBy: 'A DESC'  // Newest first
+});
 
-// Enhanced
+// Payload: 50 rows × 10 cols = 500 cells
+// Reduction: 20,000 → 500 = 97.5% smaller!
+```
+
+---
+
+## Practical Implementation Plan
+
+### Phase 1: Critical Fix (1-2 hours) ⭐ DO THIS FIRST
+
+**Goal:** Fix the 400-row masterlist performance issue
+
+**1. Add Pagination to Masterlist (30 min)**
+
+Modify `styles/js/utilities.js` - add options parameter:
+
+```javascript
 charadex.importSheet = async (sheetPage, options = {}) => {
   const {
-    columns = '*',           // SELECT clause
-    where = 'A IS NOT NULL', // WHERE clause
-    orderBy = null,          // ORDER BY clause
-    limit = null,            // LIMIT clause
-    offset = 0               // OFFSET clause
+    columns = '*',
+    where = 'A IS NOT NULL',
+    orderBy = null,
+    limit = null,
+    offset = 0,
+    sheetId = charadex.config.data.id
   } = options;
 
   let query = `SELECT ${columns} WHERE ${where}`;
   if (orderBy) query += ` ORDER BY ${orderBy}`;
-  if (limit) query += ` LIMIT ${limit} OFFSET ${offset}`;
+  if (limit) query += ` LIMIT ${limit}`;
+  if (offset > 0) query += ` OFFSET ${offset}`;
 
-  const url = `${baseUrl}/gviz/tq?tqx=out:json&headers=1&tq=${encodeURIComponent(query)}&sheet=${sheetPage}`;
-  // ...
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq`;
+  const params = new URLSearchParams({
+    tqx: 'out:json',
+    headers: '1',
+    tq: query,
+    sheet: sheetPage
+  });
+
+  // Rest of existing code...
+  const response = await fetch(`${url}?${params}`);
+  // ... etc
+};
+```
+
+**2. Update Masterlist Page (30 min)**
+
+In `styles/js/pages/masterlist.js`:
+
+```javascript
+let currentPage = 0;
+const pageSize = 50;
+
+async function loadMasterlistPage(page = 0) {
+  const data = await charadex.importSheet('Pufflings', {
+    columns: 'A, B, C, D, E, F, G, H, I, J',  // Adjust to your displayed columns
+    limit: pageSize,
+    offset: page * pageSize,
+    orderBy: 'A DESC'
+  });
+
+  currentPage = page;
+  renderMasterlist(data);
+  updatePaginationUI(page, data.length < pageSize); // hasMore = false if less than pageSize
+}
+
+// Add pagination buttons
+function updatePaginationUI(page, isLastPage) {
+  // Show/hide prev/next buttons
+  // Update page number display
 }
 ```
 
-**Specific Optimizations for Your Codebase:**
+**3. Simple Pagination UI (30 min)**
 
-**Masterlist Page** (`styles/js/pages/masterlist.js`):
+Add to your HTML:
+
+```html
+<div id="pagination">
+  <button id="prev-page" onclick="loadPreviousPage()">← Previous</button>
+  <span id="page-info">Page <span id="current-page">1</span></span>
+  <button id="next-page" onclick="loadNextPage()">Next →</button>
+</div>
+```
+
+**Expected Result:**
+- 97% smaller payload for masterlist
+- ~10x faster page load
+- Instant pagination
+
+### Phase 2: Column Optimization (1 hour)
+
+**Goal:** Reduce payload for other large sheets
+
+**Check which columns each page actually uses:**
+
 ```javascript
-// If only displaying first 50 entries
-await charadex.importSheet('Pufflings', {
-  limit: 50,
-  orderBy: 'A DESC'  // Most recent first
+// Example: If items page only displays name, cost, description, image:
+const items = await charadex.importSheet('items', {
+  columns: 'A, B, D, F, H'  // id, name, cost, description, image
+});
+
+// Instead of all columns including internal tracking fields
+```
+
+**How to find displayed columns:**
+1. Open each page
+2. Inspect what data is shown in the UI
+3. Map to sheet columns
+4. Only request those columns
+
+**Estimated savings:** 30-60% per sheet depending on column count
+
+### Phase 3: Smart Caching (30 min)
+
+**Goal:** Adjust cache times based on update frequency
+
+**Current:** 5 minutes for everything (`utilities.js:638`)
+
+**Better:**
+
+```javascript
+const CACHE_EXPIRY = {
+  // Updated frequently by players:
+  'inventory': 5 * 60 * 1000,         // 5 min
+  'inventory log': 5 * 60 * 1000,     // 5 min
+  'news': 10 * 60 * 1000,             // 10 min
+
+  // Updated occasionally by you:
+  'Pufflings': 30 * 60 * 1000,        // 30 min
+  'seekers': 30 * 60 * 1000,          // 30 min
+  'items': 30 * 60 * 1000,            // 30 min
+  'prompts': 30 * 60 * 1000,          // 30 min
+
+  // Rarely changes:
+  'OptionsSheet': 60 * 60 * 1000,     // 1 hour
+  'traits': 60 * 60 * 1000,           // 1 hour
+  'faq': 60 * 60 * 1000,              // 1 hour
+
+  'default': 30 * 60 * 1000           // 30 min
+};
+
+function getCacheExpiry(sheetPage) {
+  return CACHE_EXPIRY[sheetPage] || CACHE_EXPIRY.default;
+}
+```
+
+Update cache check:
+
+```javascript
+// utilities.js - checkCache function
+const { data, timestamp } = JSON.parse(cached);
+const expiry = getCacheExpiry(sheetPage);
+
+if (Date.now() - timestamp < expiry) {
+  return data;
+}
+```
+
+**Expected result:** 80-90% fewer API requests (due to longer cache on static data)
+
+### Phase 4: Optional Enhancements
+
+**4A. Server-Side Filtering (if needed)**
+
+Example: Shop page showing only in-stock items
+
+```javascript
+// Instead of fetching all items then filtering:
+const shopItems = await charadex.importSheet('items', {
+  where: 'A IS NOT NULL AND inStock = TRUE',  // Adjust column name
+  columns: 'A, B, C, D'
 });
 ```
-**Estimated savings:** 60-80% reduction in payload if masterlist has 200+ entries
 
-**Shop Page** (`styles/js/pages/shop.js`):
+**4B. Request Deduplication**
+
+If multiple components request same sheet simultaneously:
+
 ```javascript
-// Currently fetches all items then filters for stocked
-// Instead, filter server-side:
-await charadex.importSheet('items', {
-  where: 'A IS NOT NULL AND E = TRUE'  // Column E = inStock
-});
-```
-**Estimated savings:** 50-90% reduction if most items are out of stock
+const pendingRequests = new Map();
 
-**Items Page** (`styles/js/pages/items.js`):
+// In importSheet():
+const cacheKey = `${sheetId}_${sheetPage}_${query}`;
+
+if (pendingRequests.has(cacheKey)) {
+  return await pendingRequests.get(cacheKey);
+}
+
+const promise = fetchSheet(...);
+pendingRequests.set(cacheKey, promise);
+
+try {
+  return await promise;
+} finally {
+  pendingRequests.delete(cacheKey);
+}
+```
+
+**4C. "Load More" Instead of Pages**
+
 ```javascript
-// Only fetch displayed columns
-await charadex.importSheet('items', {
-  columns: 'A, B, C, D, E',  // id, name, description, cost, inStock
-  // Exclude internal columns
-});
-```
-**Estimated savings:** 20-40% payload reduction
-
-### Option 2: Migrate to Google Sheets API v4 ❌ **NOT RECOMMENDED**
-
-**Effort:** High
-**Risk:** High
-**Performance Gain:** Negative for your use case
-
-**Why Not Recommended:**
-
-1. **Rate Limit Problem:**
-   - You load 4+ sheets on every page load
-   - With any moderate traffic, you'll hit 300 requests/min quickly
-   - Current GVIZ has unlimited requests
-
-2. **No Query Language:**
-   - GVIZ query features would be lost
-   - Would need to fetch MORE data, filter client-side
-   - Actually worse performance than enhanced GVIZ
-
-3. **Added Complexity:**
-   - OAuth implementation needed
-   - API key management
-   - Error handling for rate limits
-   - Significantly more code to maintain
-
-4. **Your Use Case:**
-   - ✓ Public data (no security concerns)
-   - ✓ Read-only (no write operations needed)
-   - ✓ High-frequency reads (rate limits are dealbreaker)
-   - ✓ Simple data structure (no complex joins needed)
-
-**When API v4 WOULD Make Sense:**
-- Private/sensitive data requiring authentication
-- Need to write data back to sheets
-- Low-traffic internal tools
-- Complex batch operations needed
-
-### Option 3: Maintain Status Quo ⚠️ **SUBOPTIMAL**
-
-**Effort:** Zero
-**Risk:** Zero
-**Performance Gain:** Zero
-
-**Current Issues Remain:**
-- Fetching entire sheets (all columns)
-- 5-minute cache too aggressive for static data
-- No pagination for large datasets
-- Client-side filtering/sorting overhead
-- Redundant fetches across pages
-
----
-
-## Benefits of Enhanced GVIZ Approach
-
-### Performance Benefits
-
-| Optimization | Estimated Impact | Implementation Time |
-|--------------|-----------------|---------------------|
-| **Column Selection** | 30-70% smaller payloads | 2 hours |
-| **Server-Side Filtering** | 50-90% reduction for filtered views | 3 hours |
-| **Pagination** | 80-95% faster initial load | 6 hours |
-| **Server-Side Sorting** | 10-30% faster rendering | 2 hours |
-| **Longer Cache** | 70-90% fewer requests | 1 hour |
-
-**Total Time Investment:** ~14 hours
-**Expected Performance Improvement:** 2-5x faster page loads for large sheets
-
-### User Experience Benefits
-
-✅ Faster page loads
-✅ Progressive loading (pagination)
-✅ Smoother interactions
-✅ Better mobile performance
-✅ Reduced bandwidth usage
-
-### Developer Experience Benefits
-
-✅ Minimal code changes
-✅ No new dependencies
-✅ No authentication complexity
-✅ Backward compatible
-✅ Easy to test
-
-### Cost Benefits
-
-✅ Zero additional costs
-✅ No API quota management needed
-✅ No OAuth infrastructure
-✅ Reduced bandwidth costs
-
----
-
-## Potential Drawbacks & Risks
-
-### Enhanced GVIZ Approach
-
-⚠️ **Sheet Must Remain Public**
-- Users can access raw data if they find the URL
-- Consider if any data should be private
-- **Your Current Situation:** Already public, no change
-
-⚠️ **Query Language Limitations**
-- No JOINs (already handling this client-side)
-- No subqueries (not needed for your use case)
-- **Impact:** Low - current architecture already works around this
-
-⚠️ **Undocumented API**
-- GVIZ is less officially documented than API v4
-- Google could theoretically deprecate it
-- **Mitigation:** Widely used, unlikely to disappear soon
-
-⚠️ **Client-Side Processing Still Needed**
-- Related data linking still happens in browser
-- Inventory matching still O(n²)
-- **Solution:** Address separately with data structure optimization
-
-### Migration Risks (If Ignoring Recommendation)
-
-🔴 **Breaking Changes Required**
-- Complete rewrite of `importSheet()`
-- All page files need updates
-- OAuth flow implementation
-- Service account setup and security
-
-🔴 **Rate Limit Failures**
-- 300 requests/min is ~5 per second
-- With 10 users loading inventory page simultaneously: 60 requests
-- Very easy to hit limits during traffic spikes
-
-🔴 **Increased Latency**
-- OAuth token validation adds overhead
-- No built-in query language means more data transfer
-- Client-side filtering adds processing time
-
----
-
-## Recommended Implementation Plan
-
-### Phase 1: Low-Hanging Fruit (Week 1) ⭐
-
-**Priority: High | Effort: Low | Impact: High**
-
-1. **Extend Cache Duration** (1 hour)
-   ```javascript
-   // utilities.js:638
-   // Current: 5 minutes
-   const CACHE_EXPIRY = 300000;
-
-   // Recommended: 30 minutes for most sheets
-   const CACHE_EXPIRY = {
-     'OptionsSheet': 1800000,  // 30 min
-     'Pufflings': 1800000,     // 30 min
-     'items': 1800000,         // 30 min
-     'traits': 1800000,        // 30 min
-     'inventory': 300000,      // 5 min (changes frequently)
-     'news': 600000,           // 10 min
-     'default': 1800000        // 30 min
-   };
-   ```
-   **Expected Impact:** 70-90% reduction in API requests
-
-2. **Add Column Selection** (2 hours)
-   ```javascript
-   // Example: Shop page only needs id, name, cost, inStock
-   await charadex.importSheet('items', {
-     columns: 'A, B, D, E'
-   });
-   ```
-   **Expected Impact:** 40-60% smaller payloads for items/traits
-
-3. **Implement Request Deduplication** (2 hours)
-   ```javascript
-   // Prevent multiple simultaneous fetches of same sheet
-   const pendingRequests = new Map();
-
-   if (pendingRequests.has(cacheKey)) {
-     return await pendingRequests.get(cacheKey);
-   }
-   ```
-   **Expected Impact:** Eliminate redundant parallel requests
-
-### Phase 2: Targeted Filtering (Week 2)
-
-**Priority: Medium | Effort: Medium | Impact: High**
-
-4. **Shop Page: Server-Side Filter** (2 hours)
-   ```javascript
-   // styles/js/pages/shop.js
-   // Only fetch stocked items
-   const items = await charadex.importSheet('items', {
-     where: 'A IS NOT NULL AND E = TRUE'
-   });
-   ```
-   **Expected Impact:** 50-90% reduction for shop page
-
-5. **Status/Category Filters** (3 hours)
-   - Add filter UI to masterlist
-   - Use WHERE clause for filtering
-   - Example: `WHERE A IS NOT NULL AND C = 'active'`
-
-   **Expected Impact:** Instant filtering vs client-side search
-
-### Phase 3: Pagination (Week 3)
-
-**Priority: Medium | Effort: Medium | Impact: Very High for Large Sheets**
-
-6. **Implement Pagination System** (6 hours)
-   ```javascript
-   // For masterlists with 200+ entries
-   const pageSize = 50;
-   const page = 0;
-
-   await charadex.importSheet('Pufflings', {
-     limit: pageSize,
-     offset: page * pageSize,
-     orderBy: 'A DESC'
-   });
-   ```
-
-7. **Add "Load More" or Pagination UI** (4 hours)
-
-   **Expected Impact:** 80-95% faster initial page loads for large sheets
-
-### Phase 4: Advanced Optimizations (Week 4)
-
-**Priority: Low | Effort: Medium | Impact: Medium**
-
-8. **Server-Side Sorting** (2 hours)
-   ```javascript
-   await charadex.importSheet('Pufflings', {
-     orderBy: 'B ASC'  // Sort by name
-   });
-   ```
-
-9. **Inventory Processing Optimization** (4 hours)
-   - Create Map index for O(1) lookups
-   - Replace nested loops in `inventoryFix()`
-
-   ```javascript
-   // Current: O(n²)
-   for (item of inventory) {
-     for (itemData of allItems) {
-       if (item.id === itemData.id) { ... }
-     }
-   }
-
-   // Optimized: O(n)
-   const itemMap = new Map(allItems.map(i => [i.id, i]));
-   for (item of inventory) {
-     const itemData = itemMap.get(item.id);
-     if (itemData) { ... }
-   }
-   ```
-
-   **Expected Impact:** 90%+ faster inventory page for large inventories
-
-### Testing Plan
-
-**For Each Phase:**
-
-1. **Functionality Testing**
-   - Test all pages load correctly
-   - Verify filtered data is accurate
-   - Check pagination works
-   - Validate cache behavior
-
-2. **Performance Testing**
-   - Measure page load times before/after
-   - Check Network tab for payload sizes
-   - Monitor cache hit rates
-   - Test with slow 3G throttling
-
-3. **Regression Testing**
-   - Related data still links correctly
-   - Search functionality works
-   - Filters behave as expected
-   - Clear cache button still works
-
----
-
-## Cost-Benefit Analysis
-
-### Enhanced GVIZ Approach
-
-**Costs:**
-- Development time: ~20 hours
-- Testing time: ~10 hours
-- **Total:** ~30 hours (~$1,500-$3,000 at $50-100/hr)
-
-**Benefits:**
-- 2-5x faster page loads
-- 70-90% reduction in API requests
-- 30-70% reduction in bandwidth
-- Better user experience
-- Minimal ongoing maintenance
-- **Value:** Improved retention, lower bounce rates, better SEO
-
-**ROI:** High - One-time investment with permanent benefits
-
-### API v4 Migration (For Comparison)
-
-**Costs:**
-- Development time: ~80 hours (complete rewrite)
-- OAuth setup: ~10 hours
-- Testing: ~20 hours
-- Rate limit monitoring: Ongoing
-- **Total:** ~110 hours (~$5,500-$11,000)
-
-**Benefits:**
-- Better security (not needed - public data)
-- Write capability (not needed - read-only use case)
-- Official API (current API works fine)
-
-**ROI:** Negative - High investment for no relevant benefits
-
----
-
-## Technical Specifications
-
-### Current Data Flow
-
-```
-User Request
-    ↓
-Page Load
-    ↓
-Check Cache (localStorage)
-    ↓ [cache miss]
-Fetch from GVIZ API (all columns, all rows)
-    ↓
-Parse JSON
-    ↓
-Process Headers
-    ↓
-Scrub Data
-    ↓
-Filter "hide" rows
-    ↓
-Store in Cache
-    ↓
-Return to Page
-    ↓
-Client-Side Processing (filter, sort, relate)
-    ↓
-Render
-```
-
-### Proposed Enhanced Flow
-
-```
-User Request
-    ↓
-Page Load
-    ↓
-Check Cache (localStorage, 30min expiry)
-    ↓ [cache miss]
-Check Pending Requests (deduplication)
-    ↓ [no pending request]
-Fetch from GVIZ API with Query
-  - SELECT specific columns
-  - WHERE for filtering
-  - ORDER BY for sorting
-  - LIMIT/OFFSET for pagination
-    ↓
-[Server-side filtering/sorting/pagination happens here]
-    ↓
-Receive Optimized JSON (30-90% smaller)
-    ↓
-Parse JSON
-    ↓
-Process Headers
-    ↓
-Store in Cache
-    ↓
-Return to Page
-    ↓
-Minimal Client-Side Processing (only relating data)
-    ↓
-Render (faster due to less data)
-```
-
-**Key Improvements:**
-- ✅ Less data transferred
-- ✅ Less data processed
-- ✅ Longer cache (fewer requests)
-- ✅ Request deduplication
-- ✅ Server-side operations (faster)
-
-### Example Query Transformations
-
-**Masterlist Page:**
-```
-Before:
-/gviz/tq?tq=WHERE A IS NOT NULL
-
-After (first page):
-/gviz/tq?tq=SELECT A, B, C, D, E WHERE A IS NOT NULL ORDER BY A DESC LIMIT 50 OFFSET 0
-
-Payload reduction: ~80% for 200+ entry masterlist
-```
-
-**Shop Page:**
-```
-Before:
-/gviz/tq?tq=WHERE A IS NOT NULL
-[Client filters for inStock === true]
-
-After:
-/gviz/tq?tq=SELECT A, B, C, D, E WHERE A IS NOT NULL AND E = TRUE
-
-Payload reduction: ~70% if 30% of items are in stock
-```
-
-**Items Page:**
-```
-Before:
-/gviz/tq?tq=WHERE A IS NOT NULL
-[All columns fetched, many unused]
-
-After:
-/gviz/tq?tq=SELECT A, B, C, D, E, F WHERE A IS NOT NULL
-
-Payload reduction: ~40% if 6 of 10 columns are displayed
+let loadedData = [];
+let currentOffset = 0;
+
+async function loadMore() {
+  const moreData = await charadex.importSheet('Pufflings', {
+    limit: 50,
+    offset: currentOffset
+  });
+
+  loadedData = [...loadedData, ...moreData];
+  currentOffset += 50;
+
+  appendToUI(moreData);
+
+  if (moreData.length < 50) {
+    hideLoadMoreButton(); // No more data
+  }
+}
 ```
 
 ---
 
-## Security Considerations
+## Code Examples
 
-### Current Security Posture
-
-✅ Sheets are public (by design)
-✅ No sensitive user data in sheets
-✅ Read-only access
-✅ No authentication needed
-
-**Risks:**
-⚠️ Anyone with sheet URL can access data
-⚠️ Rate limiting on Google's end only
-
-**Mitigation:**
-- Data is intended to be public (character masterlist, items, etc.)
-- If any data becomes sensitive, move to API v4 at that time
-- Current approach appropriate for public directory/catalog use case
-
-### Enhanced GVIZ Security
-
-**No Change:**
-- Still requires public sheets
-- Still read-only
-- No additional vulnerabilities introduced
-
-**Advantages:**
-- Reduced payload = less data exposure if someone intercepts traffic
-- Faster requests = smaller attack surface window
-
----
-
-## Alternatives Considered
-
-### 1. Server-Side Caching (Node.js/Python Backend)
-
-**Pros:**
-- Centralized cache
-- Better rate limit management
-- Could add authentication layer
-
-**Cons:**
-- Requires server infrastructure
-- Added complexity and costs
-- Latency for server round-trip
-- Deployment and maintenance overhead
-
-**Verdict:** Overkill for current use case
-
-### 2. Static Site Generation (Build-Time Data Fetch)
-
-**Pros:**
-- Zero runtime API calls
-- Maximum performance
-- No rate limits
-
-**Cons:**
-- Stale data until rebuild
-- Requires CI/CD pipeline changes
-- Not suitable for frequently updated data (inventory, news)
-- You already do this for story content (sync_prompts.py)
-
-**Verdict:** Good for static content (you already do this), not suitable for dynamic sheets
-
-### 3. Firebase/Firestore Migration
-
-**Pros:**
-- Real-time updates
-- Better query capabilities
-- Offline support
-
-**Cons:**
-- Complete data migration required
-- Lose Google Sheets as CMS
-- Higher complexity
-- Ongoing costs
-
-**Verdict:** Major architectural change, not justified for current needs
-
-### 4. Hybrid: GVIZ + Service Worker Caching
-
-**Pros:**
-- Enhanced GVIZ with offline support
-- Better cache management
-- Background sync
-
-**Cons:**
-- Service worker complexity
-- Browser compatibility concerns
-- Added maintenance
-
-**Verdict:** Could consider in future, but optimize GVIZ first
-
----
-
-## Success Metrics
-
-### How to Measure Improvement
-
-**Before Enhancement (Baseline):**
-1. **Page Load Time:** Measure with DevTools Performance tab
-2. **Payload Size:** Network tab, total transferred
-3. **API Requests:** Count requests per page load
-4. **Cache Hit Rate:** Log cache hits vs misses
-5. **Time to Interactive:** Lighthouse audit
-
-**After Enhancement (Target):**
-1. **Page Load Time:** 40-60% reduction
-2. **Payload Size:** 50-80% reduction
-3. **API Requests:** 70-90% reduction (due to cache)
-4. **Cache Hit Rate:** 80%+ hit rate
-5. **Time to Interactive:** 30-50% improvement
-
-### Monitoring Plan
-
-**Week 1-2:** Daily performance checks
-**Week 3-4:** Fix issues, optimize further
-**Month 2+:** Weekly performance reviews
-
-**Tools:**
-- Chrome DevTools (Network, Performance tabs)
-- Lighthouse audits
-- Google Analytics page timing (if available)
-- Custom performance.mark() in code
-
----
-
-## Maintenance Considerations
-
-### Enhanced GVIZ Approach
-
-**Ongoing Maintenance:** Low
-
-**Required:**
-- Monitor cache expiry settings (adjust if needed)
-- Update queries when sheet structure changes
-- Test after Google Sheets updates
-
-**Estimated Time:** 1-2 hours/month
-
-### API v4 Approach (If Chosen)
-
-**Ongoing Maintenance:** Medium-High
-
-**Required:**
-- Monitor rate limits and quota usage
-- Refresh OAuth tokens
-- Handle quota exceeded errors
-- Update API version when deprecated
-- Manage service account credentials
-
-**Estimated Time:** 4-8 hours/month
-
----
-
-## Migration Path (If Needed Later)
-
-If you ever need to migrate from GVIZ to API v4:
-
-**Triggers:**
-- Data becomes sensitive/private
-- Need write operations
-- Google deprecates GVIZ (unlikely soon)
-- Need advanced batch operations
-
-**Migration Strategy:**
-
-1. **Phase 1:** Add API v4 alongside GVIZ
-2. **Phase 2:** Implement OAuth/service account
-3. **Phase 3:** Create adapter layer
-4. **Phase 4:** Switch one page at a time
-5. **Phase 5:** Remove GVIZ dependencies
-
-**Estimated Time:** 6-8 weeks
-**Risk Level:** Medium
-
-**Good News:** Enhanced GVIZ approach won't make migration harder. The optimization patterns (column selection, filtering, pagination) translate well to API v4.
-
----
-
-## Final Recommendation
-
-### ⭐ **Enhance Current Google Visualization API Usage**
-
-**Summary:**
-1. ✅ Keep using GVIZ (already in place)
-2. ✅ Add advanced query features (SELECT, WHERE, ORDER BY, LIMIT)
-3. ✅ Optimize caching strategy (longer expiry)
-4. ✅ Implement request deduplication
-5. ✅ Add pagination for large sheets
-
-**Timeline:** 3-4 weeks
-**Cost:** ~30 hours development time
-**Risk:** Low
-**Expected Benefit:** 2-5x performance improvement
-
-### ❌ **Do NOT Migrate to Sheets API v4**
-
-**Reasons:**
-- Rate limits problematic for your traffic patterns
-- No relevant benefits for your use case
-- Significantly higher complexity
-- No query language (would lose GVIZ benefits)
-- Public read-only data doesn't need OAuth
-
----
-
-## Next Steps
-
-### Immediate Actions (This Week)
-
-1. **Measure Baseline Performance**
-   - Run Lighthouse audit on all pages
-   - Document current page load times
-   - Measure current payload sizes
-   - Record current API request counts
-
-2. **Validate Assumptions**
-   - Confirm all sheets can remain public
-   - Identify which sheets have 50+ rows (pagination candidates)
-   - List which columns are actually displayed per page
-
-3. **Plan Phase 1 Implementation**
-   - Schedule development time
-   - Set up testing environment
-   - Create performance monitoring dashboard
-
-### Decision Point
-
-**Question:** Should we proceed with enhanced GVIZ implementation?
-
-**If YES:**
-- Follow 4-phase implementation plan
-- Start with Phase 1 (low-hanging fruit)
-- Measure improvements after each phase
-- Iterate based on results
-
-**If NO:**
-- Document reasons for maintaining status quo
-- Set review date for future reconsideration
-- Monitor for Google API changes
-
----
-
-## Conclusion
-
-Your codebase is already using the Google Visualization API effectively, but you're only scratching the surface of its capabilities. By leveraging advanced query features like column selection, server-side filtering, pagination, and optimized caching, you can achieve 2-5x performance improvements with minimal risk and moderate effort.
-
-A migration to Google Sheets API v4 would be a step backward for your use case, introducing rate limits, complexity, and costs without providing meaningful benefits for public, read-only data.
-
-**The path forward is clear: Enhance, don't replace.**
-
----
-
-## Appendix: Code Examples
-
-### A. Enhanced importSheet() Function
+### Full Enhanced importSheet() Function
 
 ```javascript
 /**
- * Enhanced import function with GVIZ query support
- * @param {string} sheetPage - Sheet tab name
- * @param {Object} options - Query options
- * @param {string} options.columns - SELECT clause (default: '*')
- * @param {string} options.where - WHERE clause (default: 'A IS NOT NULL')
- * @param {string} options.orderBy - ORDER BY clause (optional)
- * @param {number} options.limit - LIMIT clause (optional)
- * @param {number} options.offset - OFFSET clause (default: 0)
- * @param {string} options.sheetId - Override default sheet ID
- * @param {boolean} options.forceRefresh - Bypass cache
+ * Enhanced import with GVIZ query support
  */
 charadex.importSheet = async (sheetPage, options = {}) => {
   const {
@@ -989,207 +438,541 @@ charadex.importSheet = async (sheetPage, options = {}) => {
   let query = `SELECT ${columns} WHERE ${where}`;
   if (orderBy) query += ` ORDER BY ${orderBy}`;
   if (limit) query += ` LIMIT ${limit}`;
-  if (limit && offset) query += ` OFFSET ${offset}`;
+  if (offset > 0) query += ` OFFSET ${offset}`;
 
-  const cacheKey = `charadex_${sheetId}_${sheetPage}_${btoa(query)}`;
+  // Create cache key (include query in key)
+  const cacheKey = `charadex_${sheetId}_${sheetPage}_${btoa(query).substring(0, 20)}`;
 
   // Check cache
   if (!forceRefresh) {
-    const cached = checkCache(cacheKey, sheetPage);
-    if (cached) return cached;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const { data, timestamp } = JSON.parse(cached);
+        const expiry = getCacheExpiry(sheetPage);
+
+        if (Date.now() - timestamp < expiry) {
+          console.log(`Cache hit: ${sheetPage}`);
+          return data;
+        } else {
+          localStorage.removeItem(cacheKey);
+        }
+      } catch (e) {
+        localStorage.removeItem(cacheKey);
+      }
+    }
   }
 
-  // Check for pending request (deduplication)
-  if (pendingRequests.has(cacheKey)) {
-    return await pendingRequests.get(cacheKey);
-  }
+  // Fetch with query
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq`;
+    const params = new URLSearchParams({
+      tqx: 'out:json',
+      headers: '1',
+      tq: query,
+      sheet: sheetPage
+    });
 
-  // Create request promise
-  const requestPromise = (async () => {
+    const response = await fetch(`${url}?${params}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const text = await response.text();
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+
+    // Your existing processing code...
+    const cols = [];
+    const data = [];
+
+    // Extract column headers
+    if (json.table.cols) {
+      for (let col of json.table.cols) {
+        cols.push(col.label || col.id);
+      }
+    }
+
+    // Process rows
+    if (json.table.rows) {
+      for (let row of json.table.rows) {
+        const rowData = {};
+        for (let i = 0; i < cols.length; i++) {
+          const cell = row.c[i];
+          rowData[cols[i]] = cell ? (cell.v ?? cell.f ?? '') : '';
+        }
+
+        // Skip hidden rows (your existing logic)
+        if (rowData.hide !== 'hide') {
+          data.push(rowData);
+        }
+      }
+    }
+
+    // Cache result
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq`;
-      const params = new URLSearchParams({
-        tqx: 'out:json',
-        headers: '1',
-        tq: query,
-        sheet: sheetPage
-      });
-
-      const response = await fetch(`${url}?${params}`);
-      const text = await response.text();
-      const json = JSON.parse(text.substring(47).slice(0, -2));
-
-      // Process data...
-      const processedData = processGVIZResponse(json);
-
-      // Cache result
-      cacheData(cacheKey, processedData, sheetPage);
-
-      return processedData;
-    } finally {
-      pendingRequests.delete(cacheKey);
+      localStorage.setItem(cacheKey, JSON.stringify({
+        data,
+        timestamp: Date.now()
+      }));
+      console.log(`Cached: ${sheetPage} (${data.length} rows)`);
+    } catch (e) {
+      console.warn('Cache storage failed:', e);
     }
-  })();
 
-  // Store pending request
-  pendingRequests.set(cacheKey, requestPromise);
+    return data;
 
-  return await requestPromise;
-};
-
-// Request deduplication map
-const pendingRequests = new Map();
-
-// Cache expiry times per sheet (milliseconds)
-const CACHE_EXPIRY_TIMES = {
-  'OptionsSheet': 1800000,  // 30 minutes
-  'Pufflings': 1800000,     // 30 minutes
-  'items': 1800000,         // 30 minutes
-  'traits': 1800000,        // 30 minutes
-  'inventory': 300000,      // 5 minutes (frequently updated)
-  'inventory log': 300000,  // 5 minutes
-  'news': 600000,           // 10 minutes
-  'prompts': 1800000,       // 30 minutes
-  'default': 1800000        // 30 minutes
-};
-
-function checkCache(cacheKey, sheetPage) {
-  const cached = localStorage.getItem(cacheKey);
-  if (!cached) return null;
-
-  try {
-    const { data, timestamp } = JSON.parse(cached);
-    const expiry = CACHE_EXPIRY_TIMES[sheetPage] || CACHE_EXPIRY_TIMES.default;
-
-    if (Date.now() - timestamp < expiry) {
-      console.log(`Cache hit: ${sheetPage}`);
-      return data;
-    } else {
-      localStorage.removeItem(cacheKey);
-      return null;
-    }
-  } catch (e) {
-    localStorage.removeItem(cacheKey);
-    return null;
+  } catch (error) {
+    console.error(`Failed to fetch ${sheetPage}:`, error);
+    throw error;
   }
-}
-
-function cacheData(cacheKey, data, sheetPage) {
-  try {
-    localStorage.setItem(cacheKey, JSON.stringify({
-      data,
-      timestamp: Date.now()
-    }));
-    console.log(`Cached: ${sheetPage}`);
-  } catch (e) {
-    console.warn('Cache storage failed:', e);
-  }
-}
+};
 ```
 
-### B. Usage Examples
-
-```javascript
-// Example 1: Masterlist with pagination
-const masterlists = await charadex.importSheet('Pufflings', {
-  columns: 'A, B, C, D, E',  // id, name, owner, status, image
-  orderBy: 'A DESC',          // newest first
-  limit: 50,                  // 50 per page
-  offset: page * 50           // pagination
-});
-
-// Example 2: Shop - only in-stock items
-const shopItems = await charadex.importSheet('items', {
-  columns: 'A, B, C, D, E',   // id, name, description, cost, inStock
-  where: 'A IS NOT NULL AND E = TRUE',  // only stocked items
-  orderBy: 'B ASC'            // alphabetical by name
-});
-
-// Example 3: Active seekers only
-const activeSeekers = await charadex.importSheet('seekers', {
-  where: "A IS NOT NULL AND C = 'active'",
-  orderBy: 'B ASC'
-});
-
-// Example 4: Recent news (last 10)
-const recentNews = await charadex.importSheet('news', {
-  orderBy: 'A DESC',
-  limit: 10
-});
-
-// Example 5: Items in category
-const categoryItems = await charadex.importSheet('items', {
-  where: "A IS NOT NULL AND F = 'consumable'",  // category column
-  orderBy: 'D ASC'  // sort by cost
-});
-
-// Example 6: Force refresh (bypass cache)
-const freshData = await charadex.importSheet('inventory', {
-  forceRefresh: true
-});
-```
-
-### C. Pagination Component
+### Pagination Component (Reusable)
 
 ```javascript
 class SheetPagination {
   constructor(sheetPage, options = {}) {
     this.sheetPage = sheetPage;
-    this.options = options;
-    this.currentPage = 0;
     this.pageSize = options.pageSize || 50;
-    this.data = [];
+    this.queryOptions = options; // columns, where, orderBy, etc.
+    this.currentPage = 0;
     this.hasMore = true;
   }
 
-  async loadPage(page = 0) {
+  async loadPage(page) {
     this.currentPage = page;
 
-    const result = await charadex.importSheet(this.sheetPage, {
-      ...this.options,
+    const data = await charadex.importSheet(this.sheetPage, {
+      ...this.queryOptions,
       limit: this.pageSize,
       offset: page * this.pageSize
     });
 
-    this.data = result;
-    this.hasMore = result.length === this.pageSize;
-
-    return result;
+    this.hasMore = data.length === this.pageSize;
+    return data;
   }
 
-  async nextPage() {
-    if (this.hasMore) {
-      return await this.loadPage(this.currentPage + 1);
-    }
-    return [];
+  async next() {
+    if (!this.hasMore) return [];
+    return await this.loadPage(this.currentPage + 1);
   }
 
-  async previousPage() {
-    if (this.currentPage > 0) {
-      return await this.loadPage(this.currentPage - 1);
-    }
-    return this.data;
+  async prev() {
+    if (this.currentPage === 0) return await this.loadPage(0);
+    return await this.loadPage(this.currentPage - 1);
   }
 
-  async firstPage() {
+  async first() {
     return await this.loadPage(0);
   }
 }
 
 // Usage:
-const masterlistPagination = new SheetPagination('Pufflings', {
+const pagination = new SheetPagination('Pufflings', {
   columns: 'A, B, C, D, E',
   orderBy: 'A DESC',
   pageSize: 50
 });
 
-const firstPage = await masterlistPagination.firstPage();
-// User clicks "Next"
-const secondPage = await masterlistPagination.nextPage();
+const page1 = await pagination.first();
+const page2 = await pagination.next();
+const page1Again = await pagination.prev();
+```
+
+### Load More Pattern
+
+```javascript
+class LoadMoreSheet {
+  constructor(sheetPage, options = {}) {
+    this.sheetPage = sheetPage;
+    this.pageSize = options.pageSize || 50;
+    this.queryOptions = options;
+    this.loadedData = [];
+    this.offset = 0;
+    this.hasMore = true;
+  }
+
+  async loadInitial() {
+    this.loadedData = [];
+    this.offset = 0;
+    return await this.loadMore();
+  }
+
+  async loadMore() {
+    if (!this.hasMore) return [];
+
+    const newData = await charadex.importSheet(this.sheetPage, {
+      ...this.queryOptions,
+      limit: this.pageSize,
+      offset: this.offset
+    });
+
+    this.loadedData = [...this.loadedData, ...newData];
+    this.offset += this.pageSize;
+    this.hasMore = newData.length === this.pageSize;
+
+    return newData; // Return just the new data for appending
+  }
+
+  getAllLoaded() {
+    return this.loadedData;
+  }
+}
+
+// Usage:
+const loader = new LoadMoreSheet('Pufflings', {
+  columns: 'A, B, C, D, E',
+  orderBy: 'A DESC',
+  pageSize: 50
+});
+
+// Initial load
+const initialData = await loader.loadInitial();
+renderData(initialData);
+
+// User clicks "Load More"
+const moreData = await loader.loadMore();
+appendData(moreData);
+
+// Check if "Load More" button should be shown
+if (!loader.hasMore) {
+  hideLoadMoreButton();
+}
 ```
 
 ---
 
-**Report Prepared By:** Claude Code
-**Date:** November 13, 2025
-**Version:** 1.0
+## Testing Plan
+
+### 1. Test Pagination
+
+**Before (for comparison):**
+- Open DevTools Network tab
+- Load masterlist page
+- Note: Transfer size, number of cells loaded
+
+**After:**
+- Clear cache
+- Load masterlist page
+- Check: Only 50 rows loaded, much smaller transfer
+- Click "Next"
+- Check: Loads next 50 rows correctly
+- Click "Previous"
+- Check: Shows previous page (should be cached, instant)
+
+### 2. Test Column Selection
+
+**For each optimized page:**
+- Inspect Network request
+- Check the `tq` parameter contains `SELECT A, B, C...`
+- Verify all displayed data still shows correctly
+- Check transfer size is smaller
+
+### 3. Test Caching
+
+**Static sheets (30+ min cache):**
+- Load page with traits/items
+- Reload page within 30 minutes
+- Check: No new network request (cache hit)
+- Force refresh (Ctrl+Shift+R)
+- Check: New request made
+
+**Dynamic sheets (5 min cache):**
+- Load inventory page
+- Reload within 5 minutes → cache hit
+- Wait 6 minutes, reload → new request
+
+### 4. Edge Cases
+
+- Empty sheet (0 rows)
+- Single page (less than 50 rows)
+- Exactly 50 rows (pagination boundary)
+- Very long text in cells
+- Special characters in data
+- Offline (cache still works)
+
+---
+
+## Performance Expectations
+
+### Before Optimization
+
+**Pufflings Masterlist (400 rows × 50 cols):**
+- Payload: ~1.5 MB
+- Parse time: ~500ms
+- Render time: ~300ms
+- **Total: ~2-3 seconds**
+
+### After Phase 1 (Pagination + Column Selection)
+
+**Pufflings Masterlist (50 rows × 10 cols):**
+- Payload: ~50 KB (97% reduction)
+- Parse time: ~50ms (90% reduction)
+- Render time: ~50ms (83% reduction)
+- **Total: ~200-300ms (10x faster)**
+
+### After Phase 2+3 (Column Optimization + Caching)
+
+**Subsequent page loads:**
+- **Cached: ~10ms (300x faster than original)**
+- Same page within cache window: instant
+- Next/previous page: ~200ms (from cache or server)
+
+### Mobile Impact
+
+**Before:** Painful on 3G, very slow on 4G
+**After:** Usable on 3G, fast on 4G
+
+---
+
+## Maintenance
+
+### When to Update Queries
+
+**Sheet structure changes:**
+- Added/removed columns → Update `columns` parameter
+- Changed column order → Update column letters in SELECT
+- Added new sheet → Add to cache expiry config
+
+**Example:** If you add a new "thumbnail" column Z to Pufflings:
+
+```javascript
+// Old:
+columns: 'A, B, C, D, E'
+
+// New:
+columns: 'A, B, C, D, E, Z'  // Added thumbnail
+```
+
+### Monitoring
+
+**Things to watch:**
+- Page load times (Chrome DevTools)
+- Cache hit rates (console.log already in code)
+- Payload sizes (Network tab)
+
+**Red flags:**
+- Cache hit rate <70% → Cache expiry too short or users bypassing cache
+- Payload suddenly larger → Check if query is correct
+- Errors in console → Check GVIZ query syntax
+
+---
+
+## Alternatives Considered
+
+### 1. Google Sheets API v4
+
+**Verdict:** More work, no benefits
+
+- ❌ No query language (have to calculate ranges manually)
+- ❌ OAuth setup overhead
+- ❌ More complex code
+- ✅ Rate limits fine for your traffic (but still not worth it)
+
+### 2. Server-Side Proxy (Node.js/Python)
+
+**Verdict:** Overkill for solo project
+
+- ✅ Could add server-side caching
+- ✅ Could aggregate data from multiple sheets
+- ❌ Requires hosting ($5-10/month)
+- ❌ Deployment complexity
+- ❌ More maintenance
+- ❌ Latency from extra hop
+
+**When to consider:** If you get 100k+ users or need private data
+
+### 3. Pre-build Static JSON (CI/CD)
+
+**Verdict:** You already do this for story content
+
+- ✅ You use `sync_prompts.py` for static content
+- ✅ Great for truly static data
+- ❌ Not suitable for inventory (changes frequently)
+- ❌ Requires rebuild for every masterlist update
+
+**Current approach is good:** Static content via CI, dynamic via GVIZ
+
+### 4. Move to Database (Firebase/Supabase)
+
+**Verdict:** Way overkill
+
+- ✅ Real-time updates, better queries, scalability
+- ❌ Have to migrate all data
+- ❌ Lose Google Sheets as CMS (easy for you to edit)
+- ❌ Monthly costs
+- ❌ Weeks of migration work
+
+**When to consider:** If you need real-time updates or hit 10k+ users
+
+---
+
+## FAQ
+
+### Q: Will this break existing functionality?
+
+**A:** No, backward compatible. Default behavior (no options) works exactly like before.
+
+```javascript
+// Old way still works:
+await charadex.importSheet('items');
+
+// New way is optional:
+await charadex.importSheet('items', { limit: 50 });
+```
+
+### Q: What if I need all 400 rows for a feature?
+
+**A:** Either:
+1. Load all pages and combine them
+2. Use the old way for that specific call: `importSheet('Pufflings')` (no limit)
+3. Use a high limit: `{ limit: 500 }`
+
+### Q: Will users notice the pagination?
+
+**A:** They'll notice it's faster. Add smooth scrolling/transitions for better UX.
+
+### Q: How do I know which columns to select?
+
+**A:** Check your render code. If you display `character.name` and `character.image`, find those columns in the sheet, select only those.
+
+### Q: Can I search across all pages?
+
+**A:** Two options:
+1. Server-side: Use `WHERE name MATCHES '.*searchterm.*'`
+2. Load all data: `{ limit: 500 }` or load all pages
+
+### Q: What about sorting by different columns?
+
+**A:** Change the `orderBy` parameter:
+
+```javascript
+// Sort by name:
+{ orderBy: 'B ASC' }
+
+// Sort by date:
+{ orderBy: 'A DESC' }
+
+// Sort by multiple columns:
+{ orderBy: 'B ASC, A DESC' }
+```
+
+### Q: Is GVIZ going away?
+
+**A:** Not officially deprecated, widely used. If Google ever announces deprecation (unlikely), you have years to migrate and the enhanced structure will make migration easier.
+
+---
+
+## Decision Matrix
+
+|  | GVIZ Enhanced | Sheets API v4 | Status Quo |
+|---|---------------|---------------|------------|
+| **Implementation Time** | 2-4 hours | 20-30 hours | 0 hours |
+| **Pagination Support** | ✅ Built-in (LIMIT/OFFSET) | ⚠️ Manual (range calc) | ❌ None |
+| **Column Filtering** | ✅ SELECT clause | ⚠️ Fetch range, discard | ❌ Fetches all |
+| **Server-Side Filtering** | ✅ WHERE clause | ❌ Client-side only | ❌ Client-side only |
+| **Auth Complexity** | ✅ None | ❌ OAuth/Service Account | ✅ None |
+| **Ongoing Maintenance** | ✅ Low | ⚠️ Medium | ✅ None |
+| **Performance (400 rows)** | ✅ Excellent (50 row chunks) | ⚠️ OK (need manual chunking) | ❌ Slow (all at once) |
+| **Code Simplicity** | ✅ Simple queries | ❌ Complex range logic | ✅ Simple |
+| **Future-Proof** | ⚠️ Undocumented but stable | ✅ Official API | ⚠️ Will get worse |
+| **Your Use Case Fit** | ✅✅✅ Perfect | ⚠️ Overkill | ❌ Doesn't scale |
+
+**Winner:** GVIZ Enhanced
+
+---
+
+## Conclusion
+
+**Recommendation: Enhance GVIZ with pagination and column selection**
+
+**Why:**
+- 2-4 hours work vs 20-30 hours for API v4
+- Solves your actual problem (400-row sheet performance)
+- Built-in query language perfect for pagination
+- No auth complexity
+- Backward compatible
+
+**Don't overthink it.** Your current setup is 90% there, just needs:
+1. Pagination for the big sheet (30 min)
+2. Column selection (30 min)
+3. Better caching (30 min)
+
+**Total time: 1.5-2 hours for 10x performance improvement**
+
+---
+
+## Next Steps
+
+1. **Measure baseline** (5 min)
+   - Open masterlist page with DevTools Network tab
+   - Note current payload size and load time
+
+2. **Implement Phase 1** (1-2 hours)
+   - Add options to importSheet()
+   - Add pagination to masterlist page
+   - Test
+
+3. **Measure improvement** (5 min)
+   - Check new payload size
+   - Check new load time
+   - Should see ~90-95% reduction
+
+4. **Decide on Phase 2+3**
+   - If Phase 1 solves your issue, you can stop
+   - If you want more optimization, continue with column selection and caching
+
+5. **Iterate**
+   - Add pagination to other large sheets as needed
+   - Optimize column selection for bandwidth-heavy pages
+   - Adjust cache times based on actual usage
+
+---
+
+## Reference: GVIZ Query Language Quick Guide
+
+```sql
+-- Basic syntax:
+SELECT columns WHERE condition ORDER BY column LIMIT n OFFSET m
+
+-- Column selection:
+SELECT *                    -- All columns
+SELECT A, B, C              -- Specific columns
+SELECT A, B, C, D, E, F    -- Multiple columns
+
+-- Filtering:
+WHERE A IS NOT NULL                          -- Required
+WHERE A IS NOT NULL AND B = 'value'          -- Equality
+WHERE A IS NOT NULL AND C > 100              -- Comparison
+WHERE A IS NOT NULL AND B IN ('a', 'b')      -- Multiple values
+WHERE B MATCHES '.*pattern.*'                -- Regex (case-sensitive)
+
+-- Sorting:
+ORDER BY A                  -- Ascending
+ORDER BY A DESC            -- Descending
+ORDER BY B ASC, A DESC     -- Multiple columns
+
+-- Pagination:
+LIMIT 50                   -- First 50 rows
+LIMIT 50 OFFSET 0          -- First page (rows 1-50)
+LIMIT 50 OFFSET 50         -- Second page (rows 51-100)
+LIMIT 50 OFFSET 100        -- Third page (rows 101-150)
+
+-- Aggregation (bonus):
+SELECT A, COUNT(B) GROUP BY A
+SELECT A, SUM(C), AVG(D) GROUP BY A
+SELECT A, MIN(B), MAX(B) GROUP BY A
+
+-- Column naming:
+SELECT A, B LABEL A 'ID', B 'Name'
+
+-- Formatting:
+SELECT A, B FORMAT A 'MMM dd, yyyy', B '#,##0.00'
+```
+
+**Full reference:** https://developers.google.com/chart/interactive/docs/querylanguage
+
+---
+
+**Report by:** Claude
+**For:** Solo dev optimization (not enterprise analysis)
+**Version:** 2.0 (Practical Edition)
