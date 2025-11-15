@@ -7,7 +7,7 @@ import { auth } from '../auth.js';
 /* ==================================================================== */
 /* Load
 ======================================================================= */
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   charadex.tools.loadIncludedFiles();
   charadex.tools.updateMeta();
   charadex.tools.loadPage('#charadex-body', 100);
@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
   }
+
+  // Load username suggestions
+  await loadUsernameSuggestions();
 
   // Set up login form handler
   setupLoginForm();
@@ -61,8 +64,46 @@ function setupLoginForm() {
       }
     });
 
-    // Optional: Load username suggestions from the data
-    // This could be populated from the Google Sheets data if desired
-
   }, 500); // Give time for the page to load
+}
+
+/* ==================================================================== */
+/* Load Username Suggestions
+======================================================================= */
+async function loadUsernameSuggestions() {
+  try {
+    // Fetch inventory data which contains usernames
+    const inventoryData = await charadex.importSheet(charadex.sheet.pages.inventory);
+
+    if (!inventoryData || !Array.isArray(inventoryData)) {
+      console.warn('Could not load username suggestions');
+      return;
+    }
+
+    // Extract unique usernames
+    const usernames = new Set();
+    inventoryData.forEach(item => {
+      if (item.username && typeof item.username === 'string') {
+        usernames.add(item.username.trim());
+      }
+    });
+
+    // Sort usernames alphabetically
+    const sortedUsernames = Array.from(usernames).sort((a, b) =>
+      a.toLowerCase().localeCompare(b.toLowerCase())
+    );
+
+    // Populate the datalist
+    setTimeout(() => {
+      const datalist = document.getElementById('username-suggestions');
+      if (datalist && sortedUsernames.length > 0) {
+        datalist.innerHTML = sortedUsernames
+          .map(username => `<option value="${username}">`)
+          .join('');
+      }
+    }, 500); // Give time for the page to load
+
+  } catch (error) {
+    console.error('Error loading username suggestions:', error);
+  }
 }

@@ -146,9 +146,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   ===================================================================== */
   if (auth.isLoggedIn()) {
     const username = auth.getUsername();
-    const welcomeText = document.getElementById('welcome-username-text');
-    if (welcomeText && username) {
-      welcomeText.textContent = `, ${username}`;
+    const welcomeLink = document.getElementById('welcome-username-link');
+    if (welcomeLink && username) {
+      welcomeLink.textContent = `, ${username}`;
+      welcomeLink.href = auth.getProfileUrl();
+      welcomeLink.style.display = 'inline';
     }
   }
 
