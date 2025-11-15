@@ -2,6 +2,7 @@
 /* Import Charadex
 ======================================================================= */
 import { charadex } from '../charadex.js';
+import { auth } from '../auth.js';
 
 
 /* ==================================================================== */
@@ -140,5 +141,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* Load Page
   ===================================================================== */
   charadex.tools.loadPage('.softload', 500);
+
+  /* Set Welcome Message
+  ===================================================================== */
+  if (auth.isLoggedIn()) {
+    const username = auth.getUsername();
+    const welcomeText = document.getElementById('welcome-username-text');
+    if (welcomeText && username) {
+      welcomeText.textContent = `, ${username}`;
+    }
+  }
 
 });
