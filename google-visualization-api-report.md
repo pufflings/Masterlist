@@ -1,8 +1,8 @@
 # Google Visualization API Optimization Guide
 
 **Project:** Pufflings Masterlist - RPG Character Visualization
-**Context:** Solo dev, ~400 rows × 50 cols, thousands of requests/month
-**Date:** November 14, 2025
+**Context:** Solo dev, thousands of requests/month, ~188 Pufflings (growing to 400+), **46,750 traits**
+**Date:** November 15, 2025
 
 ---
 
@@ -11,13 +11,19 @@
 **You're already using Google Visualization API (GVIZ)** - you just need to use it better.
 
 **Your Real Problems:**
-1. Loading 400 rows × 50 columns = ~20,000 cells at once (SLOW)
-2. No pagination yet, but you need it as sheet grows
-3. Fetching all 50 columns when you only display ~5-10
+1. **Traits sheet:** 46,750 rows × 12 columns = **561,000 cells** (MASSIVE - needs pagination NOW)
+2. **Pufflings:** 188 rows × 25 columns = 4,700 cells (growing to 400+ = ~10,000 cells)
+3. **Seekers:** 300 rows × 14 columns = 4,200 cells
+4. Fetching ALL columns when you only display ~5-10
+5. You already have List.js pagination (client-side), but still loading everything from server first
 
-**Solution:** Use GVIZ's query language (SELECT, LIMIT, OFFSET) - it's perfect for this.
+**Solution:** Use GVIZ's query language (SELECT, LIMIT, OFFSET) to reduce server data transfer, then use your existing List.js for UI pagination.
 
 **Should you migrate to Sheets API v4?** No. More work, no real benefits for your use case.
+
+---
+
+**Column Reference:** See `COLUMN_REFERENCE.md` for complete column mappings from your CSV exports.
 
 ---
 
@@ -155,44 +161,273 @@ SELECT owner, SUM(value) GROUP BY owner
 
 ## Your Specific Use Case Analysis
 
-### Current Sheets
+### Current Sheets (from CSV exports)
 
-From `styles/js/config.js:37-50`:
+| Sheet | Actual Rows | Columns | Total Cells | Needs Pagination? | Cache Time |
+|-------|-------------|---------|-------------|------------------|------------|
+| **Traits** | **46,750** | 12 | **561,000** | **CRITICAL** | 1 hour |
+| Pufflings | 188 (→400+) | 25 | 4,700 | YES | 5 min |
+| Seekers | 300 | 14 | 4,200 | YES | 5 min |
+| Inventory | 602 users | 82 | ~49,000 | Maybe | 5 min |
+| Inventory Log | 296 | 9 | 2,664 | Maybe | 5 min |
+| Masterlist Log | 86 | 6 | 516 | No | 5 min |
+| Items | 117 | 16 | 1,872 | No | 1 hour |
+| Prompts | ~20? | ~10? | ~200 | No | 1 hour |
+| News | ~10 | ~5 | ~50 | No | 1 hour |
+| Options | 33 | varies | small | No | 1 hour |
 
-| Sheet | Likely Rows | Likely Columns | Needs Pagination? | Cache Time |
-|-------|-------------|----------------|------------------|------------|
-| Pufflings (masterlist) | ~400 | ~50 | **YES** | 30 min |
-| Seekers | ~50? | ~30? | Maybe | 30 min |
-| Inventory | Varies | ~20? | If >100 | 5 min |
-| Items | ~100? | ~15? | Maybe | 30 min |
-| Traits | ~50? | ~10? | No | 30 min |
-| Prompts | ~20? | ~10? | No | 30 min |
-| News | ~10 | ~5 | No | 10 min |
+**Based on your preferences:**
+- **5 min cache:** Pufflings, Seekers, all Logs (frequently updated)
+- **1 hour cache:** Items, Traits, Prompts, News, Options (rarely change)
 
-### Priority Fix: Pufflings Masterlist
+### Priority Fix #1: TRAITS SHEET ⚠️ CRITICAL
 
-**Current:** 400 rows × 50 cols = 20,000 cells loaded at once
+**Current:** 46,750 rows × 12 columns = **561,000 cells** loaded at once
 
 **Impact:**
-- Large payload (500KB - 2MB depending on content)
-- Slow parsing/rendering
-- Poor mobile experience
-- Will get worse as you add more characters
+- **MASSIVE** payload (likely 20-50MB of JSON!)
+- Page hangs/crashes on slow connections
+- Mobile devices may run out of memory
+- Browser tab becomes unresponsive
 
-**Quick Fix (30 minutes):**
+**CRITICAL Fix (30 minutes):**
 
 ```javascript
-// For masterlist page display:
+// Traits page - from styles/js/pages/traits.js
+// Column reference from CSV:
+// A=ID, B=Trait, C=AUX, D=Hide, E=Image URL, F=Image, G=Preview,
+// H=Type, I=Rarity, J=Price, K=Description, L=Item
+
+await charadex.importSheet('Traits', {
+  columns: 'A, B, F, H, I, K',  // ID, Trait, Image, Type, Rarity, Description
+  where: 'D = FALSE',  // D=Hide column
+  limit: 100,
+  offset: currentPage * 100,
+  orderBy: 'B ASC'  // Sort by trait name
+});
+
+// Payload: 100 rows × 6 cols = 600 cells
+// Reduction: 561,000 → 600 = 99.9% smaller!
+// From ~30MB → ~30KB
+```
+
+**THIS IS YOUR BIGGEST WIN.** Do this first.
+
+### Priority Fix #2: Pufflings/Seekers (Growing Sheets)
+
+**Pufflings:** 188 rows × 25 cols = 4,700 cells (will grow to ~400 = 10,000 cells)
+**Seekers:** 300 rows × 14 cols = 4,200 cells
+
+**Impact:**
+- Medium payloads (300KB - 1MB)
+- Noticeable on slow connections
+- Will get worse as masterlist grows
+
+**Fix (30 minutes each):**
+
+```javascript
+// Pufflings - Column reference (see COLUMN_REFERENCE.md):
+// A=ID, B=Hide, C=Prefix, D=Design, E=Name, F=Image URL, G=Image,
+// L=Type, M=Species, N=Owner, U=Status, V=Rarity
+
 await charadex.importSheet('Pufflings', {
-  columns: 'A, B, C, D, E, F, G, H, I, J',  // Only displayed columns
+  columns: 'A, D, E, G, L, M, N, U, V',  // 9 cols instead of 25
+  where: 'B = FALSE',  // Not hidden
   limit: 50,
   offset: currentPage * 50,
   orderBy: 'A DESC'  // Newest first
 });
 
-// Payload: 50 rows × 10 cols = 500 cells
-// Reduction: 20,000 → 500 = 97.5% smaller!
+// Reduction: 4,700 → 450 cells = 90% smaller
 ```
+
+```javascript
+// Seekers - Column reference:
+// A=ID, B=Hide, C=Prefix, D=Design, E=Type, F=Name, I=Image, K=Owner
+
+await charadex.importSheet('Seekers', {
+  columns: 'A, D, F, I, K',  // 5 cols instead of 14
+  where: 'B = FALSE',
+  limit: 50,
+  offset: currentPage * 50,
+  orderBy: 'A DESC'
+});
+
+// Reduction: 4,200 → 250 cells = 94% smaller
+```
+
+---
+
+## Your Existing Pagination (List.js)
+
+I found your pagination code in `styles/js/list.js:230-283`. You're using **List.js** for client-side pagination:
+
+```javascript
+charadex.listFeatures.pagination = (galleryArrayLength, pageAmount = 12, bottomPaginationToggle = true, selector = 'charadex') => {
+  // ... List.js pagination config
+}
+```
+
+**Current flow:**
+1. Load ALL data from Google Sheets (e.g., 46,750 trait rows)
+2. Store in browser memory
+3. List.js paginates the UI (shows 12-100 items per page)
+4. User clicks next → List.js shows next chunk **from memory**
+
+**Problem:** Step 1 loads EVERYTHING, even if you only show 100 items.
+
+### Integration Strategy: Server + Client Pagination
+
+You have two options:
+
+#### Option A: Keep List.js, Add Server Pagination (Hybrid) ⭐ RECOMMENDED
+
+**Best for:** Large sheets (Traits), while keeping your existing UI
+
+```javascript
+// Load first chunk from server (100 rows)
+const traits = await charadex.importSheet('Traits', {
+  limit: 100,
+  offset: 0
+});
+
+// Let List.js paginate those 100 rows in the UI (e.g., 12 per page)
+const listJs = new List('charadex-gallery', {
+  valueNames: ['trait', 'type', 'rarity'],
+  page: 12,  // Your existing List.js page size
+  pagination: { ... }
+});
+```
+
+**Then add "Load More" button:**
+```javascript
+let currentOffset = 0;
+async function loadMore() {
+  currentOffset += 100;
+  const moreTraits = await charadex.importSheet('Traits', {
+    limit: 100,
+    offset: currentOffset
+  });
+
+  // Add to List.js
+  listJs.add(moreTraits);
+}
+```
+
+**Benefits:**
+- ✅ Initial load is fast (100 rows instead of 46,750)
+- ✅ Keep all your existing List.js features (search, sort, filters)
+- ✅ "Load More" pattern is familiar to users
+- ✅ Minimal code changes
+
+#### Option B: Server-Only Pagination (Simpler)
+
+**Best for:** Small/medium sheets (Pufflings, Seekers)
+
+```javascript
+// Just load a reasonable amount and forget pagination
+const pufflings = await charadex.importSheet('Pufflings', {
+  limit: 200  // Load 200, let List.js handle UI
+});
+
+// List.js paginates 200 items into pages of 12
+const listJs = new List(...);
+```
+
+**When to use:**
+- Sheet has <500 rows and will stay that way
+- Data rarely changes (long cache is OK)
+
+#### Option C: Replace List.js with Server Pagination
+
+**Not recommended** - you'd lose all your existing search/filter/sort UI code.
+
+### Recommended Approach Per Sheet
+
+| Sheet | Strategy | Reasoning |
+|-------|----------|-----------|
+| **Traits** | Hybrid (server LIMIT 100 + List.js + Load More) | 46,750 rows, must reduce server load |
+| **Seekers** | Server LIMIT 300 + List.js | 300 rows manageable, keeps UX |
+| **Pufflings** | Server LIMIT 200 + List.js | 188 rows (growing), future-proof |
+| **Items** | Load all + List.js | 117 rows, simple |
+| **Logs** | Server-side filtering + LIMIT | Filter by user/mod, show recent |
+
+---
+
+## Server-Side Filtering for Logs
+
+You asked about filtering logs - **yes, absolutely!**
+
+### Inventory Log Filtering
+
+**Column reference:**
+- A=Username, B=Hide, C=Timestamp, D=Mod Username, E=Reason, F=Item, G=Quantity, H=Soulbound, I=Gacha
+
+**Use cases:**
+
+```javascript
+// Logs for specific user:
+await charadex.importSheet('inventory log', {
+  where: 'B = FALSE AND A = "username"',
+  orderBy: 'C DESC',
+  limit: 50
+});
+
+// Logs by specific mod:
+await charadex.importSheet('inventory log', {
+  where: 'B = FALSE AND D = "modname"',
+  orderBy: 'C DESC',
+  limit: 50
+});
+
+// Gacha logs only:
+await charadex.importSheet('inventory log', {
+  where: 'B = FALSE AND I = TRUE',  // I=Gacha column
+  orderBy: 'C DESC',
+  limit: 50
+});
+
+// Recent logs (all users):
+await charadex.importSheet('inventory log', {
+  where: 'B = FALSE',
+  orderBy: 'C DESC',  // Sort by timestamp descending
+  limit: 50  // Last 50 transactions
+});
+```
+
+### Masterlist Log Filtering
+
+**Column reference:**
+- A=ID, B=Hide, C=Timestamp, D=Mod, E=Target, F=Reason
+
+```javascript
+// Logs for specific target (Puffling ID or user):
+await charadex.importSheet('masterlist log', {
+  where: 'B = FALSE AND E = "targetname"',
+  orderBy: 'C DESC',
+  limit: 50
+});
+
+// Logs by mod:
+await charadex.importSheet('masterlist log', {
+  where: 'B = FALSE AND D = "modname"',
+  orderBy: 'C DESC',
+  limit: 50
+});
+
+// Recent approvals (if "Reason" contains "Approved"):
+await charadex.importSheet('masterlist log', {
+  where: 'B = FALSE AND F MATCHES ".*Approved.*"',
+  orderBy: 'C DESC',
+  limit: 50
+});
+```
+
+**Benefits of server-side log filtering:**
+- ✅ Only fetch relevant logs (huge reduction if filtering by user)
+- ✅ Always get most recent entries with ORDER BY timestamp DESC
+- ✅ Perfect for "view my transaction history" features
+- ✅ Reduces bandwidth for log-heavy operations
 
 ---
 
@@ -310,27 +545,30 @@ const items = await charadex.importSheet('items', {
 
 **Current:** 5 minutes for everything (`utilities.js:638`)
 
-**Better:**
+**Your Preferences:**
+- Frequently updated (5 min): Pufflings, Seekers, Inventory, Logs
+- Rarely updated (1 hour): Items, Traits, Prompts, News, Options
+
+**Implementation:**
 
 ```javascript
 const CACHE_EXPIRY = {
-  // Updated frequently by players:
+  // Updated frequently (5 min):
+  'Pufflings': 5 * 60 * 1000,         // 5 min
+  'seekers': 5 * 60 * 1000,           // 5 min
   'inventory': 5 * 60 * 1000,         // 5 min
   'inventory log': 5 * 60 * 1000,     // 5 min
-  'news': 10 * 60 * 1000,             // 10 min
+  'masterlist log': 5 * 60 * 1000,    // 5 min
 
-  // Updated occasionally by you:
-  'Pufflings': 30 * 60 * 1000,        // 30 min
-  'seekers': 30 * 60 * 1000,          // 30 min
-  'items': 30 * 60 * 1000,            // 30 min
-  'prompts': 30 * 60 * 1000,          // 30 min
-
-  // Rarely changes:
-  'OptionsSheet': 60 * 60 * 1000,     // 1 hour
+  // Rarely changes (1 hour):
+  'items': 60 * 60 * 1000,            // 1 hour
   'traits': 60 * 60 * 1000,           // 1 hour
+  'prompts': 60 * 60 * 1000,          // 1 hour
+  'news': 60 * 60 * 1000,             // 1 hour
+  'OptionsSheet': 60 * 60 * 1000,     // 1 hour
   'faq': 60 * 60 * 1000,              // 1 hour
 
-  'default': 30 * 60 * 1000           // 30 min
+  'default': 5 * 60 * 1000            // 5 min default
 };
 
 function getCacheExpiry(sheetPage) {
@@ -338,19 +576,22 @@ function getCacheExpiry(sheetPage) {
 }
 ```
 
-Update cache check:
+Update cache check in `utilities.js`:
 
 ```javascript
-// utilities.js - checkCache function
+// In charadex.importSheet or checkCache function:
 const { data, timestamp } = JSON.parse(cached);
 const expiry = getCacheExpiry(sheetPage);
 
 if (Date.now() - timestamp < expiry) {
+  console.log(`Cache hit: ${sheetPage}`);
   return data;
 }
 ```
 
-**Expected result:** 80-90% fewer API requests (due to longer cache on static data)
+**Expected result:**
+- Frequently updated sheets: Still fresh data (5 min)
+- Static sheets: 12x fewer requests (1 hour vs 5 min)
 
 ### Phase 4: Optional Enhancements
 
@@ -930,21 +1171,46 @@ await charadex.importSheet('items', { limit: 50 });
 
 ## Reference: GVIZ Query Language Quick Guide
 
+### Column Names vs Letters
+
+GVIZ supports BOTH column letters (A, B, C) AND column header names:
+
+```sql
+-- These are equivalent (if column B header is "Trait"):
+WHERE B MATCHES '.*dragon.*'
+WHERE Trait MATCHES '.*dragon.*'
+
+-- These are equivalent (if column D header is "Status"):
+WHERE D = 'Soulbound'
+WHERE Status = 'Soulbound'
+```
+
+**Important notes:**
+- Column names with spaces need backticks: ``WHERE `owner name` = 'foo'``
+- Column names are case-sensitive
+- **Recommendation:** Use column letters in code (A, B, C) - they won't break if you rename headers
+- Dropdown values are consistent (no "Approved" vs "approved" variations)
+
+### Query Syntax
+
 ```sql
 -- Basic syntax:
 SELECT columns WHERE condition ORDER BY column LIMIT n OFFSET m
 
 -- Column selection:
 SELECT *                    -- All columns
-SELECT A, B, C              -- Specific columns
+SELECT A, B, C              -- Specific columns (letters)
+SELECT Trait, Type, Rarity  -- Specific columns (names)
 SELECT A, B, C, D, E, F    -- Multiple columns
 
 -- Filtering:
 WHERE A IS NOT NULL                          -- Required
-WHERE A IS NOT NULL AND B = 'value'          -- Equality
-WHERE A IS NOT NULL AND C > 100              -- Comparison
-WHERE A IS NOT NULL AND B IN ('a', 'b')      -- Multiple values
+WHERE B = 'value'                            -- Equality (use column letter)
+WHERE Status = 'Soulbound'                   -- Equality (use column name)
+WHERE C > 100                                -- Comparison
+WHERE B IN ('a', 'b')                        -- Multiple values
 WHERE B MATCHES '.*pattern.*'                -- Regex (case-sensitive)
+WHERE B MATCHES '(?i).*dragon.*'             -- Regex (case-insensitive with (?i) flag)
 
 -- Sorting:
 ORDER BY A                  -- Ascending
