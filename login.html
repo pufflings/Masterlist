@@ -86,18 +86,17 @@
           <form id="login-form">
             <div class="form-group">
               <label for="username-input">Username</label>
-              <input
-                type="text"
-                class="form-control"
-                id="username-input"
-                placeholder="Enter your username"
-                autocomplete="username"
-                required
-                list="username-suggestions"
-              >
-              <datalist id="username-suggestions">
-                <!-- Username suggestions will be populated here if available -->
-              </datalist>
+              <div class="position-relative">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username-input"
+                  placeholder="Enter or select your username"
+                  autocomplete="off"
+                  required
+                >
+                <div id="username-dropdown" class="list-group position-absolute w-100" style="display: none; max-height: 200px; overflow-y: auto; z-index: 1000; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+              </div>
               <small class="form-text text-muted">
                 This will be displayed as "Welcome, [username]!" on the homepage.
               </small>
