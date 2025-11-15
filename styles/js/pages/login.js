@@ -117,13 +117,6 @@ function setupCustomDropdown() {
     return;
   }
 
-  // Show dropdown on focus
-  input.addEventListener('focus', () => {
-    if (allUsernames.length > 0) {
-      showFilteredUsernames('');
-    }
-  });
-
   // Filter on input
   input.addEventListener('input', (e) => {
     const searchTerm = e.target.value;
@@ -139,6 +132,12 @@ function setupCustomDropdown() {
 
   // Function to show filtered usernames
   function showFilteredUsernames(searchTerm) {
+    // Only show dropdown if 3 or more characters typed
+    if (searchTerm.length < 3) {
+      dropdown.style.display = 'none';
+      return;
+    }
+
     const filtered = allUsernames.filter(username =>
       username.toLowerCase().includes(searchTerm.toLowerCase())
     );
