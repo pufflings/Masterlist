@@ -1,7 +1,7 @@
 # Google Visualization API Optimization Guide
 
 **Project:** Pufflings Masterlist - RPG Character Visualization
-**Context:** Solo dev, thousands of requests/month, ~188 Pufflings (growing to 400+), **46,750 traits**
+**Context:** Solo dev, thousands of requests/month, ~188 Pufflings (growing to 400+)
 **Date:** November 15, 2025
 
 ---
@@ -11,11 +11,11 @@
 **You're already using Google Visualization API (GVIZ)** - you just need to use it better.
 
 **Your Real Problems:**
-1. **Traits sheet:** 46,750 rows × 12 columns = **561,000 cells** (MASSIVE - needs pagination NOW)
-2. **Pufflings:** 188 rows × 25 columns = 4,700 cells (growing to 400+ = ~10,000 cells)
-3. **Seekers:** 300 rows × 14 columns = 4,200 cells
-4. Fetching ALL columns when you only display ~5-10
-5. You already have List.js pagination (client-side), but still loading everything from server first
+1. **Pufflings (masterlist):** 188 rows × 25 columns = 4,700 cells (growing to 400+ = ~10,000 cells) - needs pagination soon
+2. **Seekers:** 300 rows × 14 columns = 4,200 cells - needs pagination
+3. Fetching ALL 25 columns when you only display ~9-10
+4. You already have List.js pagination (client-side), but still loading everything from server first
+5. Cache too aggressive (5 min for everything)
 
 **Solution:** Use GVIZ's query language (SELECT, LIMIT, OFFSET) to reduce server data transfer, then use your existing List.js for UI pagination.
 
@@ -165,13 +165,13 @@ SELECT owner, SUM(value) GROUP BY owner
 
 | Sheet | Actual Rows | Columns | Total Cells | Needs Pagination? | Cache Time |
 |-------|-------------|---------|-------------|------------------|------------|
-| **Traits** | **46,750** | 12 | **561,000** | **CRITICAL** | 1 hour |
-| Pufflings | 188 (→400+) | 25 | 4,700 | YES | 5 min |
-| Seekers | 300 | 14 | 4,200 | YES | 5 min |
+| **Pufflings** | **188 (→400+)** | 25 | **4,700 → 10,000** | **YES (priority)** | 5 min |
+| **Seekers** | **300** | 14 | **4,200** | **YES** | 5 min |
 | Inventory | 602 users | 82 | ~49,000 | Maybe | 5 min |
 | Inventory Log | 296 | 9 | 2,664 | Maybe | 5 min |
 | Masterlist Log | 86 | 6 | 516 | No | 5 min |
 | Items | 117 | 16 | 1,872 | No | 1 hour |
+| Traits | 74 | 12 | 888 | No | 1 hour |
 | Prompts | ~20? | ~10? | ~200 | No | 1 hour |
 | News | ~10 | ~5 | ~50 | No | 1 hour |
 | Options | 33 | varies | small | No | 1 hour |
@@ -180,50 +180,20 @@ SELECT owner, SUM(value) GROUP BY owner
 - **5 min cache:** Pufflings, Seekers, all Logs (frequently updated)
 - **1 hour cache:** Items, Traits, Prompts, News, Options (rarely change)
 
-### Priority Fix #1: TRAITS SHEET ⚠️ CRITICAL
+**Note:** Traits CSV export had 46,750 rows (data corruption), but actual sheet is only 74 rows.
 
-**Current:** 46,750 rows × 12 columns = **561,000 cells** loaded at once
+### Priority Fix #1: Pufflings (Growing Masterlist)
 
-**Impact:**
-- **MASSIVE** payload (likely 20-50MB of JSON!)
-- Page hangs/crashes on slow connections
-- Mobile devices may run out of memory
-- Browser tab becomes unresponsive
-
-**CRITICAL Fix (30 minutes):**
-
-```javascript
-// Traits page - from styles/js/pages/traits.js
-// Column reference from CSV:
-// A=ID, B=Trait, C=AUX, D=Hide, E=Image URL, F=Image, G=Preview,
-// H=Type, I=Rarity, J=Price, K=Description, L=Item
-
-await charadex.importSheet('Traits', {
-  columns: 'A, B, F, H, I, K',  // ID, Trait, Image, Type, Rarity, Description
-  where: 'D = FALSE',  // D=Hide column
-  limit: 100,
-  offset: currentPage * 100,
-  orderBy: 'B ASC'  // Sort by trait name
-});
-
-// Payload: 100 rows × 6 cols = 600 cells
-// Reduction: 561,000 → 600 = 99.9% smaller!
-// From ~30MB → ~30KB
-```
-
-**THIS IS YOUR BIGGEST WIN.** Do this first.
-
-### Priority Fix #2: Pufflings/Seekers (Growing Sheets)
-
-**Pufflings:** 188 rows × 25 cols = 4,700 cells (will grow to ~400 = 10,000 cells)
-**Seekers:** 300 rows × 14 cols = 4,200 cells
+**Current:** 188 rows × 25 cols = 4,700 cells
+**Growing to:** 400+ rows × 25 cols = ~10,000 cells
 
 **Impact:**
-- Medium payloads (300KB - 1MB)
-- Noticeable on slow connections
-- Will get worse as masterlist grows
+- Medium payloads now (300KB - 500KB)
+- Will become 1-2MB as you add characters
+- 25 columns but only displaying ~9-10
+- Noticeable on slow connections, will get worse
 
-**Fix (30 minutes each):**
+**Fix (30 minutes):**
 
 ```javascript
 // Pufflings - Column reference (see COLUMN_REFERENCE.md):
@@ -238,8 +208,20 @@ await charadex.importSheet('Pufflings', {
   orderBy: 'A DESC'  // Newest first
 });
 
-// Reduction: 4,700 → 450 cells = 90% smaller
+// Current: 4,700 cells
+// With pagination: 450 cells = 90% smaller
+// Future (400 rows): 10,000 → 450 cells = 95% smaller
 ```
+
+### Priority Fix #2: Seekers
+
+**Current:** 300 rows × 14 cols = 4,200 cells
+
+**Impact:**
+- Medium payload (200-400KB)
+- 14 columns but only displaying ~5
+
+**Fix (30 minutes):**
 
 ```javascript
 // Seekers - Column reference:
@@ -344,13 +326,14 @@ const listJs = new List(...);
 
 ### Recommended Approach Per Sheet
 
-| Sheet | Strategy | Reasoning |
-|-------|----------|-----------|
-| **Traits** | Hybrid (server LIMIT 100 + List.js + Load More) | 46,750 rows, must reduce server load |
-| **Seekers** | Server LIMIT 300 + List.js | 300 rows manageable, keeps UX |
-| **Pufflings** | Server LIMIT 200 + List.js | 188 rows (growing), future-proof |
-| **Items** | Load all + List.js | 117 rows, simple |
-| **Logs** | Server-side filtering + LIMIT | Filter by user/mod, show recent |
+| Sheet | Rows | Strategy | Reasoning |
+|-------|------|----------|-----------|
+| **Pufflings** | 188 → 400+ | Server LIMIT 50-100 + List.js | Growing fast, needs pagination |
+| **Seekers** | 300 | Server LIMIT 100-200 + List.js | 300 rows, future-proof |
+| Inventory | 602 | Filter by user + List.js | Per-user view |
+| Items | 117 | Load all + List.js | Small, simple |
+| Traits | 74 | Load all + List.js | Only 74 rows, grows slowly |
+| Logs | Varies | Server-side filter by user/mod + LIMIT | Only fetch relevant |
 
 ---
 

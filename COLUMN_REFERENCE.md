@@ -139,7 +139,7 @@ WHERE B = FALSE AND E = 'NPC'
 ```
 
 ## Traits
-**~1400+ rows × 12 columns**
+**74 rows × 12 columns** (CSV export was corrupted with 46,750 rows, actual sheet is 74)
 
 | Column | Header | Type |
 |--------|--------|------|
