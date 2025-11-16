@@ -1,7 +1,12 @@
 import { charadex } from '../charadex.js';
+import { auth } from '../auth.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
   await charadex.loadOptions();
+
+  // Display user's coin balance if logged in
+  await displayUserCoins();
+
   // Load all items from the Items sheet
   const allItems = await charadex.importSheet(charadex.sheet.pages.items);
 
@@ -67,4 +72,71 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Make the shop list visible (fade-in)
   $list.addClass('active');
-}); 
+});
+
+/**
+ * Display the user's coin balance if they are logged in
+ */
+async function displayUserCoins() {
+  // Check if user is logged in
+  if (!auth.isLoggedIn()) {
+    return;
+  }
+
+  const username = auth.getUsername();
+  if (!username) {
+    return;
+  }
+
+  try {
+    // Load inventory data
+    const inventoryData = await charadex.importSheet(charadex.sheet.pages.inventory);
+
+    // Find the logged-in user's inventory profile
+    const userProfile = inventoryData.find(profile =>
+      charadex.tools.scrub(profile.username) === charadex.tools.scrub(username)
+    );
+
+    if (!userProfile) {
+      console.log('User profile not found in inventory');
+      return;
+    }
+
+    // Look for coins in the user's inventory
+    // Coins could be stored as 'coins', 'Coins', 'coin', or 'Coin'
+    const coinAmount = userProfile.coins || userProfile.Coins || userProfile.coin || userProfile.Coin || 0;
+
+    // Display the coin balance in the shop header
+    displayCoinBalance(coinAmount, username);
+  } catch (error) {
+    console.error('Error loading user coin balance:', error);
+  }
+}
+
+/**
+ * Display the coin balance in the shop UI
+ */
+function displayCoinBalance(amount, username) {
+  // Find the welcome message div
+  const welcomeDiv = document.querySelector('.px-4.text-muted');
+
+  if (!welcomeDiv) {
+    return;
+  }
+
+  // Create a coin balance display element
+  const coinBalanceDiv = document.createElement('div');
+  coinBalanceDiv.className = 'card bg-faded p-3 mt-3 d-flex flex-row justify-content-between align-items-center';
+  coinBalanceDiv.innerHTML = `
+    <div>
+      <strong>${username}</strong>'s Balance
+    </div>
+    <div class="h5 mb-0">
+      <strong>${amount}</strong>
+      <img src="assets/coin.png" alt="coins" style="height: 1.5em; width: 1.5em; vertical-align: middle; margin-left: 0.25em;">
+    </div>
+  `;
+
+  // Insert the coin balance after the welcome message
+  welcomeDiv.parentNode.insertBefore(coinBalanceDiv, welcomeDiv.nextSibling);
+}
