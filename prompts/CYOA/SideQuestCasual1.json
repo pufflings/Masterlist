@@ -134,7 +134,8 @@
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Research magical herbs and components to create potions, healing medicine, and antidotes.</li>\n  <li>Cultivate rare plants and maintain the guild’s research garden.</li>\n  <li>Provide emergency medical aid to both Seekers and Puffs.</li>\n  <li>Restore natural areas affected by magic or disasters.</li>\n  <li>Discover and study new plant species.</li>\n</ul>"
         }
-      ]
+      ],
+      "final": true
     },
     {
       "scene": "scene3",
@@ -171,7 +172,8 @@
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Carry out field operations.</li>\n  <li>Battle against monsters.</li>\n  <li>Participate in rescue and evacuation missions during emergencies.</li>\n  <li>Protect and escort other Seekers during expeditions.</li>\n  <li>Train and mentor fellow Seekers in combat.</li>\n  <li>Handle urgent missions, such as searching for missing persons.</li>\n</ul>"
         }
-      ]
+      ],
+      "final": true
     },
     {
       "scene": "scene4",
@@ -216,7 +218,8 @@
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Study the behaviour of Pufflings and other magical creatures.</li>\n  <li>Care for and nurture young Puffs, and research Puff Colony behaviour.</li>\n  <li>Create safe traps to capture monsters without harming them.</li>\n  <li>Develop techniques to communicate and understand magical creatures.</li>\n  <li>Care for, treat, and preserve rare or endangered species.</li>\n  <li>Discover and research new species of magical life.</li>\n</ul>"
         }
-      ]
+      ],
+      "final": true
     },
     {
       "scene": "scene5",
@@ -261,7 +264,8 @@
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Build structures and facilities for Seekers.</li>\n  <li>Create tools and devices used in Seeker missions.</li>\n  <li>Research ways to integrate magical crystals with technology.</li>\n  <li>Study Puff Kingdom’s magical mechanisms, crystal systems, and enhance the Keystone.</li>\n  <li>Design natural disaster defence systems and city security networks.</li>\n  <li>Mine rare minerals, gems, and other valuable resources.</li>\n</ul>"
         }
-      ]
+      ],
+      "final": true
     },
     {
       "scene": "scene6",
@@ -298,7 +302,8 @@
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Study history, ancient languages, and magical scripts.</li>\n  <li>Decode spells, curses, and ancient magic.</li>\n  <li>Plan Seeker missions and manage guild databases.</li>\n  <li>Create maps, forecast disasters, and oversee city resources.</li>\n  <li>Act as coordinators between guilds during emergencies.</li>\n  <li>Seek out ancient legends, lost magic, and hidden knowledge.</li>\n</ul>"
         }
-      ]
+      ],
+      "final": true
     },
     {
       "scene": "scene7",
@@ -351,7 +356,8 @@
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Prepare and provide meals for Seekers.</li>\n  <li>Research new ingredients with magical properties.</li>\n  <li>Handle banquet and festival preparations.</li>\n  <li>Create new recipes for guild requests or special missions.</li>\n  <li>Study Puffling diets and food preferences.</li>\n  <li>Explore and gather new or rare ingredients.</li>\n</ul>"
         }
-      ]
+      ],
+      "final": true
     },
     {
       "scene": "scene8",
@@ -369,11 +375,10 @@
           "text": "<img src=\"https://img-l.ink/img/1E1Mdxi_UfuMT94C4ya_hDR4VNVRTKQqQ.png\">"
         },
         {
-          "name": "scene break",
-          "portrait": "",
           "modifiers": {
-            "class": "dialogue-container"
-          }
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>Quest: Any other Occupation activity that is not listed in the Guild faction work will be in the non-affiliate category.</b><br>"
         },
         {
           "name": "Guild Master",
@@ -399,7 +404,8 @@
           },
           "text": "Train and refine yourself as much as your Seeker’s heart can lead you…  And may luck be on your side!"
         }
-      ]
+      ],
+      "final": true
     }
   ]
 }
