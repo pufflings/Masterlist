@@ -378,7 +378,7 @@
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<p><b>Quest: Any other Occupation activity that is not listed in the Guild faction work will be in the non-affiliate category.</b><br>"
+          "text": "<p><b>Quest:</b> Any other Occupation activity that is not listed in the Guild faction work will be in the non-affiliate category.</p>"
         },
         {
           "name": "Guild Master",
