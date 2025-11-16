@@ -133,6 +133,30 @@
             "class": "dialogue-simple"
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Research magical herbs and components to create potions, healing medicine, and antidotes.</li>\n  <li>Cultivate rare plants and maintain the guild’s research garden.</li>\n  <li>Provide emergency medical aid to both Seekers and Puffs.</li>\n  <li>Restore natural areas affected by magic or disasters.</li>\n  <li>Discover and study new plant species.</li>\n</ul>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "<p>And of course… this isn’t all there is to the Puff Kingdom.  There are countless small other guilds not listed here, as well as independent travellers who choose to walk their own path.</p>\n<p>Their stories… We’ll slowly introduce you to it in time.</p>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Joining a Guild Faction isn’t a one-time choice; you’re free to assist multiple guilds as you wish!  Each mission will help you grow in your own unique way."
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Train and refine yourself as much as your Seeker’s heart can lead you…  And may luck be on your side!"
         }
       ],
       "final": true
@@ -171,6 +195,30 @@
             "class": "dialogue-simple"
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Carry out field operations.</li>\n  <li>Battle against monsters.</li>\n  <li>Participate in rescue and evacuation missions during emergencies.</li>\n  <li>Protect and escort other Seekers during expeditions.</li>\n  <li>Train and mentor fellow Seekers in combat.</li>\n  <li>Handle urgent missions, such as searching for missing persons.</li>\n</ul>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "<p>And of course… this isn’t all there is to the Puff Kingdom.  There are countless small other guilds not listed here, as well as independent travellers who choose to walk their own path.</p>\n<p>Their stories… We’ll slowly introduce you to it in time.</p>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Joining a Guild Faction isn’t a one-time choice; you’re free to assist multiple guilds as you wish!  Each mission will help you grow in your own unique way."
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Train and refine yourself as much as your Seeker’s heart can lead you…  And may luck be on your side!"
         }
       ],
       "final": true
@@ -217,6 +265,30 @@
             "class": "dialogue-simple"
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Study the behaviour of Pufflings and other magical creatures.</li>\n  <li>Care for and nurture young Puffs, and research Puff Colony behaviour.</li>\n  <li>Create safe traps to capture monsters without harming them.</li>\n  <li>Develop techniques to communicate and understand magical creatures.</li>\n  <li>Care for, treat, and preserve rare or endangered species.</li>\n  <li>Discover and research new species of magical life.</li>\n</ul>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "<p>And of course… this isn’t all there is to the Puff Kingdom.  There are countless small other guilds not listed here, as well as independent travellers who choose to walk their own path.</p>\n<p>Their stories… We’ll slowly introduce you to it in time.</p>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Joining a Guild Faction isn’t a one-time choice; you’re free to assist multiple guilds as you wish!  Each mission will help you grow in your own unique way."
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Train and refine yourself as much as your Seeker’s heart can lead you…  And may luck be on your side!"
         }
       ],
       "final": true
@@ -263,6 +335,30 @@
             "class": "dialogue-simple"
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Build structures and facilities for Seekers.</li>\n  <li>Create tools and devices used in Seeker missions.</li>\n  <li>Research ways to integrate magical crystals with technology.</li>\n  <li>Study Puff Kingdom’s magical mechanisms, crystal systems, and enhance the Keystone.</li>\n  <li>Design natural disaster defence systems and city security networks.</li>\n  <li>Mine rare minerals, gems, and other valuable resources.</li>\n</ul>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "<p>And of course… this isn’t all there is to the Puff Kingdom.  There are countless small other guilds not listed here, as well as independent travellers who choose to walk their own path.</p>\n<p>Their stories… We’ll slowly introduce you to it in time.</p>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Joining a Guild Faction isn’t a one-time choice; you’re free to assist multiple guilds as you wish!  Each mission will help you grow in your own unique way."
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Train and refine yourself as much as your Seeker’s heart can lead you…  And may luck be on your side!"
         }
       ],
       "final": true
@@ -301,6 +397,30 @@
             "class": "dialogue-simple"
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Study history, ancient languages, and magical scripts.</li>\n  <li>Decode spells, curses, and ancient magic.</li>\n  <li>Plan Seeker missions and manage guild databases.</li>\n  <li>Create maps, forecast disasters, and oversee city resources.</li>\n  <li>Act as coordinators between guilds during emergencies.</li>\n  <li>Seek out ancient legends, lost magic, and hidden knowledge.</li>\n</ul>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "<p>And of course… this isn’t all there is to the Puff Kingdom.  There are countless small other guilds not listed here, as well as independent travellers who choose to walk their own path.</p>\n<p>Their stories… We’ll slowly introduce you to it in time.</p>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Joining a Guild Faction isn’t a one-time choice; you’re free to assist multiple guilds as you wish!  Each mission will help you grow in your own unique way."
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Train and refine yourself as much as your Seeker’s heart can lead you…  And may luck be on your side!"
         }
       ],
       "final": true
@@ -355,6 +475,30 @@
             "class": "dialogue-simple"
           },
           "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Prepare and provide meals for Seekers.</li>\n  <li>Research new ingredients with magical properties.</li>\n  <li>Handle banquet and festival preparations.</li>\n  <li>Create new recipes for guild requests or special missions.</li>\n  <li>Study Puffling diets and food preferences.</li>\n  <li>Explore and gather new or rare ingredients.</li>\n</ul>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "<p>And of course… this isn’t all there is to the Puff Kingdom.  There are countless small other guilds not listed here, as well as independent travellers who choose to walk their own path.</p>\n<p>Their stories… We’ll slowly introduce you to it in time.</p>"
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Joining a Guild Faction isn’t a one-time choice; you’re free to assist multiple guilds as you wish!  Each mission will help you grow in your own unique way."
+        },
+        {
+          "name": "Guild Master",
+          "portrait": "https://img-l.ink/img/1seQ7ITGe3qvZjKsGIYERVUawl81oZHXO.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Train and refine yourself as much as your Seeker’s heart can lead you…  And may luck be on your side!"
         }
       ],
       "final": true
