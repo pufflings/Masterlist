@@ -126,7 +126,7 @@ function displayCoinBalance(amount, username) {
 
   // Create a coin balance display element
   const coinBalanceDiv = document.createElement('div');
-  coinBalanceDiv.className = 'alert alert-info mt-3 d-flex justify-content-between align-items-center';
+  coinBalanceDiv.className = 'card bg-faded p-3 mt-3 d-flex flex-row justify-content-between align-items-center';
   coinBalanceDiv.innerHTML = `
     <div>
       <strong>${username}</strong>'s Balance
