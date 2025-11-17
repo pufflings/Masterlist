@@ -519,10 +519,40 @@
           "text": "<img src=\"https://img-l.ink/img/1E1Mdxi_UfuMT94C4ya_hDR4VNVRTKQqQ.png\">"
         },
         {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/18vhsdp2xylK2BLmiftBzSPAtTFrCPIOn.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "Welcome~ have you heard about my latest loyalty program?"
+        },
+        {
+          "name": "Poki",
+          "portrait": "https://img-l.ink/img/18vhsdp2xylK2BLmiftBzSPAtTFrCPIOn.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "For every 100 <img src=\"https://img-l.ink/img/1y-xO7D0-BWXl5_GrHkjP10ccWC5XfPUP.png\" alt=\"coin\" style=\"height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;\"> you spend, Momo will let you hug her for 1 whole second!"
+        },
+        {
+          "name": "Momo",
+          "portrait": "https://img-l.ink/img/1e49su3FLTdyZTUyoouB9iDApwSQpHcIg.png",
+          "modifiers": {
+            "class": "dialogue-container"
+          },
+          "text": "<i>Mreow?!</i>"
+        },
+        {
           "modifiers": {
             "class": "dialogue-simple"
           },
-          "text": "<p><b>Quest:</b> Any other Occupation activity that is not listed in the Guild faction work will be in the non-affiliate category.</p>"
+          "text": "<p><b>Poki, Merchant</b><br>\nA small dwarf who owns the shop across the guild. She loves all that is cute and will always have something to sell or bargain. While she doesn't usually go on grand adventures, she's still supporting the guild in her own way, guaranteeing seekers are always well-equipped.</p>"
+        },
+        {
+          "modifiers": {
+            "class": "dialogue-simple"
+          },
+          "text": "<p><b>Quest: To help the guild, choose one of the options below to draw or write.</b><br>\n<ul>\n  <li>Open your own store.</li>\n  <li>Work at an inn.</li>\n  <li>Babysit</li>\n <li>etc.</li>\n  <li>Any other Occupation activity that is not listed in the Guild faction work will be in the non-affiliate category.</li>\n</ul>"
         },
         {
           "name": "Guild Master",
