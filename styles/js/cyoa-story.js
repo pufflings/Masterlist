@@ -596,6 +596,25 @@ class CYOAStory {
         // Reset to the scene before the choice
         this.currentScene = sceneBeforeChoice;
 
+        // Hide quest and end sections
+        this.hideEndSections();
+
+        // Reset dice button if it's a dice choice container
+        if (buttonsContainer.classList.contains('dice-buttons-container')) {
+            const rollButton = buttonsContainer.querySelector('.dice-roll-button');
+            if (rollButton) {
+                rollButton.disabled = false;
+                rollButton.classList.remove('selected');
+                rollButton.className = 'btn btn-warning m-2 dice-roll-button';
+                rollButton.textContent = '🎲 Roll the Dice!';
+            }
+            // Reset the options container
+            const optionsContainer = buttonsContainer.querySelector('.outcome-options');
+            if (optionsContainer) {
+                optionsContainer.style.display = 'none';
+            }
+        }
+
         // Show choice buttons again
         buttonsContainer.style.display = 'block';
 
@@ -682,6 +701,23 @@ class CYOAStory {
                 section.style.display = 'block';
             }
         });
+    }
+
+    hideEndSections() {
+        // Hide configured end sections (including quest-section)
+        const endSectionIds = this.storyConfig.endSections.split(',');
+        endSectionIds.forEach(id => {
+            const section = document.getElementById(id.trim());
+            if (section) {
+                section.style.display = 'none';
+            }
+        });
+
+        // Also hide quest-section if it exists
+        const questSection = document.getElementById('quest-section');
+        if (questSection) {
+            questSection.style.display = 'none';
+        }
     }
 
     // Get choice history for debugging or saving
