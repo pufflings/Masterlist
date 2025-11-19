@@ -23,7 +23,7 @@ charadex.site = {
 // Automatically set the site URL based on environment
 const isLocalhost = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
 charadex.site.url = isLocalhost
-  ? "http://127.0.0.1:5500/"
+  ? "http://127.0.0.1:5501/"
   : "https://pufflings.github.io/Masterlist/";
 
 /* ==================================================================== */
