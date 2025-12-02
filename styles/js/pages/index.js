@@ -2,6 +2,7 @@
 /* Import Charadex
 ======================================================================= */
 import { charadex } from '../charadex.js';
+import { auth } from '../auth.js';
 
 
 /* ==================================================================== */
@@ -140,5 +141,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* Load Page
   ===================================================================== */
   charadex.tools.loadPage('.softload', 500);
+
+  /* Set Welcome Message
+  ===================================================================== */
+  if (auth.isLoggedIn()) {
+    const username = auth.getUsername();
+    const welcomeLink = document.getElementById('welcome-username-link');
+    if (welcomeLink && username) {
+      welcomeLink.textContent = username;
+      welcomeLink.href = auth.getProfileUrl();
+      welcomeLink.style.display = 'inline';
+
+      let commaSpan = document.getElementById('welcome-username-comma');
+      if (!commaSpan && welcomeLink.parentNode) {
+        commaSpan = document.createElement('span');
+        commaSpan.id = 'welcome-username-comma';
+        commaSpan.textContent = ', ';
+        welcomeLink.parentNode.insertBefore(commaSpan, welcomeLink);
+      }
+      if (commaSpan) {
+        commaSpan.style.display = 'inline';
+      }
+    }
+  }
 
 });

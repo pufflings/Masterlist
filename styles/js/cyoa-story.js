@@ -346,51 +346,81 @@ class CYOAStory {
     createChoicesElement(choices) {
         const container = document.createElement('div');
         container.className = 'dialogue-simple choices-element';
-        
+
         const choicesTitle = document.createElement('h5');
         choicesTitle.textContent = 'What would you like to do?';
         choicesTitle.style.marginBottom = '1rem';
         container.appendChild(choicesTitle);
-        
+
+        // Container for choice buttons
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'choices-buttons-container';
+
         choices.forEach((choice, index) => {
             const button = document.createElement('button');
             button.className = 'btn btn-outline-primary m-2 choice-button';
             button.textContent = choice.text;
-            
+
             button.addEventListener('click', () => {
-                // Disable all choice buttons after one is selected
-                this.disableAllChoices(container);
-                
-                // Add visual feedback that choice was made
-                button.className = 'btn btn-success m-2';
-                button.textContent = '✓ ' + choice.text;
-                button.disabled = true;
-                
+                // Hide all choice buttons
+                buttonsContainer.style.display = 'none';
+
+                // Show the selected choice with visual feedback
+                const selectedText = document.createElement('div');
+                selectedText.className = 'selected-choice-text';
+                selectedText.innerHTML = `<strong>✓ ${choice.text}</strong>`;
+                selectedText.style.marginBottom = '1rem';
+                container.insertBefore(selectedText, retryButton);
+
+                // Show retry button
+                retryButton.style.display = 'inline-block';
+
+                // Store the current scene before making the choice
+                retryButton.setAttribute('data-scene-before-choice', this.currentScene);
+
                 // Small delay to show the selection, then proceed
                 setTimeout(() => {
                     this.makeChoice(choice.next);
                 }, 500);
             });
-            
-            container.appendChild(button);
+
+            buttonsContainer.appendChild(button);
         });
-        
+
+        container.appendChild(buttonsContainer);
+
+        // Create retry button (hidden by default)
+        const retryButton = document.createElement('button');
+        retryButton.className = 'btn btn-warning m-2 retry-button';
+        retryButton.textContent = '↻ Retry';
+        retryButton.style.display = 'none';
+
+        retryButton.addEventListener('click', () => {
+            this.retryChoice(container, buttonsContainer, retryButton);
+        });
+
+        container.appendChild(retryButton);
+
         return container;
     }
 
     createDiceChoicesElement(diceChoices) {
         const container = document.createElement('div');
         container.className = 'dialogue-simple choices-element dice-choices-element';
-        
+
         const diceTitle = document.createElement('h5');
         diceTitle.textContent = `Roll a d${diceChoices['dice-max']}!`;
         diceTitle.style.marginBottom = '1rem';
         container.appendChild(diceTitle);
-        
+
+        // Container for dice buttons
+        const diceButtonsContainer = document.createElement('div');
+        diceButtonsContainer.className = 'dice-buttons-container';
+
         const rollButton = document.createElement('button');
         rollButton.className = 'btn btn-warning m-2 dice-roll-button';
         rollButton.textContent = '🎲 Roll the Dice!';
-        
+
         rollButton.addEventListener('click', () => {
             // Disable the roll button while the roll resolves
             rollButton.disabled = true;
@@ -419,16 +449,25 @@ class CYOAStory {
                 return;
             }
 
-            // Choice resolved successfully; lock the controls and show the result
-            this.disableAllChoices(container);
-            rollButton.textContent = `You rolled: ${roll}`;
-            rollButton.className = 'btn btn-success m-2';
+            // Hide dice buttons
+            diceButtonsContainer.style.display = 'none';
+
+            // Show roll result
+            const resultText = document.createElement('div');
+            resultText.className = 'selected-choice-text';
+            resultText.innerHTML = `<strong>You rolled: ${roll}</strong>`;
+            resultText.style.marginBottom = '1rem';
+            container.insertBefore(resultText, retryButton);
+
+            // Show retry button
+            retryButton.style.display = 'inline-block';
+            retryButton.setAttribute('data-scene-before-choice', this.currentScene);
 
             setTimeout(() => {
                 this.makeChoice(selectedChoice.next);
             }, 1500);
         });
-        container.appendChild(rollButton);
+        diceButtonsContainer.appendChild(rollButton);
 
         // Add a button to let the user choose the outcome manually
         const chooseButton = document.createElement('button');
@@ -453,11 +492,20 @@ class CYOAStory {
             optionButton.textContent = label;
 
             optionButton.addEventListener('click', () => {
-                // Disable all controls once an option is selected
-                this.disableAllChoices(container);
-                // Visual feedback
-                optionButton.classList.add('selected');
-                optionButton.classList.add('btn-success');
+                // Hide dice buttons
+                diceButtonsContainer.style.display = 'none';
+
+                // Show selected outcome
+                const selectedText = document.createElement('div');
+                selectedText.className = 'selected-choice-text';
+                selectedText.innerHTML = `<strong>✓ Selected: ${label}</strong>`;
+                selectedText.style.marginBottom = '1rem';
+                container.insertBefore(selectedText, retryButton);
+
+                // Show retry button
+                retryButton.style.display = 'inline-block';
+                retryButton.setAttribute('data-scene-before-choice', this.currentScene);
+
                 // Proceed to the selected next scene
                 setTimeout(() => {
                     this.makeChoice(choice.next);
@@ -467,8 +515,21 @@ class CYOAStory {
             optionsContainer.appendChild(optionButton);
         });
 
-        container.appendChild(chooseButton);
-        container.appendChild(optionsContainer);
+        diceButtonsContainer.appendChild(chooseButton);
+        diceButtonsContainer.appendChild(optionsContainer);
+        container.appendChild(diceButtonsContainer);
+
+        // Create retry button (hidden by default)
+        const retryButton = document.createElement('button');
+        retryButton.className = 'btn btn-warning m-2 retry-button';
+        retryButton.textContent = '↻ Retry';
+        retryButton.style.display = 'none';
+
+        retryButton.addEventListener('click', () => {
+            this.retryChoice(container, diceButtonsContainer, retryButton);
+        });
+
+        container.appendChild(retryButton);
 
         return container;
     }
@@ -488,15 +549,84 @@ class CYOAStory {
             to: nextScene,
             timestamp: new Date()
         });
-        
+
         // Update current scene
         this.currentScene = nextScene;
-        
+
         // Reset dialogue index for the new scene
         this.currentSceneDialogueIndex = 0;
-        
+
         // Display the new scene
         this.displayScene(nextScene);
+    }
+
+    retryChoice(choiceContainer, buttonsContainer, retryButton) {
+        // Get the scene we're retrying from
+        const sceneBeforeChoice = retryButton.getAttribute('data-scene-before-choice');
+
+        // Remove all DOM elements that were added after this choice
+        const allElements = Array.from(this.dialogueStage.children);
+        const choiceIndex = allElements.indexOf(choiceContainer);
+
+        // Remove all elements after the choice container
+        for (let i = allElements.length - 1; i > choiceIndex; i--) {
+            allElements[i].remove();
+        }
+
+        // Remove the selected choice text if it exists
+        const selectedText = choiceContainer.querySelector('.selected-choice-text');
+        if (selectedText) {
+            selectedText.remove();
+        }
+
+        // Reset choice history - remove all choices made after this point
+        // Find the last occurrence of this scene in choice history
+        let lastIndexOfScene = -1;
+        for (let i = this.choiceHistory.length - 1; i >= 0; i--) {
+            if (this.choiceHistory[i].from === sceneBeforeChoice) {
+                lastIndexOfScene = i;
+                break;
+            }
+        }
+
+        if (lastIndexOfScene >= 0) {
+            this.choiceHistory = this.choiceHistory.slice(0, lastIndexOfScene);
+        }
+
+        // Reset to the scene before the choice
+        this.currentScene = sceneBeforeChoice;
+
+        // Hide quest and end sections
+        this.hideEndSections();
+
+        // Reset dice button if it's a dice choice container
+        if (buttonsContainer.classList.contains('dice-buttons-container')) {
+            const rollButton = buttonsContainer.querySelector('.dice-roll-button');
+            if (rollButton) {
+                rollButton.disabled = false;
+                rollButton.classList.remove('selected');
+                rollButton.className = 'btn btn-warning m-2 dice-roll-button';
+                rollButton.textContent = '🎲 Roll the Dice!';
+            }
+            // Reset the options container
+            const optionsContainer = buttonsContainer.querySelector('.outcome-options');
+            if (optionsContainer) {
+                optionsContainer.style.display = 'none';
+            }
+        }
+
+        // Show choice buttons again
+        buttonsContainer.style.display = 'block';
+
+        // Hide retry button
+        retryButton.style.display = 'none';
+
+        // Scroll to the choices
+        choiceContainer.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+        });
     }
 
     processMarkdown(text) {
@@ -571,6 +701,23 @@ class CYOAStory {
                 section.style.display = 'block';
             }
         });
+    }
+
+    hideEndSections() {
+        // Hide configured end sections (including quest-section)
+        const endSectionIds = this.storyConfig.endSections.split(',');
+        endSectionIds.forEach(id => {
+            const section = document.getElementById(id.trim());
+            if (section) {
+                section.style.display = 'none';
+            }
+        });
+
+        // Also hide quest-section if it exists
+        const questSection = document.getElementById('quest-section');
+        if (questSection) {
+            questSection.style.display = 'none';
+        }
     }
 
     // Get choice history for debugging or saving

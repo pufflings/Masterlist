@@ -5,7 +5,18 @@ import { charadex } from '../charadex.js';
 
 const MASTERLIST_BASE_INCLUDE = 'includes/masterlist-base.html';
 
-let currentMasterlistPageUrl = (window?.location?.pathname?.split('/')?.pop?.() || 'masterlist.html');
+const getCurrentMasterlistPageUrl = () => {
+  try {
+    const path = window?.location?.pathname || '';
+    const segments = path.split('/').filter(Boolean);
+    const filename = segments.pop() || '';
+    return filename || 'masterlist.html';
+  } catch (_) {
+    return 'masterlist.html';
+  }
+};
+
+let currentMasterlistPageUrl = getCurrentMasterlistPageUrl();
 
 const waitForElement = (selector) => new Promise((resolve) => {
   const element = document.querySelector(selector);
@@ -32,15 +43,14 @@ document.addEventListener('charadex:includeLoaded', (event) => {
   if (!root) return;
 
   const title = dataset.masterlistTitle || 'Masterlist';
-  const link = dataset.masterlistLink || 'masterlist.html';
+  const link = dataset.masterlistLink || currentMasterlistPageUrl;
 
   const linkElement = root.querySelector('.charadex-controls-link');
   if (linkElement) {
     linkElement.textContent = title;
-    linkElement.setAttribute('href', link);
+    const resolvedLink = charadex?.tools?.resolveRelativeUrl?.(link) || link;
+    linkElement.setAttribute('href', resolvedLink);
   }
-
-  currentMasterlistPageUrl = link;
 
   const isProfileView = (() => {
     try {

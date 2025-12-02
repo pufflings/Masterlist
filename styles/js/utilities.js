@@ -635,7 +635,14 @@ charadex.importSheet = async (sheetPage, sheetId = charadex.sheet.id) => {
 
   // Check cache first
   const cacheKey = `charadex_${sheetId}_${sheetPage}`;
-  const cacheExpiry = 5 * 60 * 1000; // 5 minutes cache
+
+  // Determine cache expiry based on sheet type
+  // Frequently updated sheets: 5 minutes
+  // Static/rarely updated sheets: 1 hour
+  const frequentlyUpdatedSheets = ['Pufflings', 'inventory', 'inventory log'];
+  const cacheExpiry = frequentlyUpdatedSheets.includes(sheetPage)
+    ? 5 * 60 * 1000   // 5 minutes
+    : 60 * 60 * 1000; // 1 hour
   
   try {
     const cached = localStorage.getItem(cacheKey);
