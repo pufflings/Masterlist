@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       $("#related-item-row .related-item").html(trait.Item || '-');
 
       // Enable HTML rendering for long description, fall back to description if empty
-      const longDesc = trait.longdescription || trait['long description'] || trait.longDescription;
+      const longDesc = trait.longdescription ? trait.longdescription : null;
       const description = longDesc || trait.description;
       if (description) {
         $("#charadex-profile .longdescription").html(description);
