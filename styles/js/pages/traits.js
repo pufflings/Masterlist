@@ -108,10 +108,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       $("#related-item-row .related-item").html(trait.Item || '-');
 
       // Enable HTML rendering for long description, fall back to description if empty
-      const longDesc = trait.longdescription ? trait.longdescription : null;
-      const description = longDesc || trait.description;
-      if (description) {
-        $("#charadex-profile .longdescription").html(description);
+      const longDesc = trait.longdescription ? trait.longdescription : trait.description;
+      if (longDesc) {
+        $("#charadex-profile .longdescription").html(longDesc);
       }
 
       const pufflingsSection = document.getElementById('trait-pufflings-gallery-section');
