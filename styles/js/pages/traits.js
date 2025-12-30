@@ -66,6 +66,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   await charadex.initialize.page(null, charadex.page.traits,
     (data) => {
       data.forEach(trait => {
+        // Replace description with long description if available
+        const longDesc = trait['long description'] || trait.longDescription || trait.longdescription;
+        if (longDesc) {
+          trait.description = longDesc;
+        }
+
         const itemValue = trait.item || '';
         if (!itemValue) {
           trait.Item = '-';
