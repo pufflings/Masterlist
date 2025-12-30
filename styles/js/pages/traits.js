@@ -66,6 +66,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   await charadex.initialize.page(null, charadex.page.traits,
     (data) => {
       data.forEach(trait => {
+        // Replace description with long description if available
+        const longDesc = trait['long description'] || trait.longDescription || trait.longdescription;
+        if (longDesc) {
+          trait.description = longDesc;
+        }
+
         const itemValue = trait.item || '';
         if (!itemValue) {
           trait.Item = '-';
@@ -101,11 +107,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       $("#related-item-row").show();
       $("#related-item-row .related-item").html(trait.Item || '-');
 
-      // Use long description if available, render as HTML
-      const longDesc = trait['long description'] || trait.longDescription || trait.longdescription;
-      if (longDesc) {
-        $("#charadex-profile .description").html(longDesc);
-      }
+      // Render description as HTML (List.js escapes HTML by default)
+      $("#charadex-profile .description").html(trait.description || '');
 
       const pufflingsSection = document.getElementById('trait-pufflings-gallery-section');
       const pufflingsListContainer = document.querySelector('#trait-pufflings-gallery .trait-pufflings-list');
