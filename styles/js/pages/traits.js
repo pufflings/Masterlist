@@ -101,6 +101,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       $("#related-item-row").show();
       $("#related-item-row .related-item").html(trait.Item || '-');
 
+      // Enable HTML rendering for long description, fall back to description if empty
+      const longDesc = trait.longdescription ? trait.longdescription : trait.description;
+      if (longDesc) {
+        $("#charadex-profile .longdescription").html(longDesc);
+      }
+
       const pufflingsSection = document.getElementById('trait-pufflings-gallery-section');
       const pufflingsListContainer = document.querySelector('#trait-pufflings-gallery .trait-pufflings-list');
       if (!pufflingsSection || !pufflingsListContainer) return;
