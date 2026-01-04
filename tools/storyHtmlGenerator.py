@@ -334,6 +334,21 @@ class StoryHTMLGenerator:
           </div>
           
 '''
+        # Generate character section only if there are characters
+        character_section_html = ""
+        if character_showcase.strip():
+            character_section_html = f'''
+      <!-- End of Chapter Character Box -->
+      <div id="end-of-prologue" class="card p-md-5 p-4 mb-4 mt-4">
+        <h4 class="text-center mb-3"><i>End of {self.chapter_title}</i></h4>
+        <hr class="dashed-line">
+        <h5 class="text-center mb-4">Characters in this Chapter</h5>
+        <div class="character-showcase-container">
+{character_showcase}        </div>
+
+        <hr class="dashed-line mt-4">
+      </div>'''
+
         # Generate trivia section if trivia exists
         trivia_html = ""
         if self.trivia_text:
@@ -430,17 +445,7 @@ class StoryHTMLGenerator:
           <div id="dialogue-stage" {dialogue_data_attrs} style="position: relative;">
 {dialogue_inner}
           </div> <!-- End of dialogue-stage -->
-      
-      <!-- End of Chapter Character Box -->
-      <div id="end-of-prologue" class="card p-md-5 p-4 mb-4 mt-4">
-        <h4 class="text-center mb-3"><i>End of {self.chapter_title}</i></h4>
-        <hr class="dashed-line">
-        <h5 class="text-center mb-4">Characters in this Chapter</h5>
-        <div class="character-showcase-container">
-{character_showcase}        </div>
-        
-        <hr class="dashed-line mt-4">
-      </div>
+{character_section_html}
 {trivia_html}
 {quest_html}
       
