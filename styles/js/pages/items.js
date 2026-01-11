@@ -42,7 +42,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!shopEntry) return '';
 
     const quantity = Number(shopEntry.stockquantity ?? 0);
-    if (!Number.isFinite(quantity) || quantity <= 0) return '';
+    const hasInfiniteStock = quantity === -1;
+    // Show callout if infinite stock (-1) or if stock > 0
+    if (!hasInfiniteStock && (!Number.isFinite(quantity) || quantity <= 0)) return '';
 
     const shopUrl = charadex.tools.resolveRelativeUrl('shop.html');
     return `
