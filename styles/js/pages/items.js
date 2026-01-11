@@ -8,14 +8,40 @@ import { charadex } from '../charadex.js';
 /* Load
 ======================================================================= */
 document.addEventListener("DOMContentLoaded", async () => {
-  
+
   // Load options from sheet first
   await charadex.loadOptions();
 
-  const buildStockCallout = (item) => {
-    if (!item || item.stockedinshop !== true) return '';
+  // Load the Shop sheet to check stock availability
+  const shopData = await charadex.importSheet(charadex.sheet.pages.shop);
 
-    const quantity = Number(item.stockquantity ?? 0);
+  // Create a map of shop items by ID and name for quick lookup
+  const shopById = {};
+  const shopByName = {};
+  shopData.forEach(shopEntry => {
+    if (shopEntry.id) {
+      shopById[shopEntry.id] = shopEntry;
+    }
+    if (shopEntry.item) {
+      shopByName[shopEntry.item.toLowerCase()] = shopEntry;
+    }
+  });
+
+  const buildStockCallout = (item) => {
+    if (!item) return '';
+
+    // Check if the item exists in the Shop sheet
+    let shopEntry = null;
+    if (item.id && shopById[item.id]) {
+      shopEntry = shopById[item.id];
+    } else if (item.item && shopByName[item.item.toLowerCase()]) {
+      shopEntry = shopByName[item.item.toLowerCase()];
+    }
+
+    // If not in shop or out of stock, return empty
+    if (!shopEntry) return '';
+
+    const quantity = Number(shopEntry.stockquantity ?? 0);
     if (!Number.isFinite(quantity) || quantity <= 0) return '';
 
     const shopUrl = charadex.tools.resolveRelativeUrl('shop.html');

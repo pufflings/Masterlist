@@ -7,30 +7,57 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Display user's coin balance if logged in
   await displayUserCoins();
 
-  // Load all items from the Items sheet
-  const allItems = await charadex.importSheet(charadex.sheet.pages.items);
+  // Load the Shop sheet and Items sheet
+  const shopData = await charadex.importSheet(charadex.sheet.pages.shop);
+  const itemsData = await charadex.importSheet(charadex.sheet.pages.items);
 
-  // Filter for items marked as stocked in the shop
-  const shopItems = allItems.filter(item => item.stockedinshop === true);
+  // Create a map of items by ID and by name for quick lookup
+  const itemsById = {};
+  const itemsByName = {};
+  itemsData.forEach(item => {
+    if (item.id) {
+      itemsById[item.id] = item;
+    }
+    if (item.item) {
+      itemsByName[item.item.toLowerCase()] = item;
+    }
+  });
 
   const $list = $("div.charadex-shop-list");
   $list.empty();
 
-  shopItems.forEach(item => {
+  shopData.forEach(shopEntry => {
+    // Find the corresponding item from the items sheet
+    // Try matching by ID first, then by item name
+    let item = null;
+    if (shopEntry.id && itemsById[shopEntry.id]) {
+      item = itemsById[shopEntry.id];
+    } else if (shopEntry.item && itemsByName[shopEntry.item.toLowerCase()]) {
+      item = itemsByName[shopEntry.item.toLowerCase()];
+    }
+
+    // Skip if we can't find the item
+    if (!item) {
+      console.warn(`Shop entry references unknown item: ${shopEntry.item || shopEntry.id}`);
+      return;
+    }
+
+    // Get data from item sheet
     const rarity = item.rarity || '';
     const rarityBadge = rarity
       ? `<span class="badge badge-pill badge-${charadex.tools.scrub(rarity)}">${rarity}</span>`
       : "";
-    const price = item.price || '';
-    const stockNumber = Number(item.stockquantity ?? 0);
-    const hasInfiniteStock = stockNumber === -1;
-    const stock = Number.isFinite(stockNumber) ? stockNumber : 0;
     const image = item.image || 'assets/favicon.png';
     const name = item.item || '';
     const description = item.description || '';
-    
     const tradeableText = item.tradeable === true ? 'Yes' : 'No';
     const tradeableClass = item.tradeable === true ? 'text-success' : 'text-muted';
+
+    // Get price and stock from shop sheet
+    const price = shopEntry.price || '';
+    const stockNumber = Number(shopEntry.stockquantity ?? 0);
+    const hasInfiniteStock = stockNumber === -1;
+    const stock = Number.isFinite(stockNumber) ? stockNumber : 0;
     
     // Create profile link (lowercase, remove spaces and special characters)
     const profile = charadex.tools.scrub(name);
