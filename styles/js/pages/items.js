@@ -27,6 +27,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // Load the Stardust Shop sheet to check stock availability
+  const stardustShopData = await charadex.importSheet(charadex.sheet.pages.stardustShop);
+
+  // Create a map of stardust shop items by ID and name for quick lookup
+  const stardustShopById = {};
+  const stardustShopByName = {};
+  stardustShopData.forEach(shopEntry => {
+    if (shopEntry.id) {
+      stardustShopById[shopEntry.id] = shopEntry;
+    }
+    if (shopEntry.item) {
+      stardustShopByName[shopEntry.item.toLowerCase()] = shopEntry;
+    }
+  });
+
   const buildStockCallout = (item) => {
     if (!item) return '';
 
@@ -59,6 +74,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     `.trim();
   };
 
+  const buildStardustStockCallout = (item) => {
+    if (!item) return '';
+
+    // Check if the item exists in the Stardust Shop sheet
+    let shopEntry = null;
+    if (item.id && stardustShopById[item.id]) {
+      shopEntry = stardustShopById[item.id];
+    } else if (item.item && stardustShopByName[item.item.toLowerCase()]) {
+      shopEntry = stardustShopByName[item.item.toLowerCase()];
+    }
+
+    // If not in shop or out of stock, return empty
+    if (!shopEntry) return '';
+
+    const quantity = Number(shopEntry.stockquantity ?? 0);
+    const hasInfiniteStock = quantity === -1;
+    // Show callout if infinite stock (-1) or if stock > 0
+    if (!hasInfiniteStock && (!Number.isFinite(quantity) || quantity <= 0)) return '';
+
+    const shopUrl = charadex.tools.resolveRelativeUrl('stardust-shop.html');
+    return `
+      <a class="item-stardust-callout" href="${shopUrl}">
+        <span class="fa-solid fa-sparkles item-stardust-callout__icon" aria-hidden="true"></span>
+        <span class="item-stardust-callout__copy">
+          <strong>Available in the Stardust Shop!</strong>
+          <span class="item-stardust-callout__cta">Visit the stardust shop</span>
+        </span>
+        <span class="fa-solid fa-arrow-right item-stardust-callout__chevron" aria-hidden="true"></span>
+      </a>
+    `.trim();
+  };
+
   const traits = await charadex.importSheet(charadex.sheet.pages.traits);
   const variantDisplayMap = {
     s: 'Soulbound',
@@ -70,6 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!Array.isArray(itemsArray)) return;
       for (const entry of itemsArray) {
         entry.stockcallout = '';
+        entry.stardustcallout = '';
       }
     },
     (listData) => {
@@ -77,6 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const item = listData.profileArray[0];
       const stockCalloutMarkup = buildStockCallout(item);
+      const stardustCalloutMarkup = buildStardustStockCallout(item);
       const urlParams = charadex.url.getUrlParameters();
       const variantParam = (urlParams.get('variant') || '').trim().toLowerCase();
       const variantOverride = variantParam === 's' || variantParam === 't' ? variantParam : null;
@@ -86,15 +135,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (listData.list && Array.isArray(listData.list.items) && listData.list.items[0]) {
         const listItem = listData.list.items[0];
-        listItem.values({ stockcallout: stockCalloutMarkup });
+        listItem.values({ stockcallout: stockCalloutMarkup, stardustcallout: stardustCalloutMarkup });
         const stockNode = listItem.elm?.querySelector?.('.stockcallout');
         if (stockNode) {
           stockNode.style.display = stockCalloutMarkup ? '' : 'none';
+        }
+        const stardustNode = listItem.elm?.querySelector?.('.stardustcallout');
+        if (stardustNode) {
+          stardustNode.style.display = stardustCalloutMarkup ? '' : 'none';
         }
       } else {
         const profileStockCallout = $("#charadex-profile .stockcallout");
         profileStockCallout.html(stockCalloutMarkup);
         profileStockCallout.toggle(!!stockCalloutMarkup);
+
+        const profileStardustCallout = $("#charadex-profile .stardustcallout");
+        profileStardustCallout.html(stardustCalloutMarkup);
+        profileStardustCallout.toggle(!!stardustCalloutMarkup);
       }
 
       if (variantOverride && displayName.trim()) {
