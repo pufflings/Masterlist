@@ -27,18 +27,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Load the Stardust Shop sheet to check stock availability
-  const stardustShopData = await charadex.importSheet(charadex.sheet.pages.stardustShop);
+  // Load the Exchange Shop sheet to check stock availability
+  const exchangeShopData = await charadex.importSheet(charadex.sheet.pages.exchangeShop);
 
-  // Create a map of stardust shop items by ID and name for quick lookup
-  const stardustShopById = {};
-  const stardustShopByName = {};
-  stardustShopData.forEach(shopEntry => {
+  // Create a map of exchange shop items by ID and name for quick lookup
+  const exchangeShopById = {};
+  const exchangeShopByName = {};
+  exchangeShopData.forEach(shopEntry => {
     if (shopEntry.id) {
-      stardustShopById[shopEntry.id] = shopEntry;
+      exchangeShopById[shopEntry.id] = shopEntry;
     }
     if (shopEntry.item) {
-      stardustShopByName[shopEntry.item.toLowerCase()] = shopEntry;
+      exchangeShopByName[shopEntry.item.toLowerCase()] = shopEntry;
     }
   });
 
@@ -74,15 +74,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     `.trim();
   };
 
-  const buildStardustStockCallout = (item) => {
+  const buildExchangeStockCallout = (item) => {
     if (!item) return '';
 
-    // Check if the item exists in the Stardust Shop sheet
+    // Check if the item exists in the Exchange Shop sheet
     let shopEntry = null;
-    if (item.id && stardustShopById[item.id]) {
-      shopEntry = stardustShopById[item.id];
-    } else if (item.item && stardustShopByName[item.item.toLowerCase()]) {
-      shopEntry = stardustShopByName[item.item.toLowerCase()];
+    if (item.id && exchangeShopById[item.id]) {
+      shopEntry = exchangeShopById[item.id];
+    } else if (item.item && exchangeShopByName[item.item.toLowerCase()]) {
+      shopEntry = exchangeShopByName[item.item.toLowerCase()];
     }
 
     // If not in shop or out of stock, return empty
@@ -93,15 +93,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Show callout if infinite stock (-1) or if stock > 0
     if (!hasInfiniteStock && (!Number.isFinite(quantity) || quantity <= 0)) return '';
 
-    const shopUrl = charadex.tools.resolveRelativeUrl('stardust-shop.html');
+    const shopUrl = charadex.tools.resolveRelativeUrl('exchange-shop.html');
     return `
-      <a class="item-stardust-callout" href="${shopUrl}">
-        <span class="fa-solid fa-sparkles item-stardust-callout__icon" aria-hidden="true"></span>
-        <span class="item-stardust-callout__copy">
-          <strong>Available in the Stardust Shop!</strong>
-          <span class="item-stardust-callout__cta">Visit the stardust shop</span>
+      <a class="item-exchange-callout" href="${shopUrl}">
+        <span class="fa-solid fa-sparkles item-exchange-callout__icon" aria-hidden="true"></span>
+        <span class="item-exchange-callout__copy">
+          <strong>Available in the Exchange Shop!</strong>
+          <span class="item-exchange-callout__cta">Visit the exchange shop</span>
         </span>
-        <span class="fa-solid fa-arrow-right item-stardust-callout__chevron" aria-hidden="true"></span>
+        <span class="fa-solid fa-arrow-right item-exchange-callout__chevron" aria-hidden="true"></span>
       </a>
     `.trim();
   };
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!Array.isArray(itemsArray)) return;
       for (const entry of itemsArray) {
         entry.stockcallout = '';
-        entry.stardustcallout = '';
+        entry.exchangecallout = '';
       }
     },
     (listData) => {
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const item = listData.profileArray[0];
       const stockCalloutMarkup = buildStockCallout(item);
-      const stardustCalloutMarkup = buildStardustStockCallout(item);
+      const exchangeCalloutMarkup = buildExchangeStockCallout(item);
       const urlParams = charadex.url.getUrlParameters();
       const variantParam = (urlParams.get('variant') || '').trim().toLowerCase();
       const variantOverride = variantParam === 's' || variantParam === 't' ? variantParam : null;
@@ -135,23 +135,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (listData.list && Array.isArray(listData.list.items) && listData.list.items[0]) {
         const listItem = listData.list.items[0];
-        listItem.values({ stockcallout: stockCalloutMarkup, stardustcallout: stardustCalloutMarkup });
+        listItem.values({ stockcallout: stockCalloutMarkup, exchangecallout: exchangeCalloutMarkup });
         const stockNode = listItem.elm?.querySelector?.('.stockcallout');
         if (stockNode) {
           stockNode.style.display = stockCalloutMarkup ? '' : 'none';
         }
-        const stardustNode = listItem.elm?.querySelector?.('.stardustcallout');
-        if (stardustNode) {
-          stardustNode.style.display = stardustCalloutMarkup ? '' : 'none';
+        const exchangeNode = listItem.elm?.querySelector?.('.exchangecallout');
+        if (exchangeNode) {
+          exchangeNode.style.display = exchangeCalloutMarkup ? '' : 'none';
         }
       } else {
         const profileStockCallout = $("#charadex-profile .stockcallout");
         profileStockCallout.html(stockCalloutMarkup);
         profileStockCallout.toggle(!!stockCalloutMarkup);
 
-        const profileStardustCallout = $("#charadex-profile .stardustcallout");
-        profileStardustCallout.html(stardustCalloutMarkup);
-        profileStardustCallout.toggle(!!stardustCalloutMarkup);
+        const profileExchangeCallout = $("#charadex-profile .exchangecallout");
+        profileExchangeCallout.html(exchangeCalloutMarkup);
+        profileExchangeCallout.toggle(!!exchangeCalloutMarkup);
       }
 
       if (variantOverride && displayName.trim()) {

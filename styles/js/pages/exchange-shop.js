@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Display user's stardust balance if logged in
   await displayUserStardust();
 
-  // Load the Stardust Shop sheet and Items sheet
-  const shopData = await charadex.importSheet(charadex.sheet.pages.stardustShop);
+  // Load the Exchange Shop sheet and Items sheet
+  const shopData = await charadex.importSheet(charadex.sheet.pages.exchangeShop);
   const itemsData = await charadex.importSheet(charadex.sheet.pages.items);
 
   // Create a map of items by ID and by name for quick lookup
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Skip if we can't find the item
     if (!item) {
-      console.warn(`Stardust Shop entry references unknown item: ${shopEntry.item || shopEntry.id}`);
+      console.warn(`Exchange Shop entry references unknown item: ${shopEntry.item || shopEntry.id}`);
       return;
     }
 

@@ -48,7 +48,7 @@ charadex.sheet = {
     options: "OptionsSheet",
     news: "news",
     shop: "Shop",
-    stardustShop: "Stardust Shop",
+    exchangeShop: "Exchange Shop",
   },
 
   options: {
