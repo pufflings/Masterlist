@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Show callout if infinite stock (-1) or if stock > 0
     if (!hasInfiniteStock && (!Number.isFinite(quantity) || quantity <= 0)) return '';
 
-    const shopUrl = charadex.tools.resolveRelativeUrl('shop.html');
+    const shopUrl = charadex.tools.resolveRelativeUrl('poki-shop.html');
     return `
       <a class="item-stock-callout" href="${shopUrl}">
         <span class="fa-solid fa-store item-stock-callout__icon" aria-hidden="true"></span>
