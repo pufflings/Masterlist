@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" type="image/png" href="assets/favicon.png" />
-  <title>Pufflings Shops</title>
-  <meta name="title" content="Pufflings Shops" />
+  <title>Poki's Shop</title>
+  <meta name="title" content="Poki's Shop" />
   <meta name="type" content="website" />
   <meta name="url" content="https://pufflings.github.io/Masterlist/" />
   <meta name="image" content="assets/meta.png" />
@@ -24,41 +24,37 @@
       <!-- Top Card Container -->
       <div class="card p-md-5 p-4 mb-4">
         <!-- Title -->
-        <h3 class="mb-0">Shops</h3>
+        <h3 class="mb-0"><a href="poki-shop.html">Poki's Shop</a></h3>
+        <!-- Faux Folders (hidden) -->
+        <div style="display:none;" id="charadex-folder-container">
+          <hr>
+          <div class="row no-gutters m-n1" id="charadex-folders"></div>
+        </div>
+        <!-- Filters (hidden) -->
+        <div style="display:none;" id="charadex-filter-container">
+          <hr>
+          <div class="row no-gutters m-n1" id="charadex-filters"></div>
+        </div>
+        <!-- Header Image instead of Search -->
         <hr>
-        <div class="px-4 text-muted">Welcome to the Puffling shops! Browse our selection below.</div>
-      </div>
-
-      <!-- Shop Gallery -->
-      <div class="row m-n2">
-        <!-- Poki's Shop Card -->
-        <div class="col-md-6 p-2">
-          <a href="poki-shop.html" class="text-decoration-none">
-            <div class="card h-100 shop-gallery-card">
-              <div class="card-body p-4 text-center">
-                <img src="https://img-l.ink/img/16xZoJO_EL0eZyFI95oZZd7cYXznK1gp4.png" alt="Poki's Shop" class="img-fluid rounded mb-3" style="max-height: 300px;">
-                <h4 class="mb-2">Poki's Shop</h4>
-                <p class="text-muted mb-0">Purchase items with coins</p>
-              </div>
-            </div>
-          </a>
+        <div class="text-center my-4">
+          <img src="https://img-l.ink/img/16xZoJO_EL0eZyFI95oZZd7cYXznK1gp4.png" alt="Shop Banner" class="img-fluid rounded" style="max-height:440px;">
         </div>
-
-        <!-- Exchange Shop Card -->
-        <!--
-        <div class="col-md-6 p-2">
-          <a href="exchange-shop.html" class="text-decoration-none">
-            <div class="card h-100 shop-gallery-card">
-              <div class="card-body p-4 text-center">
-                <img src="https://img-l.ink/img/16xZoJO_EL0eZyFI95oZZd7cYXznK1gp4.png" alt="Exchange Shop" class="img-fluid rounded mb-3" style="max-height: 300px;">
-                <h4 class="mb-2">Exchange Shop</h4>
-                <p class="text-muted mb-0">Purchase items with stardust</p>
-              </div>
-            </div>
-          </a>
+        <hr>
+        <div class="px-4 text-muted">Welcome! If you want to purchase anything with coins, please do so <a href="https://discord.gg/7tEmPWBe8q">here</a>.</div>
+        <!-- Pagination (hidden) -->
+        <div style="display: none;" class="charadex-pagination-container">
+          <hr class="mb-4 mt-4">
+          <div class="nav d-flex justify-content-center mb-n4">
+            <div class="btn-prev page-item"><a class="page-link"><i class="fa fa-chevron-left"></i></a></div>
+            <ul class="pagination charadex-pagination charadex-pagination-top justify-content-center m-0"></ul>
+            <div class="btn-next page-item"><a class="page-link"><i class="fa fa-chevron-right"></i></a></div>
+          </div>
         </div>
-        -->
       </div>
+      <!-- Shop Items List -->
+      <div class="row no-gutters charadex-shop-list softload m-n2"></div>
+
 
       <!-- VGen Promotional Box -->
       <div class="card mt-4 p-4 text-center">
@@ -68,9 +64,13 @@
           </a>
         </div>
         <div class="mb-2">
-          <p class="mb-1">Visit the VGen Shop for a custom puffling or a MYO slot purchasable with real money</p>
+          <p class="mb-1" >Visit the VGen Shop for a custom puffling or a MYO slot purchasable with real money</p>
         </div>
       </div>
+            <!-- Purchase Banner -->
+            <div class="card bg-faded py-2 px-3 mt-3 small text-center">
+              <b>If you want to purchase anything with coins, please do so <a href="https://discord.gg/7tEmPWBe8q">here</a>.</b>
+            </div>
     </div>
   </div>
   <div class="load-html" id="footer" data-source="includes/footer.html"></div>
@@ -78,15 +78,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
   <script src="styles/js/pages/base.js" type="module"></script>
-  <style>
-    .shop-gallery-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-    }
-    .shop-gallery-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    }
-  </style>
+  <script src="styles/js/pages/poki-shop.js" type="module"></script>
 </body>
 </html>

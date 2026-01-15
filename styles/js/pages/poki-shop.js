@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const stockNumber = Number(shopEntry.stockquantity ?? 0);
     const hasInfiniteStock = stockNumber === -1;
     const stock = Number.isFinite(stockNumber) ? stockNumber : 0;
-    
+
     // Create profile link (lowercase, remove spaces and special characters)
     const profile = charadex.tools.scrub(name);
     let nameLink = `<a href="items.html?profile=${profile}">${name}</a>`;

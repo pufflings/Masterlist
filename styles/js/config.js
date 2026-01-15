@@ -45,8 +45,10 @@ charadex.sheet = {
     prompts: "prompts",
     faq: "faq",
     staff: "mods",
-    options: "OptionsSheet", 
+    options: "OptionsSheet",
     news: "news",
+    shop: "Shop",
+    exchangeShop: "Exchange Shop",
   },
 
   options: {
