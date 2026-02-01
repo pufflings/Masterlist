@@ -15,7 +15,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   let dex = await charadex.initialize.page(
     null,
     charadex.page.inventory,
-    null, 
+    // dataCallback: Add usernameWithTitle property for display
+    (charadexData) => {
+      for (let entry of charadexData) {
+        if (entry.title && String(entry.title).trim()) {
+          entry.usernameWithTitle = `${entry.username}, <i>${entry.title}</i>`;
+        } else {
+          entry.usernameWithTitle = entry.username;
+        }
+      }
+    },
     async (listData) => {
 
       if (listData.type == 'profile') {
