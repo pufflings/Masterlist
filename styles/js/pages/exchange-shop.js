@@ -4,11 +4,11 @@ import { auth } from '../auth.js';
 document.addEventListener("DOMContentLoaded", async () => {
   await charadex.loadOptions();
 
-  // Display user's coin balance if logged in
-  await displayUserCoins();
+  // Display user's stardust balance if logged in
+  await displayUserStardust();
 
-  // Load the Shop sheet and Items sheet
-  const shopData = await charadex.importSheet(charadex.sheet.pages.shop);
+  // Load the Exchange Shop sheet and Items sheet
+  const shopData = await charadex.importSheet(charadex.sheet.pages.exchangeShop);
   const itemsData = await charadex.importSheet(charadex.sheet.pages.items);
 
   // Create a map of items by ID and by name for quick lookup
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Skip if we can't find the item
     if (!item) {
-      console.warn(`Shop entry references unknown item: ${shopEntry.item || shopEntry.id}`);
+      console.warn(`Exchange Shop entry references unknown item: ${shopEntry.item || shopEntry.id}`);
       return;
     }
 
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const stockNumber = Number(shopEntry.stockquantity ?? 0);
     const hasInfiniteStock = stockNumber === -1;
     const stock = Number.isFinite(stockNumber) ? stockNumber : 0;
-    
+
     // Create profile link (lowercase, remove spaces and special characters)
     const profile = charadex.tools.scrub(name);
     let nameLink = `<a href="items.html?profile=${profile}">${name}</a>`;
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               <div class="col-md-8 p-2">
                 <div class="description mb-2">${description}</div>
                 <div class="d-flex justify-content-between align-items-end mt-4">
-                  <span><b>Price:</b> ${price} <img src="assets/coin.png" alt="coin" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></span>
+                  <span><b>Price:</b> ${price} <img src="https://img-l.ink/img/1y-xO7D0-BWXl5_GrHkjP10ccWC5XfPUP.png" alt="stardust" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></span>
                   <span><b>Stock:</b> ${hasInfiniteStock ? '&infin;' : stock}</span>
                 </div>
                 <div class="mt-2">
@@ -102,9 +102,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /**
- * Display the user's coin balance if they are logged in
+ * Display the user's stardust balance if they are logged in
  */
-async function displayUserCoins() {
+async function displayUserStardust() {
   // Check if user is logged in
   if (!auth.isLoggedIn()) {
     return;
@@ -129,21 +129,21 @@ async function displayUserCoins() {
       return;
     }
 
-    // Look for coins in the user's inventory
-    // Coins could be stored as 'coins', 'Coins', 'coin', or 'Coin'
-    const coinAmount = userProfile.coins || userProfile.Coins || userProfile.coin || userProfile.Coin || 0;
+    // Look for stardust in the user's inventory
+    // Stardust could be stored as 'stardust', 'Stardust', etc.
+    const stardustAmount = userProfile.stardust || userProfile.Stardust || 0;
 
-    // Display the coin balance in the shop header
-    displayCoinBalance(coinAmount, username);
+    // Display the stardust balance in the shop header
+    displayStardustBalance(stardustAmount, username);
   } catch (error) {
-    console.error('Error loading user coin balance:', error);
+    console.error('Error loading user stardust balance:', error);
   }
 }
 
 /**
- * Display the coin balance in the shop UI
+ * Display the stardust balance in the shop UI
  */
-function displayCoinBalance(amount, username) {
+function displayStardustBalance(amount, username) {
   // Find the welcome message div
   const welcomeDiv = document.querySelector('.px-4.text-muted');
 
@@ -151,19 +151,19 @@ function displayCoinBalance(amount, username) {
     return;
   }
 
-  // Create a coin balance display element
-  const coinBalanceDiv = document.createElement('div');
-  coinBalanceDiv.className = 'card bg-faded p-3 mt-3 d-flex flex-row justify-content-between align-items-center';
-  coinBalanceDiv.innerHTML = `
+  // Create a stardust balance display element
+  const stardustBalanceDiv = document.createElement('div');
+  stardustBalanceDiv.className = 'card bg-faded p-3 mt-3 d-flex flex-row justify-content-between align-items-center';
+  stardustBalanceDiv.innerHTML = `
     <div>
-      <strong>${username}</strong>'s Balance
+      <strong>${username}</strong>'s Stardust Balance
     </div>
     <div class="h5 mb-0">
       <strong>${amount}</strong>
-      <img src="assets/coin.png" alt="coins" style="height: 1.5em; width: 1.5em; vertical-align: middle; margin-left: 0.25em;">
+      <img src="https://img-l.ink/img/1y-xO7D0-BWXl5_GrHkjP10ccWC5XfPUP.png" alt="stardust" style="height: 1.5em; width: 1.5em; vertical-align: middle; margin-left: 0.25em;">
     </div>
   `;
 
-  // Insert the coin balance after the welcome message
-  welcomeDiv.parentNode.insertBefore(coinBalanceDiv, welcomeDiv.nextSibling);
+  // Insert the stardust balance after the welcome message
+  welcomeDiv.parentNode.insertBefore(stardustBalanceDiv, welcomeDiv.nextSibling);
 }
