@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   const traits = await charadex.importSheet(charadex.sheet.pages.traits);
+  const collectiblesSheet = await charadex.importSheet(charadex.sheet.pages.collectibles);
   const variantDisplayMap = {
     s: 'Soulbound',
     t: 'Tradeable'
@@ -84,8 +85,29 @@ document.addEventListener("DOMContentLoaded", async () => {
       const tradeableText = isTradeable ? 'Yes' : 'No';
       $(".tradeable").text(tradeableText);
 
-      // Show collectible type if it has a value
-      const collectibleType = item.collectibletype || '';
+      // Show collectible type by cross-referencing with Collectibles sheet
+      let collectibleType = '';
+      if (String(item.type).toLowerCase() === 'collectible') {
+        const itemName = item.item ?? '';
+        const itemNameScrubbed = charadex.tools.scrub(itemName);
+        const itemNameKeyed = charadex.tools.createKey(itemName);
+
+        const collectibleMatch = collectiblesSheet.find(c => {
+          if (!c) return false;
+          const cItem = c.item ?? '';
+          const cItemScrubbed = charadex.tools.scrub(cItem);
+          const cItemKeyed = charadex.tools.createKey(cItem);
+          return (
+            (cItemScrubbed && cItemScrubbed === itemNameScrubbed) ||
+            (cItemKeyed && cItemKeyed === itemNameKeyed)
+          );
+        });
+
+        if (collectibleMatch && collectibleMatch.collectibletype) {
+          collectibleType = collectibleMatch.collectibletype;
+        }
+      }
+
       if (collectibleType.trim().length > 0) {
         $("#collectible-type-row").show();
         $("#collectible-type-row .collectibletype").text(collectibleType);

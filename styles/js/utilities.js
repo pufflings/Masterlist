@@ -540,6 +540,7 @@ charadex.manageData = {
   ===================================================================== */
   async inventoryFix(profileArray) {
     const items = await charadex.importSheet(charadex.sheet.pages.items);
+    const collectiblesSheet = await charadex.importSheet(charadex.sheet.pages.collectibles);
     const inventoryData = [];
     const variantSuffixRegex = /\s*\(([st])\)\s*$/i;
     const variantDisplayMap = {
@@ -583,6 +584,29 @@ charadex.manageData = {
         quantity: value,
         inventorycolumn: propertyLabel
       };
+
+      // Cross-reference with Collectibles sheet for collectible type
+      if (String(entry.type).toLowerCase() === 'collectible') {
+        const itemName = entry.item ?? '';
+        const itemNameScrubbed = charadex.tools.scrub(itemName);
+        const itemNameKeyed = charadex.tools.createKey(itemName);
+
+        const collectibleMatch = collectiblesSheet.find(c => {
+          if (!c) return false;
+          const cItem = c.item ?? '';
+          const cItemScrubbed = charadex.tools.scrub(cItem);
+          const cItemKeyed = charadex.tools.createKey(cItem);
+          return (
+            (cItemScrubbed && cItemScrubbed === itemNameScrubbed) ||
+            (cItemKeyed && cItemKeyed === itemNameKeyed)
+          );
+        });
+
+        if (collectibleMatch && collectibleMatch.collectibletype) {
+          entry.collectibletype = collectibleMatch.collectibletype;
+        }
+      }
+
       const baseDisplayName = match.item || propertyLabel || basePropertyKey;
       entry.profileLabelOverride = baseDisplayName;
 
