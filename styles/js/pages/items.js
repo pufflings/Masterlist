@@ -84,6 +84,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       const tradeableText = isTradeable ? 'Yes' : 'No';
       $(".tradeable").text(tradeableText);
 
+      // Show collectible type if it has a value
+      const collectibleType = item.collectibletype || '';
+      if (collectibleType.trim()) {
+        $("#collectible-type-row").show();
+        $("#collectible-type-row .collectibletype").text(collectibleType);
+      } else {
+        $("#collectible-type-row").hide();
+      }
+
       if (item.type !== 'Trait') {
         $("#related-trait-row").hide();
         $("#related-trait-row .related-trait-label").text('');
