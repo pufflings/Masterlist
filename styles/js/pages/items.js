@@ -86,11 +86,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       // Show collectible type if it has a value
       const collectibleType = item.collectibletype || '';
-      if (collectibleType.trim()) {
+      if (collectibleType.trim().length > 0) {
         $("#collectible-type-row").show();
         $("#collectible-type-row .collectibletype").text(collectibleType);
       } else {
-        $("#collectible-type-row").hide();
+        $("#collectible-type-row").removeClass('d-flex');
       }
 
       if (item.type !== 'Trait') {
