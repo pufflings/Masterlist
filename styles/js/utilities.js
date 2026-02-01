@@ -34,6 +34,26 @@ charadex.tools = {
     return String(str).toLowerCase().replaceAll(" ", "");
   },
 
+  // Find collectible type from Collectibles sheet by item name
+  findCollectibleType(itemName, collectiblesSheet) {
+    if (!itemName || !collectiblesSheet) return '';
+    const itemNameScrubbed = charadex.tools.scrub(itemName);
+    const itemNameKeyed = charadex.tools.createKey(itemName);
+
+    const match = collectiblesSheet.find(c => {
+      if (!c) return false;
+      const cItem = c.item ?? '';
+      const cItemScrubbed = charadex.tools.scrub(cItem);
+      const cItemKeyed = charadex.tools.createKey(cItem);
+      return (
+        (cItemScrubbed && cItemScrubbed === itemNameScrubbed) ||
+        (cItemKeyed && cItemKeyed === itemNameKeyed)
+      );
+    });
+
+    return match?.collectibletype || '';
+  },
+
   // Create Select Options
   // Creates select options from an array
   createSelectOptions(optionArray) {
@@ -540,6 +560,7 @@ charadex.manageData = {
   ===================================================================== */
   async inventoryFix(profileArray) {
     const items = await charadex.importSheet(charadex.sheet.pages.items);
+    const collectiblesSheet = await charadex.importSheet(charadex.sheet.pages.collectibles);
     const inventoryData = [];
     const variantSuffixRegex = /\s*\(([st])\)\s*$/i;
     const variantDisplayMap = {
@@ -583,6 +604,15 @@ charadex.manageData = {
         quantity: value,
         inventorycolumn: propertyLabel
       };
+
+      // Cross-reference with Collectibles sheet for collectible type
+      if (String(entry.type).toLowerCase() === 'collectible') {
+        const collectibleType = charadex.tools.findCollectibleType(entry.item, collectiblesSheet);
+        if (collectibleType) {
+          entry.collectibletype = collectibleType;
+        }
+      }
+
       const baseDisplayName = match.item || propertyLabel || basePropertyKey;
       entry.profileLabelOverride = baseDisplayName;
 

@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   const traits = await charadex.importSheet(charadex.sheet.pages.traits);
+  const collectiblesSheet = await charadex.importSheet(charadex.sheet.pages.collectibles);
   const variantDisplayMap = {
     s: 'Soulbound',
     t: 'Tradeable'
@@ -84,8 +85,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       const tradeableText = isTradeable ? 'Yes' : 'No';
       $(".tradeable").text(tradeableText);
 
-      // Show collectible type if it has a value
-      const collectibleType = item.collectibletype || '';
+      // Show collectible type by cross-referencing with Collectibles sheet
+      let collectibleType = '';
+      if (String(item.type).toLowerCase() === 'collectible') {
+        collectibleType = charadex.tools.findCollectibleType(item.item, collectiblesSheet);
+      }
+
       if (collectibleType.trim().length > 0) {
         $("#collectible-type-row").show();
         $("#collectible-type-row .collectibletype").text(collectibleType);
