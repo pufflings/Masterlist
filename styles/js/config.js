@@ -56,7 +56,8 @@ charadex.sheet = {
     rarity: [],
     species: [],
     itemTypes: [],
-    traitTypes: []
+    traitTypes: [],
+    collectibleTypes: []
   }
 
 }
@@ -764,8 +765,8 @@ charadex.page.inventory = {
       toggle: true,
       sortProperty: "item",
       order: "asc",
-      parametersKey: 'type',
-      parameters: () => charadex.sheet.options.itemTypes
+      parametersKey: 'collectibletype',
+      parameters: () => charadex.sheet.options.collectibleTypes
     },
 
     search: {
@@ -777,7 +778,7 @@ charadex.page.inventory = {
     filters: {
       toggle: true,
       parameters: () => ({
-        'Type': charadex.sheet.options.itemTypes,
+        'Collectible Type': charadex.sheet.options.collectibleTypes,
         'Rarity': charadex.sheet.options.rarity,
       })
     },

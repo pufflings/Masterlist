@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Get all items with quantity > 0
         const allItems = (await charadex.manageData.inventoryFix(profile)).filter(item => Number(item.quantity) > 0);
 
-        // Filter out collectibles from main inventory
-        const inventoryData = allItems.filter(item => String(item.collectible).toUpperCase() !== 'TRUE');
+        // Filter out collectibles from main inventory (items where type !== "Collectible")
+        const inventoryData = allItems.filter(item => String(item.type).toLowerCase() !== 'collectible');
         charadex.initialize.groupGallery(
           charadex.page.inventory.inventoryConfig,
           inventoryData,
@@ -34,12 +34,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           charadex.url.getPageUrl('items')
         )
 
-        // Collectibles - filter items where collectible is TRUE
-        const collectiblesData = allItems.filter(item => String(item.collectible).toUpperCase() === 'TRUE');
+        // Collectibles - filter items where type === "Collectible", group by collectibletype
+        const collectiblesData = allItems.filter(item => String(item.type).toLowerCase() === 'collectible');
         charadex.initialize.groupGallery(
           charadex.page.inventory.collectiblesConfig,
           collectiblesData,
-          'type',
+          'collectibletype',
           charadex.url.getPageUrl('items')
         )
 
