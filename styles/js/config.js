@@ -56,7 +56,8 @@ charadex.sheet = {
     rarity: [],
     species: [],
     itemTypes: [],
-    traitTypes: []
+    traitTypes: [],
+    collectibleTypes: []
   }
 
 }
@@ -745,6 +746,39 @@ charadex.page.inventory = {
       toggle: true,
       parameters: () => ({
         'Type': charadex.sheet.options.itemTypes,
+        'Rarity': charadex.sheet.options.rarity,
+      })
+    },
+
+  },
+
+  // This is a special config for collectibles
+  collectiblesConfig: {
+
+    sheetPage: charadex.sheet.pages.items,
+    sitePage: 'items',
+    dexSelector: 'collectibles',
+    profileProperty: 'item',
+    profileToggle: false,
+
+    sort: {
+      toggle: true,
+      sortProperty: "item",
+      order: "asc",
+      parametersKey: 'collectibletype',
+      parameters: () => charadex.sheet.options.collectibleTypes
+    },
+
+    search: {
+      toggle: true,
+      filterToggle: false,
+      parameters: ['Item']
+    },
+
+    filters: {
+      toggle: true,
+      parameters: () => ({
+        'Collectible Type': charadex.sheet.options.collectibleTypes,
         'Rarity': charadex.sheet.options.rarity,
       })
     },
