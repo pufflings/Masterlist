@@ -22,11 +22,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let profile = listData.profileArray[0];
 
-        // Inventory
-        const inventoryData = (await charadex.manageData.inventoryFix(profile)).filter(item => Number(item.quantity) > 0);
+        // Get all items with quantity > 0
+        const allItems = (await charadex.manageData.inventoryFix(profile)).filter(item => Number(item.quantity) > 0);
+
+        // Filter out collectibles from main inventory
+        const inventoryData = allItems.filter(item => String(item.collectible).toUpperCase() !== 'TRUE');
         charadex.initialize.groupGallery(
           charadex.page.inventory.inventoryConfig,
           inventoryData,
+          'type',
+          charadex.url.getPageUrl('items')
+        )
+
+        // Collectibles - filter items where collectible is TRUE
+        const collectiblesData = allItems.filter(item => String(item.collectible).toUpperCase() === 'TRUE');
+        charadex.initialize.groupGallery(
+          charadex.page.inventory.collectiblesConfig,
+          collectiblesData,
           'type',
           charadex.url.getPageUrl('items')
         )

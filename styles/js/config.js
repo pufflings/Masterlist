@@ -749,6 +749,39 @@ charadex.page.inventory = {
       })
     },
 
+  },
+
+  // This is a special config for collectibles
+  collectiblesConfig: {
+
+    sheetPage: charadex.sheet.pages.items,
+    sitePage: 'items',
+    dexSelector: 'collectibles',
+    profileProperty: 'item',
+    profileToggle: false,
+
+    sort: {
+      toggle: true,
+      sortProperty: "item",
+      order: "asc",
+      parametersKey: 'type',
+      parameters: () => charadex.sheet.options.itemTypes
+    },
+
+    search: {
+      toggle: true,
+      filterToggle: false,
+      parameters: ['Item']
+    },
+
+    filters: {
+      toggle: true,
+      parameters: () => ({
+        'Type': charadex.sheet.options.itemTypes,
+        'Rarity': charadex.sheet.options.rarity,
+      })
+    },
+
   }
 
 };
