@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="image/png" href="../assets/favicon.png" />
+  <title>Pufflings - Personality Test</title>
+  <meta name="title" content="Pufflings - Personality Test" />
+  <meta name="type" content="website" />
+  <meta name="url" content="https://pufflings.github.io/Masterlist/" />
+  <meta name="image" content="../assets/meta.png" />
+  <meta name="description" content="Welcome to the Puffling ARPG! Pufflings are a mysterious, fluffy creature, believed to be descendants of legendary dragons.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex.css">
+
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex-story.css">
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex-prompts.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400|Comfortaa:500" rel="stylesheet">
+
+  <style>
+    /* Quiz Container */
+    .quiz-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Question Cards */
+    .question-card {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .question-card.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+      margin-bottom: 30px;
+    }
+
+    .progress {
+      height: 12px;
+      background-color: var(--cd-faded-background-color);
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--cd-secondary-color), var(--cd-link-text-color));
+      border-radius: 1rem;
+      transition: width 0.4s ease;
+    }
+
+    /* Question Styling */
+    .question-number {
+      font-family: var(--cd-header-font-family);
+      font-size: 0.9em;
+      color: var(--cd-secondary-color);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .question-text {
+      font-family: var(--cd-header-font-family);
+      font-size: 1.4em;
+      font-weight: 500;
+      color: var(--cd-body-text-color);
+      margin-bottom: 30px;
+      line-height: 1.4;
+    }
+
+    /* Option Buttons */
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 16px 20px;
+      border: 2px solid var(--cd-border-color2);
+      border-radius: 1rem;
+      background: var(--cd-faded-background-color);
+      color: var(--cd-body-text-color);
+      font-family: var(--cd-body-font-family);
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option-btn::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: transparent;
+      transition: all 0.25s ease;
+    }
+
+    .option-btn:hover {
+      border-color: var(--cd-link-text-color);
+      background: var(--cd-content-background-color);
+      transform: translateX(4px);
+    }
+
+    .option-btn:hover::before {
+      background: var(--cd-link-text-color);
+    }
+
+    .option-btn.selected {
+      border-color: var(--cd-secondary-color);
+      background: var(--cd-primary-color);
+      box-shadow: 0 4px 12px rgba(136, 119, 101, 0.3);
+    }
+
+    .option-btn.selected::before {
+      background: var(--cd-secondary-color);
+      width: 6px;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 1px dashed var(--cd-border-color);
+    }
+
+    .nav-buttons .btn {
+      min-width: 120px;
+      padding: 12px 24px;
+      font-family: var(--cd-header-font-family);
+    }
+
+    .nav-buttons .btn-outline-secondary {
+      border-color: var(--cd-secondary-color);
+      color: var(--cd-secondary-color);
+    }
+
+    .nav-buttons .btn-outline-secondary:hover:not(:disabled) {
+      background: var(--cd-secondary-color);
+      color: var(--cd-faded-background-color);
+    }
+
+    .nav-buttons .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Introduction Section */
+    #intro-section {
+      padding: 20px 0;
+    }
+
+    #intro-section p {
+      font-size: 1.1em;
+      line-height: 1.7;
+      color: var(--cd-body-text-color);
+    }
+
+    #start-btn {
+      margin-top: 20px;
+      padding: 15px 40px;
+      font-size: 1.1em;
+      font-family: var(--cd-header-font-family);
+      letter-spacing: 0.5px;
+    }
+
+    /* Results Container */
+    .result-container {
+      display: none;
+      text-align: justify;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .result-container.active {
+      display: block;
+    }
+
+    .result-container h4 {
+      font-size: 1.2em;
+      color: var(--cd-secondary-color);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+
+    /* Element Result Display */
+    .element-result {
+      font-family: var(--cd-header-font-family);
+      font-size: 3em;
+      font-weight: bold;
+      margin: 25px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .result-description {
+      font-size: 1.15em;
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto 30px;
+      color: var(--cd-body-text-color);
+      text-align: justify;
+    }
+
+    /* Element Colors - Warm palette that fits the site */
+    .element-fire { color: #c44536; }
+    .element-earth { color: #6b5344; }
+    .element-water { color: #3d7ea6; }
+    .element-air { color: #7ba7bc; }
+    .element-light { color: #d4a03c; }
+    .element-darkness { color: #5c4a72; }
+
+    /* Element background colors for result card */
+    .result-card {
+      padding: 30px;
+      border-radius: 1rem;
+      margin: 20px 0;
+    }
+
+    .result-card.fire { background: linear-gradient(135deg, rgba(196, 69, 54, 0.1), rgba(196, 69, 54, 0.05)); border: 2px solid rgba(196, 69, 54, 0.3); }
+    .result-card.earth { background: linear-gradient(135deg, rgba(107, 83, 68, 0.1), rgba(107, 83, 68, 0.05)); border: 2px solid rgba(107, 83, 68, 0.3); }
+    .result-card.water { background: linear-gradient(135deg, rgba(61, 126, 166, 0.1), rgba(61, 126, 166, 0.05)); border: 2px solid rgba(61, 126, 166, 0.3); }
+    .result-card.air { background: linear-gradient(135deg, rgba(123, 167, 188, 0.1), rgba(123, 167, 188, 0.05)); border: 2px solid rgba(123, 167, 188, 0.3); }
+    .result-card.light { background: linear-gradient(135deg, rgba(212, 160, 60, 0.1), rgba(212, 160, 60, 0.05)); border: 2px solid rgba(212, 160, 60, 0.3); }
+    .result-card.darkness { background: linear-gradient(135deg, rgba(92, 74, 114, 0.1), rgba(92, 74, 114, 0.05)); border: 2px solid rgba(92, 74, 114, 0.3); }
+
+    /* Score Breakdown */
+    .score-breakdown {
+      text-align: left;
+      max-width: 450px;
+      margin: 30px auto;
+      padding: 25px;
+      background: var(--cd-faded-background-color);
+      border-radius: 1rem;
+      border: 1px solid var(--cd-border-color);
+    }
+
+    .score-breakdown h6 {
+      font-family: var(--cd-header-font-family);
+      color: var(--cd-secondary-color);
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9em;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 64px;
+      column-gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--cd-border-color);
+    }
+
+    .score-row:last-child {
+      border-bottom: none;
+    }
+
+    .score-row span:first-child {
+      font-weight: 500;
+      font-size: 1.05em;
+    }
+
+    .score-row span:last-child {
+      color: var(--cd-secondary-color);
+      font-family: var(--cd-header-font-family);
+      text-align: right;
+    }
+
+    /* Score bar visualization */
+    .score-bar-container {
+      height: 8px;
+      background: var(--cd-content-background-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .score-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .score-bar.fire { background: #c44536; }
+    .score-bar.earth { background: #6b5344; }
+    .score-bar.water { background: #3d7ea6; }
+    .score-bar.air { background: #7ba7bc; }
+    .score-bar.light { background: #d4a03c; }
+    .score-bar.darkness { background: #5c4a72; }
+
+    /* Restart Button */
+    #restart-btn {
+      margin-top: 25px;
+      padding: 12px 30px;
+      font-family: var(--cd-header-font-family);
+      border-color: var(--cd-secondary-color);
+      color: var(--cd-secondary-color);
+    }
+
+    #restart-btn:hover {
+      background: var(--cd-secondary-color);
+      color: var(--cd-faded-background-color);
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 576px) {
+      .question-text {
+        font-size: 1.2em;
+      }
+
+      .option-btn {
+        padding: 14px 16px;
+        font-size: 0.95em;
+      }
+
+      .element-result {
+        font-size: 2.2em;
+      }
+
+      .nav-buttons .btn {
+        min-width: 100px;
+        padding: 10px 18px;
+      }
+
+      .score-row {
+        grid-template-columns: 80px 1fr 56px;
+        column-gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body id="charadex-body">
+  <div class="load-html" id="header" data-source="../includes/header.html"></div>
+  <div class="container" id="main-container">
+    <div id="charadex-gallery">
+      <!-- Top Card Container -->
+      <div class="card p-md-5 p-4 mb-4">
+        <!-- Title -->
+        <h3 class="mb-0"><a href="personalityTest.html">Elemental Personality Test</a></h3>
+        <h6><i>Discover your elemental affinity</i></h6>
+        <hr>
+        <div class="text-justify my-4">
+
+          <!-- Introduction -->
+          <div id="intro-section" class="text-center">
+            <p>Every Puff is born with a unique magical affinity.
+                Let's find out which element your Puff truly resonates with!</p>
+
+                <p>For anyone who’s still unsure which magic suits their Puff,
+                this test can be used as a guideline to help you decide. Element types do not represent natural or innate magic. They reflect a Puff’s approach to magic and problem-solving.</p>
+
+                <p>This test is made just for fun and should not be taken too seriously!</p>
+            <br>
+            <button id="start-btn" class="btn btn-primary btn-lg">Begin the Test</button>
+          </div>
+
+          <!-- Quiz Container -->
+          <div id="quiz-container" class="quiz-container" style="display: none;">
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+            <!-- Questions will be generated here -->
+            <div id="questions-container"></div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+              <button id="prev-btn" class="btn btn-outline-secondary" disabled>Previous</button>
+            </div>
+          </div>
+
+          <!-- Results Container -->
+          <div id="result-container" class="result-container">
+            <h4>Your Elemental Affinity</h4>
+
+            <div id="result-card" class="result-card">
+              <div id="result-element" class="element-result"></div>
+              <p id="result-description" class="result-description"></p>
+            </div>
+
+            <div class="score-breakdown">
+              <h6>Score Breakdown</h6>
+              <div id="score-details"></div>
+            </div>
+
+            <button id="restart-btn" class="btn btn-outline-primary">Take the Test Again</button>
+          </div>
+
+        </div>
+        <hr>
+      </div>
+      <!-- Content List -->
+      <div class="row no-gutters charadex-shop-list softload m-n2"></div>
+    </div>
+  </div>
+  <div class="load-html" id="footer" data-source="../includes/footer.html"></div>
+
+  <!-- Floating Scroll to Top Button -->
+   <button id="scroll-to-top" class="btn btn-primary" title="Scroll to top">
+    ↑
+  </button>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+  <script src="../styles/js/pages/base.js" type="module"></script>
+
+  <script>
+    // Personality Test Configuration
+    const elements = ['fire', 'earth', 'water', 'air', 'light', 'darkness'];
+
+    // Point multipliers based on question number
+    // Questions 4, 5, 7, 11, 15, 16: +2 points
+    // Questions 2, 6, 9, 13: +1.5 points
+    // Questions 1, 3, 8, 10, 12, 14: +1 point
+    const questionWeights = {
+      1: 1, 2: 1.5, 3: 1, 4: 2, 5: 2, 6: 1.5, 7: 2, 8: 1,
+      9: 1.5, 10: 1, 11: 2, 12: 1, 13: 1.5, 14: 1, 15: 2, 16: 2
+    };
+
+    // Tiebreaker question number
+    const tiebreakerQuestion = 15;
+
+    // Questions data - placeholder text for you to edit
+    // Each question has 6 options, one for each element in order: fire, earth, water, air, light, darkness
+const questions = [
+  {
+    id: 1,
+    text: "If you’re taking a group photo, where do you usually stand?",
+    options: [
+      { text: "Anywhere is fine, as long as my face is clearly visible.", element: "fire" },
+      { text: "Off to the side, right at the edge. Sometimes facing away or sideways, like I accidentally slipped out of frame.", element: "darkness" },
+      { text: "In the very back, or behind something. It feels safer that way.", element: "earth" },
+      { text: "Anywhere, I don’t really care. And somehow I always close my eyes right when the photo is taken.", element: "water" },
+      { text: "Anywhere is fine, as long as there are lots of people. The more crowded, the more fun.", element: "light" },
+      { text: "Right in the center. Otherwise, the photo just does not feel balanced!", element: "air" }
+    ]
+  },
+  {
+    id: 2,
+    text: "If you see two Puffs arguing and it looks like they might start fighting, what do you do?",
+    options: [
+      { text: "Rush in immediately and say it straight, “Stop it, you’ll get hurt,” then try to pull the two of them apart.", element: "fire" },
+      { text: "Stand there quietly, tail swaying a little, thinking to yourself… if they actually fight, who would win?", element: "darkness" },
+      { text: "Ask both of them to stop and listen to each side properly before making a fair judgment.", element: "earth" },
+      { text: "Say something calmly that cuts right to the truth, leaving neither side able to argue back.", element: "water" },
+      { text: "Drop one deadpan joke, and somehow the tension fades in a very confusing way.", element: "light" },
+      { text: "Loudly cheer for the side you like, like you are watching a competition.", element: "air" }
+    ]
+  },
+  {
+    id: 3,
+    text: "If you receive a gift but have no idea what’s inside, what do you do?",
+    options: [
+      { text: "Open it right away. If I want to know, I want to know it now!", element: "fire" },
+      { text: "“A gift is at its most perfect while it’s still in the box.”", element: "darkness" },
+      { text: "Gently shake it, listen for sounds, watch everyone’s reactions, then open it carefully so the wrapping still looks nice.", element: "earth" },
+      { text: "Sit there happily staring at the box, quietly guessing what might be inside.", element: "water" },
+      { text: "Let’s just set it aside for now… and then completely forget about it.", element: "light" },
+      { text: "Open it quickly, lift the gift over my head, and proudly announce to everyone what I got.", element: "air" }
+    ]
+  },
+  {
+    id: 4,
+    text: "What is the thing that makes you feel the saddest?",
+    options: [
+      { text: "The feeling of being powerless, of losing.", element: "fire" },
+      { text: "Being betrayed by someone I trusted.", element: "darkness" },
+      { text: "When something I truly worked hard on does not turn out the way I hoped.", element: "earth" },
+      { text: "Feeling like no one truly understands what I keep inside my heart.", element: "water" },
+      { text: "Not being able to protect my family.", element: "light" },
+      { text: "Parting without ever getting the chance to say goodbye.", element: "air" }
+    ]
+  },
+  {
+    id: 5,
+    text: "What makes you the happiest?",
+    options: [
+      { text: "Giving it my all and pushing past my own limits.", element: "fire" },
+      { text: "Discovering the secrets of the world, or a kind of magic that only I truly understand.", element: "darkness" },
+      { text: "Seeing everything neat and in order, with the final result turning out perfectly.", element: "earth" },
+      { text: "Finding something so fun that I completely lose track of time.", element: "water" },
+      { text: "Being surrounded by the people I love, knowing that everyone is safe.", element: "light" },
+      { text: "An all out party filled with laughter.", element: "air" }
+    ]
+  },
+  {
+    id: 6,
+    text: "If a Puff snatches the food you really like, what do you do?",
+    options: [
+      { text: "Snatch it back immediately and say, “That’s mine. Give it back right now.”", element: "fire" },
+      { text: "Say nothing and smile, but already planning my revenge.", element: "darkness" },
+      { text: "Let out a long sigh, mutter about how rude they are, and keep complaining until they give it back on their own.", element: "earth" },
+      { text: "Quietly stare at the missing food. Feel a little sad, but let it go.", element: "water" },
+      { text: "Let out a soft laugh and say, “Put it down. I will pretend nothing happened.”", element: "light" },
+      { text: "Start yelling loudly right away, “I’m going to end you right here and now!!”", element: "air" }
+    ]
+  },
+  {
+    id: 7,
+    text: "If you see your Puff friend secretly stealing Seeker snacks, what do you do?",
+    options: [
+      { text: "Rush in and stop them right away.", element: "fire" },
+      { text: "“Heh, you are still an amateur! Share half with me and I will not tell anyone.”", element: "darkness" },
+      { text: "Go talk to them calmly, explain things step by step.", element: "earth" },
+      { text: "Say something short and quiet. Not stopping them, but not helping either.", element: "water" },
+      { text: "“Alright. I’ll say I didn’t see anything, but please don’t do it again.”", element: "light" },
+      { text: "“Seriously, what are you thinking doing this? Come on, I will help.”", element: "air" }
+    ]
+  },
+  {
+    id: 8,
+    text: "If you had to choose one novel to read, which genre do you like the most?",
+    options: [
+      { text: "Adventure or action novels.", element: "fire" },
+      { text: "Plot twist and mystery novels.", element: "darkness" },
+      { text: "Detective novels driven by logic and reasoning.", element: "earth" },
+      { text: "Philosophical novels with deep themes.", element: "water" },
+      { text: "Warm, comforting stories that leave your heart full.", element: "light" },
+      { text: "Tear jerking drama or romantic novels.", element: "air" }
+    ]
+  },
+  {
+    id: 9,
+    text: "If you accidentally do something embarrassing in front of a group of Puffs, what do you do?",
+    options: [
+      { text: "Laugh it off and stand tall.", element: "fire" },
+      { text: "Do not seem to care, but secretly think about it all day.", element: "darkness" },
+      { text: "Play it off as smoothly as possible.", element: "earth" },
+      { text: "Keep talking to cover the awkwardness.", element: "water" },
+      { text: "Act like nothing happened, then quickly change the topic.", element: "light" },
+      { text: "Start yelling loudly right away to cover the embarrassment.", element: "air" }
+    ]
+  },
+  {
+    id: 10,
+    text: "Where is your favorite place to relax and unwind?",
+    options: [
+      { text: "An open, wide space.", element: "fire" },
+      { text: "A hidden cave, quiet and peaceful.", element: "darkness" },
+      { text: "A silent library or ancient place.", element: "earth" },
+      { text: "Nature, water, wind, anywhere to let thoughts wander.", element: "water" },
+      { text: "My own home, warm and safe.", element: "light" },
+      { text: "The heart of the city, lively and loud.", element: "air" }
+    ]
+  },
+  {
+    id: 11,
+    text: "What kind of weapon do you like the most?",
+    options: [
+      { text: "Direct, straightforward weapons.", element: "fire" },
+      { text: "Stealthy and agile weapons.", element: "darkness" },
+      { text: "Flexible weapons that adapt.", element: "earth" },
+      { text: "Magical or unusual weapons.", element: "water" },
+      { text: "Weapons meant to protect others.", element: "light" },
+      { text: "Long range weapons.", element: "air" }
+    ]
+  },
+  {
+    id: 12,
+    text: "If there are many dishes you have never tried before, how do you choose?",
+    options: [
+      { text: "Pick the dish that looks the most appetizing.", element: "fire" },
+      { text: "Pick the strangest looking dish.", element: "darkness" },
+      { text: "Pick the safest looking dish.", element: "earth" },
+      { text: "Pick the dish that gives you a certain feeling.", element: "water" },
+      { text: "Pick the same dish as everyone else.", element: "light" },
+      { text: "Pick the most eye catching dish.", element: "air" }
+    ]
+  },
+  {
+    id: 13,
+    text: "If you have to go on a mission tomorrow, how do you prepare tonight?",
+    options: [
+      { text: "Do a quick check, eat, and rest.", element: "fire" },
+      { text: "Sit quietly and think through a plan.", element: "darkness" },
+      { text: "Carefully read every detail and double check.", element: "earth" },
+      { text: "Space out, then pack at the last moment.", element: "water" },
+      { text: "Talk with friends and encourage each other.", element: "light" },
+      { text: "Have trouble sleeping, excited and restless.", element: "air" }
+    ]
+  },
+  {
+    id: 14,
+    text: "What is your room like?",
+    options: [
+      { text: "Things are scattered, but I know where everything is.", element: "fire" },
+      { text: "A mysterious room, sometimes spotless, sometimes messy.", element: "darkness" },
+      { text: "Everything has its proper place.", element: "earth" },
+      { text: "A personal domain, shut off from the outside world.", element: "water" },
+      { text: "A room filled with a pleasant scent and collections.", element: "light" },
+      { text: "A room full of stuff, colors, and decorations.", element: "air" }
+    ]
+  },
+  {
+    id: 15,
+    text: "When death looms before you, what does your body do first?",
+    options: [
+      { text: "Charge headfirst into a direct clash.", element: "fire" },
+      { text: "Twist and evade with fluid movement.", element: "darkness" },
+      { text: "Raise your arms to block and assess.", element: "earth" },
+      { text: "Stand firm, regain composure, act calmly.", element: "water" },
+      { text: "Grab something nearby to protect others.", element: "light" },
+      { text: "Shout loudly to intimidate, then counterattack.", element: "air" }
+    ]
+  },
+  {
+    id: 16,
+    text: "What do you think you are?",
+    options: [
+      { text: "A descendant of legendary dragons, obviously!", element: "fire" },
+      { text: "Well then, who do you think I am?", element: "darkness" },
+      { text: "One who holds onto their pride.", element: "earth" },
+      { text: "I am just… me! That’s it!", element: "water" },
+      { text: "Huh…? A Puffling, of course.", element: "light" },
+      { text: "Just a normal, cute little fluff ball.", element: "air" }
+    ]
+  }
+];
+
+    // Element descriptions - placeholder text
+const elementDescriptions = {
+  fire: `
+    <strong>🔥 Fire Element Puff</strong><br>
+    Your Puff is a Fire element.<br>
+    You are a straightforward person who does not like going in circles.<br>
+    What you think is what you say.<br>
+    What you feel is what you show.<br><br>
+
+    Weak to compliments or sweet-talk.<br>
+    Among all the elements, you are the easiest to read.<br>
+    You carry an energy ride-or-die kind of energy.<br>
+    If it is time to charge forward, you charge.<br>
+    If it is time to protect someone, you stand at the front.<br>
+    You are not good at lying, and you do not want to waste time doing it.<br>
+    To you, the truth is simply the fastest path.<br><br>
+
+    Deep down, you do not want others to see you as weak.<br>
+    Even if you look strong and confident, there are things you choose to carry on your own.<br>
+    Not because you do not trust others, but because you do not want anyone to worry.<br><br>
+
+    A Fire element Puff may get hurt easily, but you get back up just as fast.<br>
+    And when you choose to stand by someone, you stay with them until the very end.<br><br>
+
+    <strong>Magic Type:</strong><br>
+    Direct Power and Amplification<br>
+    Power must be visible. High risk, high impact. Win through raw strength.<br>
+    <ul>
+      <li>Buff and enhancement magic</li>
+      <li>High explosion and destruction spells</li>
+      <li>Large scale magic with heavy resource cost</li>
+      <li>Offensive spells that grow stronger the more they are used</li>
+    </ul>
+
+    <strong>Examples</strong>
+    <ul>
+      <li>Enhance Strength / Overdrive</li>
+      <li>Meteor / Explosion / Burst</li>
+    </ul>
+
+    <strong>Fire Type Puff</strong>
+    <ul>
+      <li>Peridot</li>
+    </ul>
+  `,
+
+  darkness: `
+    <strong>🌑 Dark Element Puff</strong><br>
+    Your Puff is a Dark element.<br>
+    You are someone who does not want to be easily understood by others. You have many layers, many sides, and you do not believe everyone deserves to see all of it.<br><br>
+
+    You are clever and quick-witted.<br>
+    You read the atmosphere well.<br>
+    You know when to speak, when to step back, and when to keep certain things to yourself.<br>
+    You know how to survive.<br>
+    You adapt quickly and handle problems on the spot.<br><br>
+
+    At times, you may seem selfish, but to you, this is simply protecting your own space.<br>
+    A Dark element Puff does not like standing in the spotlight. Instead, you are someone who always knows where the escape route is,<br>
+    And somehow, you always make it back safely.<br><br>
+
+    <strong>Magic Type:</strong><br>
+    Mind Control and Battlefield Manipulation<br>
+    Win without the opponent realizing it. Raw power is unnecessary if the enemy collapses on their own.<br>
+    <ul>
+      <li>Illusions and hallucinations</li>
+      <li>Mind reading and information concealment</li>
+      <li>Poison, stun, fear effects</li>
+      <li>All forms of debuffs</li>
+    </ul>
+
+    <strong>Examples</strong>
+    <ul>
+      <li>Mind Read / Confuse</li>
+      <li>Poison / Paralysis</li>
+      <li>Curse / Weakness</li>
+    </ul>
+
+    <strong>Dark Type Puff</strong>
+    <ul>
+      <li>Momo</li>
+    </ul>
+  `,
+
+  earth: `
+    <strong>🪨 Earth Element Puff</strong><br>
+    Your Puff is an Earth element.<br>
+    You are steady and dependable.<br>
+    Not flashy.<br>
+    Not rushed.<br>
+    But firmly grounded where you stand.<br><br>
+
+    You think in systems and rely on reason more than emotion.<br>
+    You prefer things you can touch and trust, and you are not fond of uncertainty.<br><br>
+
+    You may seem ordinary, not particularly eye catching, but without you, things slowly begin to fall out of place.<br>
+    You quietly carry responsibility on your shoulders, and you hold yourself to higher standards than most people ever notice.<br><br>
+
+    An Earth element Puff may not be in the spotlight, but is someone everyone can always rely on.<br><br>
+
+    <strong>Magic Type:</strong><br>
+    Structure and Stability<br>
+    Build first, then control. Not flashy, but nothing passes through easily.<br>
+    <ul>
+      <li>Creation magic such as walls and structures</li>
+      <li>Physical defense magic</li>
+      <li>Summons with physical concepts</li>
+      <li>Area control magic</li>
+    </ul>
+
+    <strong>Examples</strong>
+    <ul>
+      <li>Stone Wall / Fortress</li>
+      <li>Golem / Guardian</li>
+      <li>Physical traps</li>
+    </ul>
+
+    <strong>Earth Type Puff</strong>
+    <ul>
+      <li>Leo</li>
+      <li>Queen Puff</li>
+    </ul>
+  `,
+
+  water: `
+    <strong>💧 Water Element Puff</strong><br>
+    Your Puff is a Water element.<br>
+    You are mysterious and hard to read.<br>
+    Not because you try to hide yourself, but because expressing your feelings directly does not come easily to you.<br><br>
+
+    You cherish solitude and enjoy having space to be with yourself.<br>
+    You may have only a few friends, but when you let someone in, the bond is deep and lasting.<br><br>
+
+    You have a deep inner world,<br>
+    filled with ideals, thoughts, and perspectives<br>
+    that do not need to be fully understood by others.<br><br>
+
+    A Water element Puff may seem quiet,<br>
+    but inside, you are full of meaning.<br>
+    And when you choose to move,<br>
+    It will always be at your own pace.<br><br>
+
+    <strong>Magic Type:</strong><br>
+    Conditional and System-Bending Magic<br>
+    Not strong directly, but breaks the rules. The more you understand it, the more dangerous it becomes.<br>
+    <ul>
+      <li>Absorption and reflection</li>
+      <li>Invisibility and evasion</li>
+      <li>Time based magic</li>
+      <li>Spells with complex conditions</li>
+    </ul>
+
+    <strong>Examples</strong>
+    <ul>
+      <li>Reflect / Absorb</li>
+      <li>Time Slow / Rewind</li>
+      <li>Invisibility / Phase Shift</li>
+      <li>Skills that become powerful only when conditions are met</li>
+    </ul>
+
+    <strong>Water Type Puff</strong>
+    <ul>
+      <li>Sugar</li>
+    </ul>
+  `,
+
+  light: `
+    <strong>☀️ Light Element Puff</strong><br>
+    Your Puff is a Light element.<br>
+    You are someone who values the people around you.<br>
+    Honest, sincere, and standing firmly by your own sense of honor.<br><br>
+
+    You get along with others easily<br>
+    and tend to have many friends.<br>
+    You may not have one closest person,<br>
+    But you never leave anyone behind.<br><br>
+
+    You like to keep situations under control.<br>
+    You dislike chaos and uncertainty,<br>
+    and without realizing it, you often become someone others rely on.<br><br>
+
+    A Light element Puff may not be the brightest light in the room, but you are a light that is always there, making others feel safe.<br>
+    You may seem kind like this, but if anyone breaks the rules or disturbs the peace, you’ll instantly turn into something truly terrifying. So be careful.<br><br>
+
+    <strong>Magic Type:</strong><br>
+    Support and Protection<br>
+    You do not need to win yourself. You just need to make sure no one loses.<br>
+    <ul>
+      <li>Healing and regeneration</li>
+      <li>Cleansing debuffs</li>
+      <li>Holy and anti-dark magic</li>
+      <li>Anti-magic barriers</li>
+      <li>Defensive warp and teleportation</li>
+    </ul>
+
+    <strong>Examples</strong>
+    <ul>
+      <li>Heal / Revive</li>
+      <li>Purify</li>
+      <li>Magic Barrier</li>
+      <li>Emergency Warp</li>
+    </ul>
+
+    <strong>Light Type Puff</strong>
+    <ul>
+      <li>Pebble</li>
+    </ul>
+  `,
+
+  air: `
+    <strong>️🌪️ Wind Element Puff</strong><br>
+    Your Puff is a Wind element.<br>
+    You are someone driven by emotion and quick to feel.<br><br>
+
+    You laugh loudly.<br>
+    You cry sincerely.<br>
+    You get angry easily, but you calm down just as fast.<br><br>
+
+    You want to stand out.<br>
+    You want to be seen.<br>
+    You want the world to respond to you.<br><br>
+
+    Even if you sometimes put on a front or make a scene to cover things up, you are deeply genuine and highly sensitive.<br>
+    You love fun, laughter, and moments where you get to live life to the fullest.<br><br>
+
+    A Wind element Puff keeps the world from standing still. And if you were not there,<br>
+    The atmosphere would be much quieter and far lonelier.<br><br>
+
+    <strong>Magic Type:</strong><br>
+    Speed and Hit-and-Run Combat<br>
+    Strike first, then disappear. If you get countered, you made a mistake.<br>
+    <ul>
+      <li>Speed and evasion boosts</li>
+      <li>Ambush and strike magic</li>
+      <li>Invisible blades and projectiles</li>
+      <li>Chain and combo skills</li>
+    </ul>
+
+    <strong>Examples</strong>
+    <ul>
+      <li>Speed Up / Dash</li>
+      <li>Wind Blade / Invisible Slash</li>
+      <li>Multi-hit attacks</li>
+      <li>Sound wave</li>
+    </ul>
+
+    <strong>Wind Type Puff</strong>
+    <ul>
+      <li>King Puff</li>
+      <li>Snow</li>
+    </ul>
+  `
+};
+
+    // State
+    let currentQuestion = 0;
+    let answers = {};
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      generateQuestions();
+      setupEventListeners();
+    });
+
+    function generateQuestions() {
+      const container = document.getElementById('questions-container');
+
+      questions.forEach((q, index) => {
+        const questionCard = document.createElement('div');
+        questionCard.className = `question-card ${index === 0 ? 'active' : ''}`;
+        questionCard.id = `question-${index}`;
+
+        let optionsHTML = '';
+        q.options.forEach((opt, optIndex) => {
+          optionsHTML += `
+            <button class="option-btn" data-question="${index}" data-element="${opt.element}" data-option="${optIndex}">
+              ${opt.text}
+            </button>
+          `;
+        });
+
+        questionCard.innerHTML = `
+          <div class="question-number">Question ${q.id} of ${questions.length}</div>
+          <div class="question-text">${q.text}</div>
+          <div class="options-container">
+            ${optionsHTML}
+          </div>
+        `;
+
+        container.appendChild(questionCard);
+      });
+    }
+
+    function setupEventListeners() {
+      // Start button
+      document.getElementById('start-btn').addEventListener('click', startQuiz);
+
+      // Option buttons
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', selectOption);
+      });
+
+      // Previous button
+      document.getElementById('prev-btn').addEventListener('click', prevQuestion);
+
+      // Restart button
+      document.getElementById('restart-btn').addEventListener('click', restartQuiz);
+    }
+
+    function startQuiz() {
+      document.getElementById('intro-section').style.display = 'none';
+      document.getElementById('quiz-container').style.display = 'block';
+      updateProgressBar();
+    }
+
+    function selectOption(e) {
+      const btn = e.target;
+      const questionIndex = parseInt(btn.dataset.question);
+      const element = btn.dataset.element;
+
+      // Remove selected class from all options in this question
+      document.querySelectorAll(`#question-${questionIndex} .option-btn`).forEach(b => {
+        b.classList.remove('selected');
+      });
+
+      // Add selected class to clicked option
+      btn.classList.add('selected');
+
+      // Store the answer
+      answers[questionIndex] = element;
+
+      // Auto-advance to next question after a brief delay for visual feedback
+      setTimeout(() => {
+        if (currentQuestion < questions.length - 1) {
+          showQuestion(currentQuestion + 1);
+        } else {
+          showResults();
+        }
+      }, 300);
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        showQuestion(currentQuestion - 1);
+      }
+    }
+
+    function showQuestion(index) {
+      document.getElementById(`question-${currentQuestion}`).classList.remove('active');
+      document.getElementById(`question-${index}`).classList.add('active');
+      currentQuestion = index;
+
+      // Update navigation buttons
+      document.getElementById('prev-btn').disabled = currentQuestion === 0;
+
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const progress = ((currentQuestion + 1) / questions.length) * 100;
+      const progressBar = document.querySelector('.progress-bar');
+      progressBar.style.width = `${progress}%`;
+      progressBar.setAttribute('aria-valuenow', progress);
+    }
+
+    function calculateResults() {
+      // Initialize scores for each element
+      const scores = {
+        fire: 0,
+        earth: 0,
+        water: 0,
+        air: 0,
+        light: 0,
+        darkness: 0
+      };
+
+      // Calculate weighted scores
+      for (let questionIndex in answers) {
+        const element = answers[questionIndex];
+        const questionId = questions[questionIndex].id;
+        const weight = questionWeights[questionId];
+        scores[element] += weight;
+      }
+
+      return scores;
+    }
+
+    function determineWinner(scores) {
+      // Find the maximum score
+      const maxScore = Math.max(...Object.values(scores));
+
+      // Find all elements with the maximum score
+      const topElements = Object.keys(scores).filter(el => scores[el] === maxScore);
+
+      // If there's only one winner, return it
+      if (topElements.length === 1) {
+        return topElements[0];
+      }
+
+      // Tiebreaker: use the answer from question 15
+      // Find the index of question 15 in our questions array
+      const tiebreakerIndex = questions.findIndex(q => q.id === tiebreakerQuestion);
+      if (tiebreakerIndex !== -1 && answers[tiebreakerIndex] !== undefined) {
+        const tiebreakerElement = answers[tiebreakerIndex];
+        // If the tiebreaker element is among the tied elements, use it
+        if (topElements.includes(tiebreakerElement)) {
+          return tiebreakerElement;
+        }
+      }
+
+      // If tiebreaker doesn't resolve it, return the first one alphabetically
+      return topElements.sort()[0];
+    }
+
+    function showResults() {
+      document.getElementById('quiz-container').style.display = 'none';
+      document.getElementById('result-container').classList.add('active');
+
+      const scores = calculateResults();
+      const winner = determineWinner(scores);
+      const maxPossibleScore = Object.values(questionWeights).reduce((a, b) => a + b, 0);
+
+      // Display the winning element
+      const resultElement = document.getElementById('result-element');
+      resultElement.textContent = winner.charAt(0).toUpperCase() + winner.slice(1);
+      resultElement.className = `element-result element-${winner}`;
+
+      // Add result card styling
+      const resultCard = document.getElementById('result-card');
+      resultCard.className = `result-card ${winner}`;
+
+      // Display description
+      document.getElementById('result-description').innerHTML = elementDescriptions[winner];
+
+      // Display score breakdown with visual bars
+      const scoreDetails = document.getElementById('score-details');
+      scoreDetails.innerHTML = '';
+
+      // Sort scores from highest to lowest
+      const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+      sortedScores.forEach(([element, score]) => {
+        const percentage = maxPossibleScore > 0 ? (score / maxPossibleScore) * 100 : 0;
+        const row = document.createElement('div');
+        row.className = 'score-row';
+        row.innerHTML = `
+          <span class="element-${element}">${element.charAt(0).toUpperCase() + element.slice(1)}</span>
+          <div class="score-bar-container">
+            <div class="score-bar ${element}" style="width: ${percentage}%"></div>
+          </div>
+          <span>${percentage.toFixed(1)}%</span>
+        `;
+        scoreDetails.appendChild(row);
+      });
+    }
+
+    function restartQuiz() {
+      // Reset state
+      currentQuestion = 0;
+      answers = {};
+
+      // Reset UI
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+
+      document.querySelectorAll('.question-card').forEach((card, index) => {
+        card.classList.toggle('active', index === 0);
+      });
+
+      document.getElementById('result-container').classList.remove('active');
+      document.getElementById('intro-section').style.display = 'block';
+      document.getElementById('quiz-container').style.display = 'none';
+
+      document.getElementById('prev-btn').disabled = true;
+
+      updateProgressBar();
+    }
+  </script>
+
+</body>
+</html>
