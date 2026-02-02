@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="image/png" href="../assets/favicon.png" />
+  <title>Pufflings - Personality Test</title>
+  <meta name="title" content="Pufflings - Personality Test" />
+  <meta name="type" content="website" />
+  <meta name="url" content="https://pufflings.github.io/Masterlist/" />
+  <meta name="image" content="../assets/meta.png" />
+  <meta name="description" content="Welcome to the Puffling ARPG! Pufflings are a mysterious, fluffy creature, believed to be descendants of legendary dragons.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex.css">
+
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex-story.css">
+  <link rel="stylesheet" type="text/css" href="../styles/css/charadex-prompts.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400|Comfortaa:500" rel="stylesheet">
+
+  <style>
+    .quiz-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .question-card {
+      display: none;
+    }
+
+    .question-card.active {
+      display: block;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 10px;
+      padding: 15px 20px;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .option-btn:hover {
+      border-color: #6c757d;
+      background: #f8f9fa;
+    }
+
+    .option-btn.selected {
+      border-color: #007bff;
+      background: #e7f1ff;
+    }
+
+    .progress-bar-container {
+      margin-bottom: 20px;
+    }
+
+    .question-number {
+      font-size: 0.9em;
+      color: #6c757d;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 1.2em;
+      font-weight: 500;
+      margin-bottom: 25px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .result-container {
+      display: none;
+      text-align: center;
+    }
+
+    .result-container.active {
+      display: block;
+    }
+
+    .element-result {
+      font-size: 2em;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .element-fire { color: #dc3545; }
+    .element-earth { color: #795548; }
+    .element-water { color: #2196F3; }
+    .element-air { color: #90CAF9; }
+    .element-light { color: #FFC107; }
+    .element-darkness { color: #673AB7; }
+
+    .score-breakdown {
+      text-align: left;
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .score-row:last-child {
+      border-bottom: none;
+    }
+
+    .restart-btn {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body id="charadex-body">
+  <div class="load-html" id="header" data-source="../includes/header.html"></div>
+  <div class="container" id="main-container">
+    <div id="charadex-gallery">
+      <!-- Top Card Container -->
+      <div class="card p-md-5 p-4 mb-4">
+        <!-- Title -->
+        <h3 class="mb-0"><a href="personalityTest.html">Elemental Personality Test</a></h3>
+        <h6><i>Discover your elemental affinity</i></h6>
+        <hr>
+        <div class="text-justify my-4">
+
+          <!-- Introduction -->
+          <div id="intro-section" class="text-center">
+            <p>Placeholder introduction text. Explain what this personality test is about and what the user will discover.</p>
+            <p>There are 16 questions. Answer honestly to find out which element you are most aligned with!</p>
+            <br>
+            <button id="start-btn" class="btn btn-primary btn-lg">Begin the Test</button>
+          </div>
+
+          <!-- Quiz Container -->
+          <div id="quiz-container" class="quiz-container" style="display: none;">
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+
+            <!-- Questions will be generated here -->
+            <div id="questions-container"></div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+              <button id="prev-btn" class="btn btn-outline-secondary" disabled>Previous</button>
+              <button id="next-btn" class="btn btn-primary" disabled>Next</button>
+            </div>
+          </div>
+
+          <!-- Results Container -->
+          <div id="result-container" class="result-container">
+            <h4>Your Elemental Affinity</h4>
+            <div id="result-element" class="element-result"></div>
+            <p id="result-description"></p>
+
+            <div class="score-breakdown">
+              <h6>Score Breakdown</h6>
+              <div id="score-details"></div>
+            </div>
+
+            <button id="restart-btn" class="btn btn-outline-primary restart-btn">Take the Test Again</button>
+          </div>
+
+        </div>
+        <hr>
+      </div>
+      <!-- Content List -->
+      <div class="row no-gutters charadex-shop-list softload m-n2"></div>
+    </div>
+  </div>
+  <div class="load-html" id="footer" data-source="../includes/footer.html"></div>
+
+  <!-- Floating Scroll to Top Button -->
+   <button id="scroll-to-top" class="btn btn-primary" title="Scroll to top">
+    ↑
+  </button>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+  <script src="../styles/js/pages/base.js" type="module"></script>
+
+  <script>
+    // Personality Test Configuration
+    const elements = ['fire', 'earth', 'water', 'air', 'light', 'darkness'];
+
+    // Point multipliers based on question number
+    // Questions 4, 5, 7, 11, 15, 16: +2 points
+    // Questions 2, 6, 9, 13: +1.5 points
+    // Questions 1, 3, 8, 10, 12, 14: +1 point
+    const questionWeights = {
+      1: 1, 2: 1.5, 3: 1, 4: 2, 5: 2, 6: 1.5, 7: 2, 8: 1,
+      9: 1.5, 10: 1, 11: 2, 12: 1, 13: 1.5, 14: 1, 15: 2, 16: 2
+    };
+
+    // Tiebreaker question number
+    const tiebreakerQuestion = 15;
+
+    // Questions data - placeholder text for you to edit
+    // Each question has 6 options, one for each element in order: fire, earth, water, air, light, darkness
+    const questions = [
+      {
+        id: 1,
+        text: "Placeholder question 1?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 2,
+        text: "Placeholder question 2?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 3,
+        text: "Placeholder question 3?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 4,
+        text: "Placeholder question 4?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 5,
+        text: "Placeholder question 5?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 6,
+        text: "Placeholder question 6?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 7,
+        text: "Placeholder question 7?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 8,
+        text: "Placeholder question 8?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 9,
+        text: "Placeholder question 9?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 10,
+        text: "Placeholder question 10?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 11,
+        text: "Placeholder question 11?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 12,
+        text: "Placeholder question 12?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 13,
+        text: "Placeholder question 13?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 14,
+        text: "Placeholder question 14?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 15,
+        text: "Placeholder question 15 (TIEBREAKER)?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      },
+      {
+        id: 16,
+        text: "Placeholder question 16?",
+        options: [
+          { text: "Option A (Fire answer)", element: "fire" },
+          { text: "Option B (Earth answer)", element: "earth" },
+          { text: "Option C (Water answer)", element: "water" },
+          { text: "Option D (Air answer)", element: "air" },
+          { text: "Option E (Light answer)", element: "light" },
+          { text: "Option F (Darkness answer)", element: "darkness" }
+        ]
+      }
+    ];
+
+    // Element descriptions - placeholder text
+    const elementDescriptions = {
+      fire: "Placeholder description for Fire element. You are passionate, bold, and driven!",
+      earth: "Placeholder description for Earth element. You are grounded, reliable, and steadfast!",
+      water: "Placeholder description for Water element. You are adaptable, intuitive, and calm!",
+      air: "Placeholder description for Air element. You are free-spirited, curious, and intellectual!",
+      light: "Placeholder description for Light element. You are optimistic, pure-hearted, and inspiring!",
+      darkness: "Placeholder description for Darkness element. You are mysterious, deep, and introspective!"
+    };
+
+    // State
+    let currentQuestion = 0;
+    let answers = {};
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      generateQuestions();
+      setupEventListeners();
+    });
+
+    function generateQuestions() {
+      const container = document.getElementById('questions-container');
+
+      questions.forEach((q, index) => {
+        const questionCard = document.createElement('div');
+        questionCard.className = `question-card ${index === 0 ? 'active' : ''}`;
+        questionCard.id = `question-${index}`;
+
+        let optionsHTML = '';
+        q.options.forEach((opt, optIndex) => {
+          optionsHTML += `
+            <button class="option-btn" data-question="${index}" data-element="${opt.element}" data-option="${optIndex}">
+              ${opt.text}
+            </button>
+          `;
+        });
+
+        questionCard.innerHTML = `
+          <div class="question-number">Question ${q.id} of ${questions.length}</div>
+          <div class="question-text">${q.text}</div>
+          <div class="options-container">
+            ${optionsHTML}
+          </div>
+        `;
+
+        container.appendChild(questionCard);
+      });
+    }
+
+    function setupEventListeners() {
+      // Start button
+      document.getElementById('start-btn').addEventListener('click', startQuiz);
+
+      // Option buttons
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', selectOption);
+      });
+
+      // Navigation buttons
+      document.getElementById('prev-btn').addEventListener('click', prevQuestion);
+      document.getElementById('next-btn').addEventListener('click', nextQuestion);
+
+      // Restart button
+      document.getElementById('restart-btn').addEventListener('click', restartQuiz);
+    }
+
+    function startQuiz() {
+      document.getElementById('intro-section').style.display = 'none';
+      document.getElementById('quiz-container').style.display = 'block';
+      updateProgressBar();
+    }
+
+    function selectOption(e) {
+      const btn = e.target;
+      const questionIndex = parseInt(btn.dataset.question);
+      const element = btn.dataset.element;
+
+      // Remove selected class from all options in this question
+      document.querySelectorAll(`#question-${questionIndex} .option-btn`).forEach(b => {
+        b.classList.remove('selected');
+      });
+
+      // Add selected class to clicked option
+      btn.classList.add('selected');
+
+      // Store the answer
+      answers[questionIndex] = element;
+
+      // Enable next button
+      document.getElementById('next-btn').disabled = false;
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        showQuestion(currentQuestion - 1);
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQuestion < questions.length - 1) {
+        showQuestion(currentQuestion + 1);
+      } else {
+        showResults();
+      }
+    }
+
+    function showQuestion(index) {
+      document.getElementById(`question-${currentQuestion}`).classList.remove('active');
+      document.getElementById(`question-${index}`).classList.add('active');
+      currentQuestion = index;
+
+      // Update navigation buttons
+      document.getElementById('prev-btn').disabled = currentQuestion === 0;
+      document.getElementById('next-btn').disabled = answers[currentQuestion] === undefined;
+
+      // Update next button text for last question
+      if (currentQuestion === questions.length - 1) {
+        document.getElementById('next-btn').textContent = 'See Results';
+      } else {
+        document.getElementById('next-btn').textContent = 'Next';
+      }
+
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const progress = ((currentQuestion + 1) / questions.length) * 100;
+      const progressBar = document.querySelector('.progress-bar');
+      progressBar.style.width = `${progress}%`;
+      progressBar.setAttribute('aria-valuenow', progress);
+    }
+
+    function calculateResults() {
+      // Initialize scores for each element
+      const scores = {
+        fire: 0,
+        earth: 0,
+        water: 0,
+        air: 0,
+        light: 0,
+        darkness: 0
+      };
+
+      // Calculate weighted scores
+      for (let questionIndex in answers) {
+        const element = answers[questionIndex];
+        const questionId = questions[questionIndex].id;
+        const weight = questionWeights[questionId];
+        scores[element] += weight;
+      }
+
+      return scores;
+    }
+
+    function determineWinner(scores) {
+      // Find the maximum score
+      const maxScore = Math.max(...Object.values(scores));
+
+      // Find all elements with the maximum score
+      const topElements = Object.keys(scores).filter(el => scores[el] === maxScore);
+
+      // If there's only one winner, return it
+      if (topElements.length === 1) {
+        return topElements[0];
+      }
+
+      // Tiebreaker: use the answer from question 15
+      // Find the index of question 15 in our questions array
+      const tiebreakerIndex = questions.findIndex(q => q.id === tiebreakerQuestion);
+      if (tiebreakerIndex !== -1 && answers[tiebreakerIndex] !== undefined) {
+        const tiebreakerElement = answers[tiebreakerIndex];
+        // If the tiebreaker element is among the tied elements, use it
+        if (topElements.includes(tiebreakerElement)) {
+          return tiebreakerElement;
+        }
+      }
+
+      // If tiebreaker doesn't resolve it, return the first one alphabetically
+      return topElements.sort()[0];
+    }
+
+    function showResults() {
+      document.getElementById('quiz-container').style.display = 'none';
+      document.getElementById('result-container').classList.add('active');
+
+      const scores = calculateResults();
+      const winner = determineWinner(scores);
+
+      // Display the winning element
+      const resultElement = document.getElementById('result-element');
+      resultElement.textContent = winner.charAt(0).toUpperCase() + winner.slice(1);
+      resultElement.className = `element-result element-${winner}`;
+
+      // Display description
+      document.getElementById('result-description').textContent = elementDescriptions[winner];
+
+      // Display score breakdown
+      const scoreDetails = document.getElementById('score-details');
+      scoreDetails.innerHTML = '';
+
+      // Sort scores from highest to lowest
+      const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+      sortedScores.forEach(([element, score]) => {
+        const row = document.createElement('div');
+        row.className = 'score-row';
+        row.innerHTML = `
+          <span class="element-${element}">${element.charAt(0).toUpperCase() + element.slice(1)}</span>
+          <span>${score} points</span>
+        `;
+        scoreDetails.appendChild(row);
+      });
+    }
+
+    function restartQuiz() {
+      // Reset state
+      currentQuestion = 0;
+      answers = {};
+
+      // Reset UI
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+
+      document.querySelectorAll('.question-card').forEach((card, index) => {
+        card.classList.toggle('active', index === 0);
+      });
+
+      document.getElementById('result-container').classList.remove('active');
+      document.getElementById('intro-section').style.display = 'block';
+      document.getElementById('quiz-container').style.display = 'none';
+
+      document.getElementById('prev-btn').disabled = true;
+      document.getElementById('next-btn').disabled = true;
+      document.getElementById('next-btn').textContent = 'Next';
+
+      updateProgressBar();
+    }
+  </script>
+
+</body>
+</html>
