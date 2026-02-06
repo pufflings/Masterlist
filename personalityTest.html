@@ -466,7 +466,7 @@ const questions = [
     id: 2,
     text: "If you see two Puffs arguing and it looks like they might start fighting, what do you do?",
     options: [
-      { text: "Rush in immediately and say it straight, “Stop it, you’ll get hurt,” then try to pull the two of them apart.", element: "fire" },
+      { text: "Rush in immediately and say it straight, <i>“Stop it, you’ll get hurt,”</i> then try to pull the two of them apart.", element: "fire" },
       { text: "Stand there quietly, tail swaying a little, thinking to yourself… if they actually fight, who would win?", element: "darkness" },
       { text: "Ask both of them to stop and listen to each side properly before making a fair judgment.", element: "earth" },
       { text: "Say something calmly that cuts right to the truth, leaving neither side able to argue back.", element: "water" },
@@ -479,10 +479,10 @@ const questions = [
     text: "If you receive a gift but have no idea what’s inside, what do you do?",
     options: [
       { text: "Open it right away. If I want to know, I want to know it now!", element: "fire" },
-      { text: "“A gift is at its most perfect while it’s still in the box.”", element: "darkness" },
-      { text: "Gently shake it, listen for sounds, watch everyone’s reactions, then open it carefully so the wrapping still looks nice.", element: "earth" },
+      { text: "Gently shake it, listen for sounds, watch everyone’s reactions, then open it carefully so the wrapping still looks nice.", element: "darkness" },
+      { text: "Let’s just set it aside for now… and then completely forget about it. <br>“A gift is at its most perfect while it’s still in the box.”", element: "earth" },
       { text: "Sit there happily staring at the box, quietly guessing what might be inside.", element: "water" },
-      { text: "Let’s just set it aside for now… and then completely forget about it.", element: "light" },
+      { text: "Open it, then immediately hand it to a friend.", element: "light" },
       { text: "Open it quickly, lift the gift over my head, and proudly announce to everyone what I got.", element: "air" }
     ]
   },
@@ -490,12 +490,12 @@ const questions = [
     id: 4,
     text: "What is the thing that makes you feel the saddest?",
     options: [
-      { text: "The feeling of being powerless, of losing.", element: "fire" },
-      { text: "Being betrayed by someone I trusted.", element: "darkness" },
-      { text: "When something I truly worked hard on does not turn out the way I hoped.", element: "earth" },
-      { text: "Feeling like no one truly understands what I keep inside my heart.", element: "water" },
-      { text: "Not being able to protect my family.", element: "light" },
-      { text: "Parting without ever getting the chance to say goodbye.", element: "air" }
+      { text: "The feeling of being powerless, of losing.<br><i>‘If only I were stronger…’</i>", element: "fire" },
+      { text: "Being betrayed by someone I trusted. <br><i>‘I really opened my heart, you know….’</i>", element: "darkness" },
+      { text: "When something I truly worked hard on does not turn out the way I hoped. <br><i>‘If it ends like this, what worth do I even have left?’</i>", element: "earth" },
+      { text: "Feeling like no one truly understands what I keep inside my heart. <br><i>‘Or maybe…I come from another world?’</i>", element: "water" },
+      { text: "Not being able to protect my family, I could only stand there and watch. <br><i>‘Is there really nothing I can do?’</i>", element: "light" },
+      { text: "Parting without ever getting the chance to say goodbye.<br><i>‘Hey… at least come back and listen to me first...’</i>", element: "air" }
     ]
   },
   {
@@ -503,9 +503,9 @@ const questions = [
     text: "What makes you the happiest?",
     options: [
       { text: "Giving it my all and pushing past my own limits.", element: "fire" },
-      { text: "Discovering the secrets of the world, or a kind of magic that only I truly understand.", element: "darkness" },
+      { text: "Finding something so fun that I completely lose track of time.", element: "darkness" },
       { text: "Seeing everything neat and in order, with the final result turning out perfectly.", element: "earth" },
-      { text: "Finding something so fun that I completely lose track of time.", element: "water" },
+      { text: "Discovering the secrets of the world, or a kind of magic that only I truly understand.", element: "water" },
       { text: "Being surrounded by the people I love, knowing that everyone is safe.", element: "light" },
       { text: "An all out party filled with laughter.", element: "air" }
     ]
@@ -514,132 +514,132 @@ const questions = [
     id: 6,
     text: "If a Puff snatches the food you really like, what do you do?",
     options: [
-      { text: "Snatch it back immediately and say, “That’s mine. Give it back right now.”", element: "fire" },
-      { text: "Say nothing and smile, but already planning my revenge.", element: "darkness" },
+      { text: "Snatch it back immediately and say, <br><i>“That’s mine. Give it back right now.”</i>", element: "fire" },
+      { text: "Say nothing and smile, but already planning my revenge. <br><i>‘Should I sneak in some chili or salt next time?’</i>", element: "darkness" },
       { text: "Let out a long sigh, mutter about how rude they are, and keep complaining until they give it back on their own.", element: "earth" },
-      { text: "Quietly stare at the missing food. Feel a little sad, but let it go.", element: "water" },
-      { text: "Let out a soft laugh and say, “Put it down. I will pretend nothing happened.”", element: "light" },
-      { text: "Start yelling loudly right away, “I’m going to end you right here and now!!”", element: "air" }
+      { text: "Quietly stare at the missing food. Feel a little sad, but let it go. And do not expect to ever see me eat in front of you again.", element: "water" },
+      { text: "Let out a soft laugh and say, <br><i>“Put it down. I will pretend nothing happened.”</i>", element: "light" },
+      { text: "Start yelling loudly right away, <br><i>“I’m going to end you right here and now!!”</i>", element: "air" }
     ]
   },
   {
     id: 7,
     text: "If you see your Puff friend secretly stealing Seeker snacks, what do you do?",
     options: [
-      { text: "Rush in and stop them right away.", element: "fire" },
-      { text: "“Heh, you are still an amateur! Share half with me and I will not tell anyone.”", element: "darkness" },
-      { text: "Go talk to them calmly, explain things step by step.", element: "earth" },
-      { text: "Say something short and quiet. Not stopping them, but not helping either.", element: "water" },
-      { text: "“Alright. I’ll say I didn’t see anything, but please don’t do it again.”", element: "light" },
-      { text: "“Seriously, what are you thinking doing this? Come on, I will help.”", element: "air" }
+      { text: "Rush in and stop them right away. <br><i>“Hey, stop. This is not okay,”</i> <br>and give them a light smack to snap them back to reality.", element: "fire" },
+      { text: "<i>“Heh, you are still an amateur! Share half with me and I will not tell anyone.”</i>", element: "darkness" },
+      { text: "Go talk to them calmly, explain things step by step.<br><i>“If you get caught, I'm not helping.”</i>", element: "earth" },
+      { text: "Say something short and quiet. Not stopping them, but not helping either. <br><i>‘Kind of curious what they will do next…’</i>", element: "water" },
+      { text: "<i>“Alright. I’ll say I didn’t see anything, but please don’t do it again.”</i>", element: "light" },
+      { text: "<i>“Seriously, what are you thinking doing this? Come on, I'll help.”</i>", element: "air" }
     ]
   },
   {
     id: 8,
     text: "If you had to choose one novel to read, which genre do you like the most?",
     options: [
-      { text: "Adventure or action novels.", element: "fire" },
-      { text: "Plot twist and mystery novels.", element: "darkness" },
-      { text: "Detective novels driven by logic and reasoning.", element: "earth" },
-      { text: "Philosophical novels with deep themes.", element: "water" },
-      { text: "Warm, comforting stories that leave your heart full.", element: "light" },
-      { text: "Tear jerking drama or romantic novels.", element: "air" }
+      { text: "<b>Adventure or action novels.</b><br>The main character fights with everything they have, overcoming every obstacle. Reading it makes you feel fired up!", element: "fire" },
+      { text: "<b>Plot twist and mystery novels.</b><br> where characters hide secrets. You keep guessing as you read, including horror and ghost stories.", element: "darkness" },
+      { text: "<b>Detective novels</b> driven by logic and reasoning.<br>Everything develops step by step in a structured way.", element: "earth" },
+      { text: "<b>Philosophical novels</b> with deep themes.<br>They make you think along as you read, sometimes ending openly. After finishing, you keep reflecting on it for a long time.", element: "water" },
+      { text: "<b>Historical fiction</b> based on real events.<br>", element: "light" },
+      { text: "<b>Tear jerking drama or romantic novels.</b><br>When the characters cry, you cry with them. A warm, comforting stories that leave your heart full.", element: "air" }
     ]
   },
   {
     id: 9,
     text: "If you accidentally do something embarrassing in front of a group of Puffs, what do you do?",
     options: [
-      { text: "Laugh it off and stand tall.", element: "fire" },
-      { text: "Do not seem to care, but secretly think about it all day.", element: "darkness" },
-      { text: "Play it off as smoothly as possible.", element: "earth" },
-      { text: "Keep talking to cover the awkwardness.", element: "water" },
+      { text: "Laugh it off and stand tall, saying, <br><i>“Hey, everyone makes mistakes.”</i>Like it's no big deal and then forget about it in no time.<br>", element: "fire" },
+      { text: "Play it off as smoothly as possible.<br><i>“I meant to do that, actually.”</i>", element: "darkness" },
+      { text: "Keep talking to cover the awkwardness, while completely losing your composure inside.<br>This will <i>never</i> happen again.", element: "earth" },
+      { text: "Do not seem to care, but secretly think about it all day.", element: "water" },
       { text: "Act like nothing happened, then quickly change the topic.", element: "light" },
-      { text: "Start yelling loudly right away to cover the embarrassment.", element: "air" }
+      { text: "Start yelling loudly right away to cover the embarrassment. <br><i>“What are you staring at. move along!!”</i><br>…and then secretly cry, wanting someone to comfort you.", element: "air" }
     ]
   },
   {
     id: 10,
-    text: "Where is your favorite place to relax and unwind?",
+    text: "Where is your favourite place to relax and unwind?",
     options: [
-      { text: "An open, wide space.", element: "fire" },
-      { text: "A hidden cave, quiet and peaceful.", element: "darkness" },
-      { text: "A silent library or ancient place.", element: "earth" },
-      { text: "Nature, water, wind, anywhere to let thoughts wander.", element: "water" },
-      { text: "My own home, warm and safe.", element: "light" },
-      { text: "The heart of the city, lively and loud.", element: "air" }
+      { text: "<b>An open, wide space.</b><br>Where I can move freely, run, jump, and shout without feeling self conscious.", element: "fire" },
+      { text: "<b>A hidden cave, quiet and peaceful, and still not fully explored.</b><br>", element: "darkness" },
+      { text: "<b>A silent library, a dimly lit workspace, or ancient place</b> filled with stories of the past.", element: "earth" },
+      { text: "<b>Somewhere away from the outside world.</b><br> Nature, water, wind, anywhere that you can let your thoughts wander.", element: "water" },
+      { text: "<b>My own home, warm and safe.</b><br>Or a castle or fortress that gives a strong sense of security.", element: "light" },
+      { text: "<b>The heart of the city, where there are lots of people.</b><br>Lively, loud, and always full of exciting things.", element: "air" }
     ]
   },
   {
     id: 11,
     text: "What kind of weapon do you like the most?",
     options: [
-      { text: "Direct, straightforward weapons.", element: "fire" },
-      { text: "Stealthy and agile weapons.", element: "darkness" },
-      { text: "Flexible weapons that adapt.", element: "earth" },
-      { text: "Magical or unusual weapons.", element: "water" },
-      { text: "Weapons meant to protect others.", element: "light" },
-      { text: "Long range weapons.", element: "air" }
+      { text: "<b>Direct, straightforward weapons.</b><br>Swords, hammers, shields, or even bare hands.<br>Easy to use, no complicated tricks.", element: "fire" },
+      { text: "<b>Stealthy and agile weapons with tricks up their sleeve.</b><br>Poison, hidden blades tucked away on the body. no one ever knows when they will be used.<br>Such as daggers or sickles.", element: "darkness" },
+      { text: "<b>Flexible weapons that can adapt to different situations.</b><br>Easy to counter an opponent without wasting much energy.<br>Such as staves, spears, or chain weapons.", element: "earth" },
+      { text: "<b>Magical or unusual weapons. Hard to use, but extremely powerful.</b><br> Weapons that rely more on understanding than physical strength.<br>Anyone who does not know the principles cannot use them.<br>Such as ancient tomes or an invisibility cloak.", element: "water" },
+      { text: "<b>Weapons meant to protect both yourself and others.</b><br>Such as shields, war banners, staffs, or anything that keeps everyone safe.", element: "light" },
+      { text: "<b>Long range weapons.</b>Destroy targets from a safe distance.<br>Leaving enemies with almost no chance to fight back.<br>Such as guns or throwing weapons.", element: "air" }
     ]
   },
   {
     id: 12,
-    text: "If there are many dishes you have never tried before, how do you choose?",
+    text: "If there are many dishes you have never tried before placed in front of you, what do you use to decide which dish to try?",
     options: [
-      { text: "Pick the dish that looks the most appetizing.", element: "fire" },
-      { text: "Pick the strangest looking dish.", element: "darkness" },
-      { text: "Pick the safest looking dish.", element: "earth" },
-      { text: "Pick the dish that gives you a certain feeling.", element: "water" },
-      { text: "Pick the same dish as everyone else.", element: "light" },
-      { text: "Pick the most eye catching dish.", element: "air" }
+      { text: "<b>Pick the dish that looks the most appetizing.</b><br>It smells amazing, and you just know this has to be the one.", element: "fire" },
+      { text: "<b>Pick the strangest looking dish.</b><br>An unfamiliar name, suspicious colors.<br>The more mysterious it is, the more you want to try it.<br>‘What's that green thing anyway? Looks tempting.’", element: "darkness" },
+      { text: "<b>Pick the safest looking dish.</b><br>You can roughly guess the ingredients and how it is cooked. At least it should be something you can actually eat.", element: "earth" },
+      { text: "<b>Pick the dish that gives you a certain feeling.</b><br>You cannot explain why, but it feels like this dish is calling out to you.", element: "water" },
+      { text: "<b>Pick the same dish as everyone else, Or wait for a friend to try it first.</b><br>If everyone is fine with it, I'm okay with it too.", element: "light" },
+      { text: "<b>Pick the most eye catching dish with bold, vibrant colors.</b><br>Spices that sting your nose. This one looks fun. Give me the spiciest one.", element: "air" }
     ]
   },
   {
     id: 13,
     text: "If you have to go on a mission tomorrow, how do you prepare tonight?",
     options: [
-      { text: "Do a quick check, eat, and rest.", element: "fire" },
-      { text: "Sit quietly and think through a plan.", element: "darkness" },
-      { text: "Carefully read every detail and double check.", element: "earth" },
-      { text: "Space out, then pack at the last moment.", element: "water" },
-      { text: "Talk with friends and encourage each other.", element: "light" },
-      { text: "Have trouble sleeping, excited and restless.", element: "air" }
+      { text: "Do a quick check of your gear, eat until you are full, then get plenty of rest.<br><i>“I will deal with it when tomorrow comes”</i>", element: "fire" },
+      { text: "Sit quietly and think through a plan.<br><i>“How should I surprise everyone tomorrow?“</i>", element: "darkness" },
+      { text: "Carefully read every detail of the mission.<br>Prepare everything thoroughly and double check multiple times.<br>Not a single thing can go wrong.", element: "earth" },
+      { text: "Space out and stare into the distance, letting your mind calm down.<br>Then quickly pack everything at the very last moment.", element: "water" },
+      { text: "Talk with your friends and encourage each other.<br>Make sure everyone is well-prepared.", element: "light" },
+      { text: "Have trouble sleeping, feeling excited and restless, then get up to prepare everything all over again depends on the mood.", element: "air" }
     ]
   },
   {
     id: 14,
     text: "What is your room like?",
     options: [
-      { text: "Things are scattered, but I know where everything is.", element: "fire" },
-      { text: "A mysterious room, sometimes spotless, sometimes messy.", element: "darkness" },
-      { text: "Everything has its proper place.", element: "earth" },
-      { text: "A personal domain, shut off from the outside world.", element: "water" },
-      { text: "A room filled with a pleasant scent and collections.", element: "light" },
-      { text: "A room full of stuff, colors, and decorations.", element: "air" }
+      { text: "<b>Things are scattered, but I know where everything is.</b><br>Might be a bit messy, but it is always ready to use.<br>A cozy bed, warm blankets, and a room that I can sleep soundly all night long.", element: "fire" },
+      { text: "<b>A mysterious room.</b> sometimes spotless, sometimes messy.<br>There are strange items hidden all around that make people who sees it wonder,<br><i>“What in the world is this?”</i>", element: "darkness" },
+      { text: "<b>Everything has its proper place.</b><br>Neatly organized by category, clean and orderly, easy to grab and use.<br>It feels calming, and I like bringing work into my bedroom.", element: "earth" },
+      { text: "<b>A personal domain, A space that clearly reflects who I am.</b><br>Completely shut off from the outside world", element: "water" },
+      { text: "<b>A room filled with a pleasant scent.</b><br> Collections displayed neatly. <i>Do not touch without permission.</i>", element: "light" },
+      { text: "<b>A room full of colors, and decorations.</b><br>It looks chaotic, but full of life.<br>And there is still open space to actually do things.", element: "air" }
     ]
   },
   {
     id: 15,
-    text: "When death looms before you, what does your body do first?",
+    text: "When death looms before you, an enemy rushes in, and you have only a ‘split second’ to decide. What is the very first thing your body moves to do?",
     options: [
-      { text: "Charge headfirst into a direct clash.", element: "fire" },
-      { text: "Twist and evade with fluid movement.", element: "darkness" },
-      { text: "Raise your arms to block and assess.", element: "earth" },
-      { text: "Stand firm, regain composure, act calmly.", element: "water" },
-      { text: "Grab something nearby to protect others.", element: "light" },
-      { text: "Shout loudly to intimidate, then counterattack.", element: "air" }
+      { text: "<b>Charge headfirst into a direct clash.</b><br><i>“If this is the end, then I’ll go down fighting! YAAAH!”</i><br><b>…OR</b> fail to dodge in time and take the hit full-on.", element: "fire" },
+      { text: "<b>Twist and evade with fluid movement.</b><br><i>“As if something like that could hit me! No way I’m getting hurt, I’m outta here!”</i>", element: "darkness" },
+      { text: "<b>Raise your (short?)arms to block and assessing the situation in a split second, will you Fight or retreat.</b>", element: "earth" },
+      { text: "<b>Stand firm and lock eyes with the target.</b><br>Even if you’re terrified inside, you show nothing.<br>Once you regain your composure, you deal with it calmly and carefully.", element: "water" },
+      { text: "<b>Grab something nearby to use as a shield or weapon.</b><br>Not only to protect yourself, but others as well.<br><i>“Watch out, everyone!”</i>", element: "light" },
+      { text: "<b>Shout loudly to intimidate the enemy</b><br>then counterattack with superior tactics. mock them after you win…<br><b>...OR</b> run away crying and hide in a corner.", element: "air" }
     ]
   },
   {
     id: 16,
     text: "What do you think you are?",
     options: [
-      { text: "A descendant of legendary dragons, obviously!", element: "fire" },
+      { text: "I am just… <i>me!</i> That’s it!", element: "fire" },
       { text: "Well then, who do you think I am?", element: "darkness" },
-      { text: "One who holds onto their pride.", element: "earth" },
-      { text: "I am just… me! That’s it!", element: "water" },
-      { text: "Huh…? A Puffling, of course.", element: "light" },
-      { text: "Just a normal, cute little fluff ball.", element: "air" }
+      { text: "Huh…? A Puffling, of course.", element: "earth" },
+      { text: "Just a normal, cute little fluff ball. Nothing special, really.", element: "water" },
+      { text: "One who holds onto their pride.", element: "light" },
+      { text: "A descendant of legendary dragons, obviously!", element: "air" }
     ]
   }
 ];
@@ -649,13 +649,14 @@ const elementDescriptions = {
   fire: `
     <strong>🔥 Fire Element Puff</strong><br>
     Your Puff is a Fire element.<br>
-    You are a straightforward person who does not like going in circles.<br>
+    You are a <b>straightforward person who does not like going in circles.</b><br>
     What you think is what you say.<br>
-    What you feel is what you show.<br><br>
-
+    What you feel is what you show.<br>
     Weak to compliments or sweet-talk.<br>
-    Among all the elements, you are the easiest to read.<br>
-    You carry an energy ride-or-die kind of energy.<br>
+    Among all the elements, you are the <b>easiest to read.</b><br><br>
+    
+    You carry a <b>ride-or-die</b> kind of energy.<br><br>
+    
     If it is time to charge forward, you charge.<br>
     If it is time to protect someone, you stand at the front.<br>
     You are not good at lying, and you do not want to waste time doing it.<br>
@@ -673,8 +674,8 @@ const elementDescriptions = {
     Power must be visible. High risk, high impact. Win through raw strength.<br>
     <ul>
       <li>Buff and enhancement magic</li>
-      <li>High explosion and destruction spells</li>
-      <li>Large scale magic with heavy resource cost</li>
+      <li>High explosive and destruction spells</li>
+      <li>Large-scale magic with heavy resource cost</li>
       <li>Offensive spells that grow stronger the more they are used</li>
     </ul>
 
@@ -693,9 +694,9 @@ const elementDescriptions = {
   darkness: `
     <strong>🌑 Dark Element Puff</strong><br>
     Your Puff is a Dark element.<br>
-    You are someone who does not want to be easily understood by others. You have many layers, many sides, and you do not believe everyone deserves to see all of it.<br><br>
+    <b>You are someone who does not want to be easily understood by others.</b> You have many layers, many sides, and you do not believe everyone deserves to see all of it.<br><br>
 
-    You are clever and quick-witted.<br>
+    You are <b>clever</b> and <b>quick-witted.</b><br>
     You read the atmosphere well.<br>
     You know when to speak, when to step back, and when to keep certain things to yourself.<br>
     You know how to survive.<br>
@@ -729,9 +730,9 @@ const elementDescriptions = {
   `,
 
   earth: `
-    <strong>🪨 Earth Element Puff</strong><br>
+    <strong>🌱 Earth Element Puff</strong><br>
     Your Puff is an Earth element.<br>
-    You are steady and dependable.<br>
+    You are <b>steady</b> and <b>dependable.</b><br>
     Not flashy.<br>
     Not rushed.<br>
     But firmly grounded where you stand.<br><br>
@@ -739,10 +740,10 @@ const elementDescriptions = {
     You think in systems and rely on reason more than emotion.<br>
     You prefer things you can touch and trust, and you are not fond of uncertainty.<br><br>
 
-    You may seem ordinary, not particularly eye catching, but without you, things slowly begin to fall out of place.<br>
+    You may seem ordinary, not particularly eye-catching, but without you, things slowly begin to fall out of place.<br>
     You quietly carry responsibility on your shoulders, and you hold yourself to higher standards than most people ever notice.<br><br>
 
-    An Earth element Puff may not be in the spotlight, but is someone everyone can always rely on.<br><br>
+    An Earth element Puff may not be in the spotlight, but is someone everyone can <i>always</i> rely on.<br><br>
 
     <strong>Magic Type:</strong><br>
     Structure and Stability<br>
@@ -771,7 +772,7 @@ const elementDescriptions = {
   water: `
     <strong>💧 Water Element Puff</strong><br>
     Your Puff is a Water element.<br>
-    You are mysterious and hard to read.<br>
+    You are <b>mysterious</b> and <b>hard to read.</b><br>
     Not because you try to hide yourself, but because expressing your feelings directly does not come easily to you.<br><br>
 
     You cherish solitude and enjoy having space to be with yourself.<br>
@@ -788,7 +789,7 @@ const elementDescriptions = {
 
     <strong>Magic Type:</strong><br>
     Conditional and System-Bending Magic<br>
-    Not strong directly, but breaks the rules. The more you understand it, the more dangerous it becomes.<br>
+    Not strong directly, but it breaks the principle of things. The more you understand it, the more dangerous it becomes.<br>
     <ul>
       <li>Absorption and reflection</li>
       <li>Invisibility and evasion</li>
@@ -813,8 +814,8 @@ const elementDescriptions = {
   light: `
     <strong>☀️ Light Element Puff</strong><br>
     Your Puff is a Light element.<br>
-    You are someone who values the people around you.<br>
-    Honest, sincere, and standing firmly by your own sense of honor.<br><br>
+    <b>You are someone who values the people around you.</b><br>
+    <b>Honest, sincere,</b> and standing firmly by your own sense of honour.<br><br>
 
     You get along with others easily<br>
     and tend to have many friends.<br>
@@ -825,7 +826,7 @@ const elementDescriptions = {
     You dislike chaos and uncertainty,<br>
     and without realizing it, you often become someone others rely on.<br><br>
 
-    A Light element Puff may not be the brightest light in the room, but you are a light that is always there, making others feel safe.<br>
+    A Light element Puff may not be the brightest light in the room, but you are a light that is <i>always there</i>, making others feel safe.<br>
     You may seem kind like this, but if anyone breaks the rules or disturbs the peace, you’ll instantly turn into something truly terrifying. So be careful.<br><br>
 
     <strong>Magic Type:</strong><br>
@@ -856,7 +857,7 @@ const elementDescriptions = {
   air: `
     <strong>️🌪️ Wind Element Puff</strong><br>
     Your Puff is a Wind element.<br>
-    You are someone driven by emotion and quick to feel.<br><br>
+    You are someone <b>driven by emotion</b> and <b>quick to feel.</b><br><br>
 
     You laugh loudly.<br>
     You cry sincerely.<br>
@@ -1015,7 +1016,7 @@ const elementDescriptions = {
         fire: 0,
         earth: 0,
         water: 0,
-        air: 0,
+        wind: 0,
         light: 0,
         darkness: 0
       };
