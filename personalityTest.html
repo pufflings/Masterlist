@@ -909,6 +909,15 @@ const elementDescriptions = {
       setupEventListeners();
     });
 
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
     function generateQuestions() {
       const container = document.getElementById('questions-container');
 
@@ -917,8 +926,9 @@ const elementDescriptions = {
         questionCard.className = `question-card ${index === 0 ? 'active' : ''}`;
         questionCard.id = `question-${index}`;
 
+        const shuffledOptions = shuffleArray(q.options);
         let optionsHTML = '';
-        q.options.forEach((opt, optIndex) => {
+        shuffledOptions.forEach((opt, optIndex) => {
           optionsHTML += `
             <button class="option-btn" data-question="${index}" data-element="${opt.element}" data-option="${optIndex}">
               ${opt.text}
@@ -961,7 +971,8 @@ const elementDescriptions = {
     }
 
     function selectOption(e) {
-      const btn = e.target;
+      const btn = e.target.closest('.option-btn');
+      if (!btn) return;
       const questionIndex = parseInt(btn.dataset.question);
       const element = btn.dataset.element;
 
