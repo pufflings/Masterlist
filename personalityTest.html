@@ -227,7 +227,7 @@
     .element-fire { color: #c44536; }
     .element-earth { color: #6b5344; }
     .element-water { color: #3d7ea6; }
-    .element-air { color: #7ba7bc; }
+    .element-wind { color: #7ba7bc; }
     .element-light { color: #d4a03c; }
     .element-darkness { color: #5c4a72; }
 
@@ -241,7 +241,7 @@
     .result-card.fire { background: linear-gradient(135deg, rgba(196, 69, 54, 0.1), rgba(196, 69, 54, 0.05)); border: 2px solid rgba(196, 69, 54, 0.3); }
     .result-card.earth { background: linear-gradient(135deg, rgba(107, 83, 68, 0.1), rgba(107, 83, 68, 0.05)); border: 2px solid rgba(107, 83, 68, 0.3); }
     .result-card.water { background: linear-gradient(135deg, rgba(61, 126, 166, 0.1), rgba(61, 126, 166, 0.05)); border: 2px solid rgba(61, 126, 166, 0.3); }
-    .result-card.air { background: linear-gradient(135deg, rgba(123, 167, 188, 0.1), rgba(123, 167, 188, 0.05)); border: 2px solid rgba(123, 167, 188, 0.3); }
+    .result-card.wind { background: linear-gradient(135deg, rgba(123, 167, 188, 0.1), rgba(123, 167, 188, 0.05)); border: 2px solid rgba(123, 167, 188, 0.3); }
     .result-card.light { background: linear-gradient(135deg, rgba(212, 160, 60, 0.1), rgba(212, 160, 60, 0.05)); border: 2px solid rgba(212, 160, 60, 0.3); }
     .result-card.darkness { background: linear-gradient(135deg, rgba(92, 74, 114, 0.1), rgba(92, 74, 114, 0.05)); border: 2px solid rgba(92, 74, 114, 0.3); }
 
@@ -306,7 +306,7 @@
     .score-bar.fire { background: #c44536; }
     .score-bar.earth { background: #6b5344; }
     .score-bar.water { background: #3d7ea6; }
-    .score-bar.air { background: #7ba7bc; }
+    .score-bar.wind { background: #7ba7bc; }
     .score-bar.light { background: #d4a03c; }
     .score-bar.darkness { background: #5c4a72; }
 
@@ -433,7 +433,7 @@
 
   <script>
     // Personality Test Configuration
-    const elements = ['fire', 'earth', 'water', 'air', 'light', 'darkness'];
+    const elements = ['fire', 'earth', 'water', 'wind', 'light', 'darkness'];
 
     // Point multipliers based on question number
     // Questions 4, 5, 7, 11, 15, 16: +2 points
@@ -448,7 +448,7 @@
     const tiebreakerQuestion = 15;
 
     // Questions data - placeholder text for you to edit
-    // Each question has 6 options, one for each element in order: fire, earth, water, air, light, darkness
+    // Each question has 6 options, one for each element in order: fire, earth, water, wind, light, darkness
 const questions = [
   {
     id: 1,
@@ -459,7 +459,7 @@ const questions = [
       { text: "In the very back, or behind something. It feels safer that way.", element: "earth" },
       { text: "Anywhere, I don’t really care. And somehow I always close my eyes right when the photo is taken.", element: "water" },
       { text: "Anywhere is fine, as long as there are lots of people. The more crowded, the more fun.", element: "light" },
-      { text: "Right in the center. Otherwise, the photo just does not feel balanced!", element: "air" }
+      { text: "Right in the center. Otherwise, the photo just does not feel balanced!", element: "wind" }
     ]
   },
   {
@@ -468,10 +468,10 @@ const questions = [
     options: [
       { text: "Rush in immediately and say it straight, <i>“Stop it, you’ll get hurt,”</i> then try to pull the two of them apart.", element: "fire" },
       { text: "Stand there quietly, tail swaying a little, thinking to yourself… if they actually fight, who would win?", element: "darkness" },
-      { text: "Ask both of them to stop and listen to each side properly before making a fair judgment.", element: "earth" },
+      { text: "Ask both of them to stop and listen to each side properly before making a fwind judgment.", element: "earth" },
       { text: "Say something calmly that cuts right to the truth, leaving neither side able to argue back.", element: "water" },
       { text: "Drop one deadpan joke, and somehow the tension fades in a very confusing way.", element: "light" },
-      { text: "Loudly cheer for the side you like, like you are watching a competition.", element: "air" }
+      { text: "Loudly cheer for the side you like, like you are watching a competition.", element: "wind" }
     ]
   },
   {
@@ -483,7 +483,7 @@ const questions = [
       { text: "Let’s just set it aside for now… and then completely forget about it. <br>“A gift is at its most perfect while it’s still in the box.”", element: "earth" },
       { text: "Sit there happily staring at the box, quietly guessing what might be inside.", element: "water" },
       { text: "Open it, then immediately hand it to a friend.", element: "light" },
-      { text: "Open it quickly, lift the gift over my head, and proudly announce to everyone what I got.", element: "air" }
+      { text: "Open it quickly, lift the gift over my head, and proudly announce to everyone what I got.", element: "wind" }
     ]
   },
   {
@@ -495,7 +495,7 @@ const questions = [
       { text: "When something I truly worked hard on does not turn out the way I hoped. <br><i>‘If it ends like this, what worth do I even have left?’</i>", element: "earth" },
       { text: "Feeling like no one truly understands what I keep inside my heart. <br><i>‘Or maybe…I come from another world?’</i>", element: "water" },
       { text: "Not being able to protect my family, I could only stand there and watch. <br><i>‘Is there really nothing I can do?’</i>", element: "light" },
-      { text: "Parting without ever getting the chance to say goodbye.<br><i>‘Hey… at least come back and listen to me first...’</i>", element: "air" }
+      { text: "Parting without ever getting the chance to say goodbye.<br><i>‘Hey… at least come back and listen to me first...’</i>", element: "wind" }
     ]
   },
   {
@@ -507,7 +507,7 @@ const questions = [
       { text: "Seeing everything neat and in order, with the final result turning out perfectly.", element: "earth" },
       { text: "Discovering the secrets of the world, or a kind of magic that only I truly understand.", element: "water" },
       { text: "Being surrounded by the people I love, knowing that everyone is safe.", element: "light" },
-      { text: "An all out party filled with laughter.", element: "air" }
+      { text: "An all out party filled with laughter.", element: "wind" }
     ]
   },
   {
@@ -519,7 +519,7 @@ const questions = [
       { text: "Let out a long sigh, mutter about how rude they are, and keep complaining until they give it back on their own.", element: "earth" },
       { text: "Quietly stare at the missing food. Feel a little sad, but let it go. And do not expect to ever see me eat in front of you again.", element: "water" },
       { text: "Let out a soft laugh and say, <br><i>“Put it down. I will pretend nothing happened.”</i>", element: "light" },
-      { text: "Start yelling loudly right away, <br><i>“I’m going to end you right here and now!!”</i>", element: "air" }
+      { text: "Start yelling loudly right away, <br><i>“I’m going to end you right here and now!!”</i>", element: "wind" }
     ]
   },
   {
@@ -531,7 +531,7 @@ const questions = [
       { text: "Go talk to them calmly, explain things step by step.<br><i>“If you get caught, I'm not helping.”</i>", element: "earth" },
       { text: "Say something short and quiet. Not stopping them, but not helping either. <br><i>‘Kind of curious what they will do next…’</i>", element: "water" },
       { text: "<i>“Alright. I’ll say I didn’t see anything, but please don’t do it again.”</i>", element: "light" },
-      { text: "<i>“Seriously, what are you thinking doing this? Come on, I'll help.”</i>", element: "air" }
+      { text: "<i>“Seriously, what are you thinking doing this? Come on, I'll help.”</i>", element: "wind" }
     ]
   },
   {
@@ -543,7 +543,7 @@ const questions = [
       { text: "<b>Detective novels</b> driven by logic and reasoning.<br>Everything develops step by step in a structured way.", element: "earth" },
       { text: "<b>Philosophical novels</b> with deep themes.<br>They make you think along as you read, sometimes ending openly. After finishing, you keep reflecting on it for a long time.", element: "water" },
       { text: "<b>Historical fiction</b> based on real events.<br>", element: "light" },
-      { text: "<b>Tear jerking drama or romantic novels.</b><br>When the characters cry, you cry with them. A warm, comforting stories that leave your heart full.", element: "air" }
+      { text: "<b>Tear jerking drama or romantic novels.</b><br>When the characters cry, you cry with them. A warm, comforting stories that leave your heart full.", element: "wind" }
     ]
   },
   {
@@ -555,7 +555,7 @@ const questions = [
       { text: "Keep talking to cover the awkwardness, while completely losing your composure inside.<br>This will <i>never</i> happen again.", element: "earth" },
       { text: "Do not seem to care, but secretly think about it all day.", element: "water" },
       { text: "Act like nothing happened, then quickly change the topic.", element: "light" },
-      { text: "Start yelling loudly right away to cover the embarrassment. <br><i>“What are you staring at. move along!!”</i><br>…and then secretly cry, wanting someone to comfort you.", element: "air" }
+      { text: "Start yelling loudly right away to cover the embarrassment. <br><i>“What are you staring at. move along!!”</i><br>…and then secretly cry, wanting someone to comfort you.", element: "wind" }
     ]
   },
   {
@@ -567,7 +567,7 @@ const questions = [
       { text: "<b>A silent library, a dimly lit workspace, or ancient place</b> filled with stories of the past.", element: "earth" },
       { text: "<b>Somewhere away from the outside world.</b><br> Nature, water, wind, anywhere that you can let your thoughts wander.", element: "water" },
       { text: "<b>My own home, warm and safe.</b><br>Or a castle or fortress that gives a strong sense of security.", element: "light" },
-      { text: "<b>The heart of the city, where there are lots of people.</b><br>Lively, loud, and always full of exciting things.", element: "air" }
+      { text: "<b>The heart of the city, where there are lots of people.</b><br>Lively, loud, and always full of exciting things.", element: "wind" }
     ]
   },
   {
@@ -579,7 +579,7 @@ const questions = [
       { text: "<b>Flexible weapons that can adapt to different situations.</b><br>Easy to counter an opponent without wasting much energy.<br>Such as staves, spears, or chain weapons.", element: "earth" },
       { text: "<b>Magical or unusual weapons. Hard to use, but extremely powerful.</b><br> Weapons that rely more on understanding than physical strength.<br>Anyone who does not know the principles cannot use them.<br>Such as ancient tomes or an invisibility cloak.", element: "water" },
       { text: "<b>Weapons meant to protect both yourself and others.</b><br>Such as shields, war banners, staffs, or anything that keeps everyone safe.", element: "light" },
-      { text: "<b>Long range weapons.</b>Destroy targets from a safe distance.<br>Leaving enemies with almost no chance to fight back.<br>Such as guns or throwing weapons.", element: "air" }
+      { text: "<b>Long range weapons.</b>Destroy targets from a safe distance.<br>Leaving enemies with almost no chance to fight back.<br>Such as guns or throwing weapons.", element: "wind" }
     ]
   },
   {
@@ -591,7 +591,7 @@ const questions = [
       { text: "<b>Pick the safest looking dish.</b><br>You can roughly guess the ingredients and how it is cooked. At least it should be something you can actually eat.", element: "earth" },
       { text: "<b>Pick the dish that gives you a certain feeling.</b><br>You cannot explain why, but it feels like this dish is calling out to you.", element: "water" },
       { text: "<b>Pick the same dish as everyone else, Or wait for a friend to try it first.</b><br>If everyone is fine with it, I'm okay with it too.", element: "light" },
-      { text: "<b>Pick the most eye catching dish with bold, vibrant colors.</b><br>Spices that sting your nose. This one looks fun. Give me the spiciest one.", element: "air" }
+      { text: "<b>Pick the most eye catching dish with bold, vibrant colors.</b><br>Spices that sting your nose. This one looks fun. Give me the spiciest one.", element: "wind" }
     ]
   },
   {
@@ -603,7 +603,7 @@ const questions = [
       { text: "Carefully read every detail of the mission.<br>Prepare everything thoroughly and double check multiple times.<br>Not a single thing can go wrong.", element: "earth" },
       { text: "Space out and stare into the distance, letting your mind calm down.<br>Then quickly pack everything at the very last moment.", element: "water" },
       { text: "Talk with your friends and encourage each other.<br>Make sure everyone is well-prepared.", element: "light" },
-      { text: "Have trouble sleeping, feeling excited and restless, then get up to prepare everything all over again depends on the mood.", element: "air" }
+      { text: "Have trouble sleeping, feeling excited and restless, then get up to prepare everything all over again depends on the mood.", element: "wind" }
     ]
   },
   {
@@ -615,7 +615,7 @@ const questions = [
       { text: "<b>Everything has its proper place.</b><br>Neatly organized by category, clean and orderly, easy to grab and use.<br>It feels calming, and I like bringing work into my bedroom.", element: "earth" },
       { text: "<b>A personal domain, A space that clearly reflects who I am.</b><br>Completely shut off from the outside world", element: "water" },
       { text: "<b>A room filled with a pleasant scent.</b><br> Collections displayed neatly. <i>Do not touch without permission.</i>", element: "light" },
-      { text: "<b>A room full of colors, and decorations.</b><br>It looks chaotic, but full of life.<br>And there is still open space to actually do things.", element: "air" }
+      { text: "<b>A room full of colors, and decorations.</b><br>It looks chaotic, but full of life.<br>And there is still open space to actually do things.", element: "wind" }
     ]
   },
   {
@@ -627,7 +627,7 @@ const questions = [
       { text: "<b>Raise your (short?)arms to block and assessing the situation in a split second, will you Fight or retreat.</b>", element: "earth" },
       { text: "<b>Stand firm and lock eyes with the target.</b><br>Even if you’re terrified inside, you show nothing.<br>Once you regain your composure, you deal with it calmly and carefully.", element: "water" },
       { text: "<b>Grab something nearby to use as a shield or weapon.</b><br>Not only to protect yourself, but others as well.<br><i>“Watch out, everyone!”</i>", element: "light" },
-      { text: "<b>Shout loudly to intimidate the enemy</b><br>then counterattack with superior tactics. mock them after you win…<br><b>...OR</b> run away crying and hide in a corner.", element: "air" }
+      { text: "<b>Shout loudly to intimidate the enemy</b><br>then counterattack with superior tactics. mock them after you win…<br><b>...OR</b> run away crying and hide in a corner.", element: "wind" }
     ]
   },
   {
@@ -639,7 +639,7 @@ const questions = [
       { text: "Huh…? A Puffling, of course.", element: "earth" },
       { text: "Just a normal, cute little fluff ball. Nothing special, really.", element: "water" },
       { text: "One who holds onto their pride.", element: "light" },
-      { text: "A descendant of legendary dragons, obviously!", element: "air" }
+      { text: "A descendant of legendary dragons, obviously!", element: "wind" }
     ]
   }
 ];
@@ -854,7 +854,7 @@ const elementDescriptions = {
     </ul>
   `,
 
-  air: `
+  wind: `
     <strong>️🌪️ Wind Element Puff</strong><br>
     Your Puff is a Wind element.<br>
     You are someone <b>driven by emotion</b> and <b>quick to feel.</b><br><br>
@@ -1027,7 +1027,7 @@ const elementDescriptions = {
         fire: 0,
         earth: 0,
         water: 0,
-        air: 0,
+        wind: 0,
         light: 0,
         darkness: 0
       };
