@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const stockNumber = Number(shopEntry.stockquantity ?? 0);
     const hasInfiniteStock = stockNumber === -1;
     const stock = Number.isFinite(stockNumber) ? stockNumber : 0;
+    const limitedText = shopEntry.limited === true ? `<span><b>Limited:</b> Yes</span>` : '';
 
     // Create profile link (lowercase, remove spaces and special characters)
     const profile = charadex.tools.scrub(name);
@@ -82,11 +83,12 @@ document.addEventListener("DOMContentLoaded", async () => {
               <div class="col-md-8 p-2">
                 <div class="description mb-2">${description}</div>
                 <div class="d-flex justify-content-between align-items-end mt-4">
-                  <span><b>Price:</b> ${price} <img src="https://img-l.ink/img/1y-xO7D0-BWXl5_GrHkjP10ccWC5XfPUP.png" alt="stardust" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></span>
+                  <span><b>Price:</b> ${price} <img src="https://img-l.ink/img/1TDR8Q1MH-Mabvrb5HNnGWrqs6xZXAw1o.png" alt="stardust" style="height: 1em; width: 1em; vertical-align: middle; margin-left: 0.25em;"></span>
                   <span><b>Stock:</b> ${hasInfiniteStock ? '&infin;' : stock}</span>
                 </div>
-                <div class="mt-2">
+                <div class="d-flex justify-content-between mt-2">
                   <span class="${tradeableClass}"><b>Tradeable:</b> ${tradeableText}</span>
+                  ${limitedText}
                 </div>
               </div>
             </div>
@@ -160,7 +162,7 @@ function displayStardustBalance(amount, username) {
     </div>
     <div class="h5 mb-0">
       <strong>${amount}</strong>
-      <img src="https://img-l.ink/img/1y-xO7D0-BWXl5_GrHkjP10ccWC5XfPUP.png" alt="stardust" style="height: 1.5em; width: 1.5em; vertical-align: middle; margin-left: 0.25em;">
+      <img src="https://img-l.ink/img/1TDR8Q1MH-Mabvrb5HNnGWrqs6xZXAw1o.png" alt="stardust" style="height: 1.5em; width: 1.5em; vertical-align: middle; margin-left: 0.25em;">
     </div>
   `;
 

@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const description = item.description || '';
     const tradeableText = item.tradeable === true ? 'Yes' : 'No';
     const tradeableClass = item.tradeable === true ? 'text-success' : 'text-muted';
+    const limitedLine = item.limited === true ? `<div class="mt-2"><span class="text-warning"><b>Limited:</b> Yes</span></div>` : '';
 
     // Get price and stock from shop sheet
     const price = shopEntry.price || '';
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="mt-2">
                   <span class="${tradeableClass}"><b>Tradeable:</b> ${tradeableText}</span>
                 </div>
+                ${limitedLine}
               </div>
             </div>
           </div>
