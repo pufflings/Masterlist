@@ -48,6 +48,8 @@ charadex.sheet = {
     staff: "mods",
     options: "OptionsSheet",
     news: "news",
+    shop: "Shop",
+    exchangeShop: "Exchange Shop",
   },
 
   options: {

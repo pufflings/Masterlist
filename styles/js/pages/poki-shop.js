@@ -52,13 +52,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const description = item.description || '';
     const tradeableText = item.tradeable === true ? 'Yes' : 'No';
     const tradeableClass = item.tradeable === true ? 'text-success' : 'text-muted';
+    const limitedLine = item.limited === true ? `<div class="mt-2"><span class="text-warning"><b>Limited:</b> Yes</span></div>` : '';
 
     // Get price and stock from shop sheet
     const price = shopEntry.price || '';
     const stockNumber = Number(shopEntry.stockquantity ?? 0);
     const hasInfiniteStock = stockNumber === -1;
     const stock = Number.isFinite(stockNumber) ? stockNumber : 0;
-    
+
     // Create profile link (lowercase, remove spaces and special characters)
     const profile = charadex.tools.scrub(name);
     let nameLink = `<a href="items.html?profile=${profile}">${name}</a>`;
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="mt-2">
                   <span class="${tradeableClass}"><b>Tradeable:</b> ${tradeableText}</span>
                 </div>
+                ${limitedLine}
               </div>
             </div>
           </div>
