@@ -692,6 +692,24 @@ p:last-child {
   max-height: 200px;
 }
 
+
+#inventory-gallery .card-body .imageprofilelink,
+#collectibles-gallery .card-body .imageprofilelink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+#inventory-gallery .card-body .imageprofilelink img,
+#collectibles-gallery .card-body .imageprofilelink img {
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
 .cd-gallery-card {
   min-height: calc(175px + 2.5rem);
 }
