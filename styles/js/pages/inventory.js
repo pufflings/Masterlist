@@ -15,19 +15,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   let dex = await charadex.initialize.page(
     null,
     charadex.page.inventory,
-    null, 
+    null,
     async (listData) => {
 
       if (listData.type == 'profile') {
 
         let profile = listData.profileArray[0];
 
-        // Inventory
-        const inventoryData = (await charadex.manageData.inventoryFix(profile)).filter(item => Number(item.quantity) > 0);
+        // Get all items with quantity > 0
+        const allItems = (await charadex.manageData.inventoryFix(profile)).filter(item => Number(item.quantity) > 0);
+
+        // Filter out collectibles from main inventory (items where type !== "Collectible")
+        const inventoryData = allItems.filter(item => String(item.type).toLowerCase() !== 'collectible');
         charadex.initialize.groupGallery(
           charadex.page.inventory.inventoryConfig,
           inventoryData,
           'type',
+          charadex.url.getPageUrl('items')
+        )
+
+        // Collectibles - filter items where type === "Collectible", group by collectibletype
+        const collectiblesData = allItems.filter(item => String(item.type).toLowerCase() === 'collectible');
+        charadex.initialize.groupGallery(
+          charadex.page.inventory.collectiblesConfig,
+          collectiblesData,
+          'collectibletype',
           charadex.url.getPageUrl('items')
         )
 
