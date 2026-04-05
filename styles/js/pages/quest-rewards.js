@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Render the page
     renderStatus();
+    renderFormula();
     populateItemsDropdown();
     bindFormEvents();
     recalculate();
@@ -395,35 +396,30 @@ const recalculate = () => {
     wordCount,
   };
 
-  renderFormula(result);
   renderPreview(result);
 };
 
 /* ==================================================================== */
-/* Formula Display
+/* Formula Display (static reference — rendered once on page load)
 ======================================================================= */
-const renderFormula = (r) => {
+const renderFormula = () => {
   const el = document.getElementById('formula-display');
-
-  const scaleLabel = r.scale === 1 ? 'Chibi 1x' : `Full ${r.scale}x`;
-  const commLabel = r.commissionMultiplier < 1 ? `x${r.commissionMultiplier}` : '1x';
-
   el.innerHTML = `
 <span class="formula-cap">MIN(35,</span>
-  ((<span class="formula-artwork">${r.artworkRewards}<span class="formula-label">Artwork</span></span>
-  + <span class="formula-artwork">${r.writingRewards}<span class="formula-label">Writing</span></span>)
-  x <span class="formula-scale">${r.scale}<span class="formula-label">Scale (${scaleLabel})</span></span>)
-  + <span class="formula-extra">${r.extra}<span class="formula-label">Extra Bonuses</span></span>)
-= <span class="formula-cap">${r.bonus}<span class="formula-label">Bonus (capped at 35)</span></span>
+  ((<span class="formula-artwork">Artwork<span class="formula-label">characters + art finish</span></span>
+  + <span class="formula-artwork">Writing<span class="formula-label">floor(words / 100)</span></span>)
+  × <span class="formula-scale">Scale<span class="formula-label">Chibi 1× or Full 1.25×</span></span>)
+  + <span class="formula-extra">Extra<span class="formula-label">gift art / masterpiece / scenery</span></span>)
+= <span class="formula-cap">Bonus<span class="formula-label">capped at 35</span></span>
 
-<span class="formula-cap">${r.bonus}</span>
-+ <span class="formula-base">${r.baseCoins}<span class="formula-label">Base Coins</span></span>
-= <span class="formula-base">${r.total}<span class="formula-label">Total</span></span>
+<span class="formula-cap">Bonus</span>
++ <span class="formula-base">Base Coins<span class="formula-label">from Base Rewards</span></span>
+= <span class="formula-base">Total<span class="formula-label"></span></span>
 
-<span class="formula-base">${r.total}</span>
-x <span class="formula-modifier">${r.commissionMultiplier}<span class="formula-label">Commission (${commLabel})</span></span>
-/ <span class="formula-modifier">${r.collab}<span class="formula-label">Collab</span></span>
-= <strong>${r.finalCoins} coins</strong>
+<span class="formula-base">Total</span>
+× <span class="formula-modifier">Commission<span class="formula-label">0.85 if commissioned, else 1</span></span>
+÷ <span class="formula-modifier">Collab<span class="formula-label">number of collaborators (min 1)</span></span>
+= <strong>Final Coins</strong>
   `.trim();
 };
 
@@ -446,23 +442,7 @@ const renderPreview = (r) => {
     cooldownText = ready ? `${cooldown} - Ready` : `${cooldown} - On cooldown`;
   }
 
-  // Build text preview lines
-  const lines = [];
-  lines.push(promptTitle);
-  lines.push(`First Time Bonus: ${ftbText}  | Cooldown: ${cooldownText}`);
-  lines.push('');
-  lines.push(`Completing quest for ${username}: ${promptTitle}`);
-  lines.push('');
-
-  // Base Rewards
-  lines.push('Base Rewards');
-  if (r.baseCoins > 0) lines.push(`\u2022 Coins: ${r.baseCoins}`);
-  if (r.baseRP > 0) lines.push(`\u2022 Relationship points: ${r.baseRP} RP`);
-  if (r.baseCoins === 0 && r.baseRP === 0) lines.push('\u2022 (none)');
-  lines.push('');
-
-  // Bonus Rewards
-  lines.push('Bonus Rewards (Art)');
+  // Build synopsis lines in Discord markdown — used for both text preview and JSON Synopsis
   const charEntries = [
     { label: 'Pufflings', data: r.charCounts.pufflings },
     { label: 'Humanoid Puffling Headshot', data: r.charCounts.humanoidHeadshot },
@@ -472,123 +452,83 @@ const renderPreview = (r) => {
     { label: 'Seeker Half-body', data: r.charCounts.seekerHalfBody },
     { label: 'Seeker Full-body', data: r.charCounts.seekerFullBody },
   ];
-  charEntries.forEach(({ label, data }) => {
-    if (data.count > 0) lines.push(`\u2022 ${label} (${data.count}): +${data.coins}`);
-  });
 
-  if (r.artFinish.coloring.value > 0) lines.push(`\u2022 Coloring: +${r.artFinish.coloring.value}`);
-  if (r.artFinish.shading.value > 0) lines.push(`\u2022 ${r.artFinish.shading.label}: +${r.artFinish.shading.value}`);
-  if (r.artFinish.background.value > 0) lines.push(`\u2022 Background (${r.artFinish.background.label}): +${r.artFinish.background.value}`);
-  if (r.writingRewards > 0) lines.push(`\u2022 Writing (${r.wordCount} words): +${r.writingRewards}`);
-  if (r.giftArt > 0) lines.push('\u2022 Gift art: +5');
-  if (r.masterpiece > 0) lines.push('\u2022 Masterpiece Rendering: +5');
-  if (r.scenery > 0) lines.push('\u2022 Scenery Background: +5');
+  const capNote = r.uncappedBonus > 35 ? ` (capped at 35)` : '';
+  const bonusDisplay = r.uncappedBonus > 35 ? r.uncappedBonus : r.bonus;
+  const hasModifiers = r.scale !== 1 || r.commissionMultiplier < 1 || r.collab > 1;
+  const formItems = getItemsFromForm();
 
-  const capNote = r.uncappedBonus > 35 ? ' (capped at 35)' : '';
-  lines.push(`\u2022 Bonus subtotal: ${r.bonus} coins${capNote}`);
+  const lines = [];
+  lines.push(`**${promptTitle}**`);
+  lines.push(`First Time Bonus: ${ftbText}  | Cooldown: ${cooldownText}`);
+  lines.push('');
+  lines.push(`Completing quest for **${username}**: ${promptTitle}`);
   lines.push('');
 
+  // Base Rewards
+  lines.push('**Base Rewards**');
+  if (r.baseCoins > 0) lines.push(`- Coins: ${r.baseCoins}`);
+  if (r.baseRP > 0) lines.push(`- Relationship points: ${r.baseRP} RP`);
+  if (r.baseCoins === 0 && r.baseRP === 0) lines.push('- (none)');
+  lines.push('');
+
+  // Bonus Rewards
+  lines.push('**Bonus Rewards (Art)**');
+  charEntries.forEach(({ label, data }) => {
+    if (data.count > 0) lines.push(`- ${label} (${data.count}): +${data.coins}`);
+  });
+  if (r.artFinish.coloring.value > 0) lines.push(`- Coloring: +${r.artFinish.coloring.value}`);
+  if (r.artFinish.shading.value > 0) lines.push(`- ${r.artFinish.shading.label}: +${r.artFinish.shading.value}`);
+  if (r.artFinish.background.value > 0) lines.push(`- Background (${r.artFinish.background.label}): +${r.artFinish.background.value}`);
+  if (r.writingRewards > 0) lines.push(`- Writing (${r.wordCount} words): +${r.writingRewards}`);
+  if (r.giftArt > 0) lines.push('- Gift art: +5');
+  if (r.masterpiece > 0) lines.push('- Masterpiece Rendering: +5');
+  if (r.scenery > 0) lines.push('- Scenery Background: +5');
+  lines.push(`- Bonus subtotal: ${bonusDisplay} coins${capNote}`);
+
   // Modifiers
-  const hasModifiers = r.scale !== 1 || r.commissionMultiplier < 1 || r.collab > 1;
   if (hasModifiers) {
-    lines.push('Modifiers');
+    lines.push('');
+    lines.push('**Modifiers**');
     if (r.scale !== 1) {
-      const scaleLabel = r.scale === 1.25 ? 'Full Scale' : `${r.scale}x`;
       const beforeScale = r.artworkRewards + r.writingRewards;
       const afterScale = Math.round(beforeScale * r.scale);
       const scaleAdded = afterScale - beforeScale;
-      lines.push(`\u2022 Scale (${scaleLabel}): +${scaleAdded} coins`);
+      lines.push(`- Scale (${r.scale === 1.25 ? 'Full Scale' : r.scale + 'x'}): +${scaleAdded} coins`);
     }
     if (r.commissionMultiplier < 1) {
       const discount = Math.round(r.total * (1 - r.commissionMultiplier));
-      lines.push(`\u2022 Commission discount (-15%): -${discount} coins`);
+      lines.push(`- Commission discount (-15%): -${discount} coins`);
     }
     if (r.collab > 1) {
       const beforeCollab = Math.round(r.total * r.commissionMultiplier);
       const afterCollab = Math.round(beforeCollab / r.collab);
       const collabRemoved = beforeCollab - afterCollab;
-      lines.push(`\u2022 Collab (\u00F7${r.collab}): -${collabRemoved} coins`);
+      lines.push(`- Collab (\u00F7${r.collab}): -${collabRemoved} coins`);
     }
-    lines.push('');
   }
 
-  lines.push(`Total coins: ${r.finalCoins}`);
+  lines.push('');
+  lines.push(`**Total coins: ${r.finalCoins}**`);
 
-  // Items in preview
-  const formItems = getItemsFromForm();
   if (Object.keys(formItems).length > 0) {
     lines.push('');
-    lines.push('Items');
+    lines.push('**Items**');
     for (const [name, qty] of Object.entries(formItems)) {
-      lines.push(`\u2022 ${name}: ${qty}`);
+      lines.push(`- ${name}: ${qty}`);
     }
   }
 
-  document.getElementById('preview-text').textContent = lines.join('\n');
+  const synopsis = lines.join('\n');
 
-  // Build JSON
+  // Text preview = the same Discord-markdown synopsis string
+  document.getElementById('preview-text').textContent = synopsis;
+
+  // JSON output
   const jsonItems = { Coins: r.finalCoins };
   for (const [name, qty] of Object.entries(formItems)) {
     jsonItems[name] = qty;
   }
-
-  // Synopsis (Discord format)
-  const discordLines = [];
-  discordLines.push(`**${promptTitle}**`);
-  discordLines.push(`First Time Bonus: ${ftbText}  | Cooldown: ${cooldownText}`);
-  discordLines.push('');
-  discordLines.push(`Completing quest for **${username}**: ${promptTitle}`);
-  discordLines.push('');
-  discordLines.push('**Base Rewards**');
-  if (r.baseCoins > 0) discordLines.push(`- Coins: ${r.baseCoins}`);
-  if (r.baseRP > 0) discordLines.push(`- Relationship points: ${r.baseRP} RP`);
-  discordLines.push('');
-  discordLines.push('**Bonus Rewards (Art)**');
-  charEntries.forEach(({ label, data }) => {
-    if (data.count > 0) discordLines.push(`- ${label} (${data.count}): +${data.coins}`);
-  });
-  if (r.artFinish.coloring.value > 0) discordLines.push(`- Coloring: +${r.artFinish.coloring.value}`);
-  if (r.artFinish.shading.value > 0) discordLines.push(`- ${r.artFinish.shading.label}: +${r.artFinish.shading.value}`);
-  if (r.artFinish.background.value > 0) discordLines.push(`- Background (${r.artFinish.background.label}): +${r.artFinish.background.value}`);
-  if (r.writingRewards > 0) discordLines.push(`- Writing (${r.wordCount} words): +${r.writingRewards}`);
-  if (r.giftArt > 0) discordLines.push('- Gift art: +5');
-  if (r.masterpiece > 0) discordLines.push('- Masterpiece Rendering: +5');
-  if (r.scenery > 0) discordLines.push('- Scenery Background: +5');
-  discordLines.push(`- Bonus subtotal: ${r.bonus} coins${capNote}`);
-
-  if (hasModifiers) {
-    discordLines.push('');
-    discordLines.push('**Modifiers**');
-    if (r.scale !== 1) {
-      const beforeScale = r.artworkRewards + r.writingRewards;
-      const afterScale = Math.round(beforeScale * r.scale);
-      const scaleAdded = afterScale - beforeScale;
-      discordLines.push(`- Scale (${r.scale === 1.25 ? 'Full Scale' : r.scale + 'x'}): +${scaleAdded} coins`);
-    }
-    if (r.commissionMultiplier < 1) {
-      const discount = Math.round(r.total * (1 - r.commissionMultiplier));
-      discordLines.push(`- Commission discount (-15%): -${discount} coins`);
-    }
-    if (r.collab > 1) {
-      const beforeCollab = Math.round(r.total * r.commissionMultiplier);
-      const afterCollab = Math.round(beforeCollab / r.collab);
-      const collabRemoved = beforeCollab - afterCollab;
-      discordLines.push(`- Collab (\u00F7${r.collab}): -${collabRemoved} coins`);
-    }
-  }
-
-  discordLines.push('');
-  discordLines.push(`**Total coins: ${r.finalCoins}**`);
-
-  if (Object.keys(formItems).length > 0) {
-    discordLines.push('');
-    discordLines.push('**Items**');
-    for (const [name, qty] of Object.entries(formItems)) {
-      discordLines.push(`- ${name}: ${qty}`);
-    }
-  }
-
-  const synopsis = discordLines.join('\n');
 
   const jsonOutput = {
     items: jsonItems,
