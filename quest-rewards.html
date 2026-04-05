@@ -113,16 +113,17 @@
                 <input type="number" class="form-control form-control-sm" id="char-pufflings" value="0" min="0">
               </div>
               <div class="quest-form-row">
-                <label for="char-humanoid-headshot">Humanoid Puffling (Headshot) <small class="text-muted">(3 first, +1 extra)</small></label>
-                <input type="number" class="form-control form-control-sm" id="char-humanoid-headshot" value="0" min="0">
+                <label for="char-humanoid-puffling">Humanoid Puffling</label>
+                <select class="form-control form-control-sm" id="char-humanoid-puffling">
+                  <option value="0">None</option>
+                  <option value="3">Headshot (3)</option>
+                  <option value="5">Half-body (5)</option>
+                  <option value="7">Full-body (7)</option>
+                </select>
               </div>
               <div class="quest-form-row">
-                <label for="char-humanoid-halfbody">Humanoid Puffling (Half-body) <small class="text-muted">(5 first, +1 extra)</small></label>
-                <input type="number" class="form-control form-control-sm" id="char-humanoid-halfbody" value="0" min="0">
-              </div>
-              <div class="quest-form-row">
-                <label for="char-humanoid-fullbody">Humanoid Puffling (Full-body) <small class="text-muted">(7 first, +1 extra)</small></label>
-                <input type="number" class="form-control form-control-sm" id="char-humanoid-fullbody" value="0" min="0">
+                <label for="char-humanoid-puffling-extra">Extra Humanoid Pufflings <small class="text-muted">(+1 each)</small></label>
+                <input type="number" class="form-control form-control-sm" id="char-humanoid-puffling-extra" value="0" min="0">
               </div>
             </div>
 
@@ -130,16 +131,17 @@
             <div class="quest-subsubsection">
               <strong class="d-block mb-2">Seeker Characters</strong>
               <div class="quest-form-row">
-                <label for="char-seeker-headshot">Seeker (Headshot) <small class="text-muted">(3 first, +1 extra)</small></label>
-                <input type="number" class="form-control form-control-sm" id="char-seeker-headshot" value="0" min="0">
+                <label for="char-seeker">Seeker</label>
+                <select class="form-control form-control-sm" id="char-seeker">
+                  <option value="0">None</option>
+                  <option value="3">Headshot (3)</option>
+                  <option value="5">Half-body (5)</option>
+                  <option value="7">Full-body (7)</option>
+                </select>
               </div>
               <div class="quest-form-row">
-                <label for="char-seeker-halfbody">Seeker (Half-body) <small class="text-muted">(5 first, +1 extra)</small></label>
-                <input type="number" class="form-control form-control-sm" id="char-seeker-halfbody" value="0" min="0">
-              </div>
-              <div class="quest-form-row">
-                <label for="char-seeker-fullbody">Seeker (Full-body) <small class="text-muted">(7 first, +1 extra)</small></label>
-                <input type="number" class="form-control form-control-sm" id="char-seeker-fullbody" value="0" min="0">
+                <label for="char-seeker-extra">Extra Seekers <small class="text-muted">(+1 each)</small></label>
+                <input type="number" class="form-control form-control-sm" id="char-seeker-extra" value="0" min="0">
               </div>
             </div>
 

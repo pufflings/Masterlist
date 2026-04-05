@@ -315,12 +315,16 @@ const getItemsFromForm = () => {
 const recalculate = () => {
   // Character rewards
   const pufflings = charCoins(getNum('char-pufflings'), 3);
-  const humanoidHeadshot = charCoins(getNum('char-humanoid-headshot'), 3);
-  const humanoidHalfBody = charCoins(getNum('char-humanoid-halfbody'), 5);
-  const humanoidFullBody = charCoins(getNum('char-humanoid-fullbody'), 7);
-  const seekerHeadshot = charCoins(getNum('char-seeker-headshot'), 3);
-  const seekerHalfBody = charCoins(getNum('char-seeker-halfbody'), 5);
-  const seekerFullBody = charCoins(getNum('char-seeker-fullbody'), 7);
+  const humanoidBase = getSelectNum('char-humanoid-puffling');
+  const humanoidExtra = getNum('char-humanoid-puffling-extra');
+  const humanoidCoins = humanoidBase + humanoidExtra;
+  const seekerBase = getSelectNum('char-seeker');
+  const seekerExtra = getNum('char-seeker-extra');
+  const seekerCoins = seekerBase + seekerExtra;
+
+  // Humanoid/Seeker labels for preview
+  const humanoidLabel = { 0: 'None', 3: 'Headshot', 5: 'Half-body', 7: 'Full-body' }[humanoidBase] || 'None';
+  const seekerLabel = { 0: 'None', 3: 'Headshot', 5: 'Half-body', 7: 'Full-body' }[seekerBase] || 'None';
 
   // Art finish
   const coloring = getSelectNum('art-coloring');
@@ -348,16 +352,15 @@ const recalculate = () => {
   const commissionMultiplier = isChecked('bonus-commission') ? 0.85 : 1;
   const collab = Math.max(1, getNum('bonus-collab'));
 
-  // Formula calculation
-  const artworkRewards = pufflings + humanoidHeadshot + humanoidHalfBody + humanoidFullBody
-    + seekerHeadshot + seekerHalfBody + seekerFullBody
+  // Formula calculation (all floor, integers only)
+  const artworkRewards = pufflings + humanoidCoins + seekerCoins
     + coloring + shading + background;
 
-  const scaledArtWriting = (artworkRewards + writingRewards) * scale;
+  const scaledArtWriting = Math.floor((artworkRewards + writingRewards) * scale);
   const uncappedBonus = scaledArtWriting + extra;
   const bonus = Math.min(35, uncappedBonus);
   const total = bonus + baseCoins;
-  const finalCoins = Math.round((total * commissionMultiplier) / collab);
+  const finalCoins = Math.floor((total * commissionMultiplier) / collab);
 
   // Build result object for preview
   const result = {
@@ -377,15 +380,10 @@ const recalculate = () => {
     commissionMultiplier,
     collab,
     finalCoins,
-    // Individual character counts for preview
     charCounts: {
       pufflings: { count: getNum('char-pufflings'), coins: pufflings },
-      humanoidHeadshot: { count: getNum('char-humanoid-headshot'), coins: humanoidHeadshot },
-      humanoidHalfBody: { count: getNum('char-humanoid-halfbody'), coins: humanoidHalfBody },
-      humanoidFullBody: { count: getNum('char-humanoid-fullbody'), coins: humanoidFullBody },
-      seekerHeadshot: { count: getNum('char-seeker-headshot'), coins: seekerHeadshot },
-      seekerHalfBody: { count: getNum('char-seeker-halfbody'), coins: seekerHalfBody },
-      seekerFullBody: { count: getNum('char-seeker-fullbody'), coins: seekerFullBody },
+      humanoid: { base: humanoidBase, extra: humanoidExtra, coins: humanoidCoins, label: humanoidLabel },
+      seeker: { base: seekerBase, extra: seekerExtra, coins: seekerCoins, label: seekerLabel },
     },
     artFinish: {
       coloring: { value: coloring, label: coloring > 0 ? 'Yes' : 'No' },
@@ -418,19 +416,9 @@ const renderPreview = (r) => {
   }
 
   // Build synopsis lines in Discord markdown — used for both text preview and JSON Synopsis
-  const charEntries = [
-    { label: 'Pufflings', data: r.charCounts.pufflings },
-    { label: 'Humanoid Puffling Headshot', data: r.charCounts.humanoidHeadshot },
-    { label: 'Humanoid Puffling Half-body', data: r.charCounts.humanoidHalfBody },
-    { label: 'Humanoid Puffling Full-body', data: r.charCounts.humanoidFullBody },
-    { label: 'Seeker Headshot', data: r.charCounts.seekerHeadshot },
-    { label: 'Seeker Half-body', data: r.charCounts.seekerHalfBody },
-    { label: 'Seeker Full-body', data: r.charCounts.seekerFullBody },
-  ];
-
   const formItems = getItemsFromForm();
 
-  // Pre-calculate bonus modifier values
+  // Pre-calculate modifier flags
   const hasBonusModifiers = r.scale !== 1;
   const hasTotalModifiers = r.commissionMultiplier < 1 || r.collab > 1;
 
@@ -457,9 +445,18 @@ const renderPreview = (r) => {
 
   // Bonus Rewards
   lines.push('**Bonus Rewards (Art)**');
-  charEntries.forEach(({ label, data }) => {
-    if (data.count > 0) lines.push(`- ${label} (${data.count}): +${data.coins}`);
-  });
+  const cc = r.charCounts;
+  if (cc.pufflings.count > 0) lines.push(`- Pufflings (${cc.pufflings.count}): +${cc.pufflings.coins}`);
+  if (cc.humanoid.coins > 0) {
+    let hLabel = `Humanoid Puffling (${cc.humanoid.label})`;
+    if (cc.humanoid.extra > 0) hLabel += ` +${cc.humanoid.extra} extra`;
+    lines.push(`- ${hLabel}: +${cc.humanoid.coins}`);
+  }
+  if (cc.seeker.coins > 0) {
+    let sLabel = `Seeker (${cc.seeker.label})`;
+    if (cc.seeker.extra > 0) sLabel += ` +${cc.seeker.extra} extra`;
+    lines.push(`- ${sLabel}: +${cc.seeker.coins}`);
+  }
   if (r.artFinish.coloring.value > 0) lines.push(`- Coloring: +${r.artFinish.coloring.value}`);
   if (r.artFinish.shading.value > 0) lines.push(`- ${r.artFinish.shading.label}: +${r.artFinish.shading.value}`);
   if (r.artFinish.background.value > 0) lines.push(`- Background (${r.artFinish.background.label}): +${r.artFinish.background.value}`);
@@ -474,7 +471,7 @@ const renderPreview = (r) => {
     lines.push('');
     lines.push('**Bonus Modifiers**');
     const beforeScale = r.artworkRewards + r.writingRewards;
-    const scaleAdded = Math.round(beforeScale * r.scale) - beforeScale;
+    const scaleAdded = Math.floor(beforeScale * r.scale) - beforeScale;
     lines.push(`- Scale (${r.scale === 1.25 ? 'Full Scale (+25% bonus)' : r.scale + 'x'}): +${scaleAdded} coins`);
   }
 
@@ -482,18 +479,22 @@ const renderPreview = (r) => {
   lines.push('');
   lines.push(`**Bonus Total: ${bonusTotalUncapped} coins**${capNote}`);
 
+  // Subtotal (bonus after cap + base, before total modifiers)
+  lines.push('');
+  lines.push(`**Subtotal: ${r.total} coins**`);
+
   // Total Modifiers (commission, collab)
   if (hasTotalModifiers) {
     lines.push('');
     lines.push('**Total Modifiers**');
     if (r.commissionMultiplier < 1) {
-      const discount = Math.round(r.total * (1 - r.commissionMultiplier));
+      const discount = r.total - Math.floor(r.total * r.commissionMultiplier);
       lines.push(`- Commission discount (-15% total): -${discount} coins`);
     }
     if (r.collab > 1) {
-      const beforeCollab = Math.round(r.total * r.commissionMultiplier);
-      const afterCollab = Math.round(beforeCollab / r.collab);
-      const collabRemoved = beforeCollab - afterCollab;
+      const afterCommission = Math.floor(r.total * r.commissionMultiplier);
+      const afterCollab = Math.floor(afterCommission / r.collab);
+      const collabRemoved = afterCommission - afterCollab;
       lines.push(`- Collab (\u00F7${r.collab}): -${collabRemoved} coins`);
     }
   }
@@ -539,13 +540,13 @@ const bindFormEvents = () => {
   // All numeric inputs and selects trigger recalculate
   const inputs = document.querySelectorAll(
     '#base-coins, #base-rp, ' +
-    '#char-pufflings, #char-humanoid-headshot, #char-humanoid-halfbody, #char-humanoid-fullbody, ' +
-    '#char-seeker-headshot, #char-seeker-halfbody, #char-seeker-fullbody, ' +
+    '#char-pufflings, #char-humanoid-puffling-extra, #char-seeker-extra, ' +
     '#writing-wordcount, #bonus-collab'
   );
   inputs.forEach((input) => input.addEventListener('input', recalculate));
 
   const selects = document.querySelectorAll(
+    '#char-humanoid-puffling, #char-seeker, ' +
     '#art-coloring, #art-shading, #art-background, #bonus-scale'
   );
   selects.forEach((select) => select.addEventListener('change', recalculate));
