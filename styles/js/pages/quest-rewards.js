@@ -428,10 +428,18 @@ const renderPreview = (r) => {
     { label: 'Seeker Full-body', data: r.charCounts.seekerFullBody },
   ];
 
-  const capNote = r.uncappedBonus > 35 ? ` (capped at 35)` : '';
-  const bonusDisplay = r.uncappedBonus > 35 ? r.uncappedBonus : r.bonus;
-  const hasModifiers = r.scale !== 1 || r.commissionMultiplier < 1 || r.collab > 1;
   const formItems = getItemsFromForm();
+
+  // Pre-calculate bonus modifier values
+  const hasBonusModifiers = r.scale !== 1;
+  const hasTotalModifiers = r.commissionMultiplier < 1 || r.collab > 1;
+
+  // Bonus subtotal = artwork + writing + extra (before scale, before cap)
+  const bonusSubtotal = r.artworkRewards + r.writingRewards + r.extra;
+
+  // Bonus total = after scale applied, before cap
+  const bonusTotalUncapped = r.uncappedBonus;
+  const capNote = bonusTotalUncapped > 35 ? ' (capped to 35)' : '';
 
   const lines = [];
   lines.push(`**${promptTitle}**`);
@@ -459,18 +467,25 @@ const renderPreview = (r) => {
   if (r.giftArt > 0) lines.push('- Gift art: +5');
   if (r.masterpiece > 0) lines.push('- Masterpiece Rendering: +5');
   if (r.scenery > 0) lines.push('- Scenery Background: +5');
-  lines.push(`- Bonus subtotal: ${bonusDisplay} coins${capNote}`);
+  lines.push(`- Bonus subtotal: ${bonusSubtotal} coins`);
 
-  // Modifiers
-  if (hasModifiers) {
+  // Bonus Modifiers (scale)
+  if (hasBonusModifiers) {
     lines.push('');
-    lines.push('**Modifiers**');
-    if (r.scale !== 1) {
-      const beforeScale = r.artworkRewards + r.writingRewards;
-      const afterScale = Math.round(beforeScale * r.scale);
-      const scaleAdded = afterScale - beforeScale;
-      lines.push(`- Scale (${r.scale === 1.25 ? 'Full Scale (+25% bonus)' : r.scale + 'x'}): +${scaleAdded} coins`);
-    }
+    lines.push('**Bonus Modifiers**');
+    const beforeScale = r.artworkRewards + r.writingRewards;
+    const scaleAdded = Math.round(beforeScale * r.scale) - beforeScale;
+    lines.push(`- Scale (${r.scale === 1.25 ? 'Full Scale (+25% bonus)' : r.scale + 'x'}): +${scaleAdded} coins`);
+  }
+
+  // Bonus Total
+  lines.push('');
+  lines.push(`**Bonus Total: ${bonusTotalUncapped} coins**${capNote}`);
+
+  // Total Modifiers (commission, collab)
+  if (hasTotalModifiers) {
+    lines.push('');
+    lines.push('**Total Modifiers**');
     if (r.commissionMultiplier < 1) {
       const discount = Math.round(r.total * (1 - r.commissionMultiplier));
       lines.push(`- Commission discount (-15% total): -${discount} coins`);
