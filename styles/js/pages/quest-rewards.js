@@ -160,7 +160,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Render the page
     renderStatus();
-    renderFormula();
     populateItemsDropdown();
     bindFormEvents();
     recalculate();
@@ -397,30 +396,6 @@ const recalculate = () => {
   };
 
   renderPreview(result);
-};
-
-/* ==================================================================== */
-/* Formula Display (static reference — rendered once on page load)
-======================================================================= */
-const renderFormula = () => {
-  const el = document.getElementById('formula-display');
-  el.innerHTML = `
-<span class="formula-cap">MIN(35,</span>
-  ((<span class="formula-artwork">Artwork<span class="formula-label">characters + art finish</span></span>
-  + <span class="formula-artwork">Writing<span class="formula-label">floor(words / 100)</span></span>)
-  × <span class="formula-scale">Scale<span class="formula-label">Chibi 1× or Full 1.25×</span></span>)
-  + <span class="formula-extra">Extra<span class="formula-label">gift art / masterpiece / scenery</span></span>)
-= <span class="formula-cap">Bonus<span class="formula-label">capped at 35</span></span>
-
-<span class="formula-cap">Bonus</span>
-+ <span class="formula-base">Base Coins<span class="formula-label">from Base Rewards</span></span>
-= <span class="formula-base">Total<span class="formula-label"></span></span>
-
-<span class="formula-base">Total</span>
-× <span class="formula-modifier">Commission<span class="formula-label">0.85 if commissioned, else 1</span></span>
-÷ <span class="formula-modifier">Collab<span class="formula-label">number of collaborators (min 1)</span></span>
-= <strong>Final Coins</strong>
-  `.trim();
 };
 
 /* ==================================================================== */
