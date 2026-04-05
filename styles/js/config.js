@@ -50,6 +50,7 @@ charadex.sheet = {
     news: "news",
     shop: "Shop",
     exchangeShop: "Exchange Shop",
+    questStatusLog: "Quest Status log",
   },
 
   options: {
