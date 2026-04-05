@@ -469,11 +469,11 @@ const renderPreview = (r) => {
       const beforeScale = r.artworkRewards + r.writingRewards;
       const afterScale = Math.round(beforeScale * r.scale);
       const scaleAdded = afterScale - beforeScale;
-      lines.push(`- Scale (${r.scale === 1.25 ? 'Full Scale' : r.scale + 'x'}): +${scaleAdded} coins`);
+      lines.push(`- Scale (${r.scale === 1.25 ? 'Full Scale (+25% bonus)' : r.scale + 'x'}): +${scaleAdded} coins`);
     }
     if (r.commissionMultiplier < 1) {
       const discount = Math.round(r.total * (1 - r.commissionMultiplier));
-      lines.push(`- Commission discount (-15%): -${discount} coins`);
+      lines.push(`- Commission discount (-15% total): -${discount} coins`);
     }
     if (r.collab > 1) {
       const beforeCollab = Math.round(r.total * r.commissionMultiplier);
