@@ -448,13 +448,15 @@ const renderPreview = (r) => {
   const cc = r.charCounts;
   if (cc.pufflings.count > 0) lines.push(`- Pufflings (${cc.pufflings.count}): +${cc.pufflings.coins}`);
   if (cc.humanoid.coins > 0) {
-    let hLabel = `Humanoid Puffling (${cc.humanoid.label})`;
-    if (cc.humanoid.extra > 0) hLabel += ` +${cc.humanoid.extra} extra`;
+    let hLabel = `Humanoid Pufflings (1 ${cc.humanoid.label}`;
+    if (cc.humanoid.extra > 0) hLabel += ` and ${cc.humanoid.extra} extra`;
+    hLabel += `)`;
     lines.push(`- ${hLabel}: +${cc.humanoid.coins}`);
   }
   if (cc.seeker.coins > 0) {
-    let sLabel = `Seeker (${cc.seeker.label})`;
-    if (cc.seeker.extra > 0) sLabel += ` +${cc.seeker.extra} extra`;
+    let sLabel = `Seeker (1 ${cc.seeker.label}`;
+    if (cc.seeker.extra > 0) sLabel += ` and ${cc.seeker.extra} extra`;
+    sLabel += `)`;
     lines.push(`- ${sLabel}: +${cc.seeker.coins}`);
   }
   if (r.artFinish.coloring.value > 0) lines.push(`- Coloring: +${r.artFinish.coloring.value}`);
