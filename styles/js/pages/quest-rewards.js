@@ -453,7 +453,8 @@ const renderPreview = (r) => {
     { label: 'Seeker Full-body', data: r.charCounts.seekerFullBody },
   ];
 
-  const capNote = r.uncappedBonus > 35 ? ' (capped at 35)' : '';
+  const capNote = r.uncappedBonus > 35 ? ` (capped at 35)` : '';
+  const bonusDisplay = r.uncappedBonus > 35 ? r.uncappedBonus : r.bonus;
   const hasModifiers = r.scale !== 1 || r.commissionMultiplier < 1 || r.collab > 1;
   const formItems = getItemsFromForm();
 
@@ -483,7 +484,7 @@ const renderPreview = (r) => {
   if (r.giftArt > 0) lines.push('- Gift art: +5');
   if (r.masterpiece > 0) lines.push('- Masterpiece Rendering: +5');
   if (r.scenery > 0) lines.push('- Scenery Background: +5');
-  lines.push(`- Bonus subtotal: ${r.bonus} coins${capNote}`);
+  lines.push(`- Bonus subtotal: ${bonusDisplay} coins${capNote}`);
 
   // Modifiers
   if (hasModifiers) {
