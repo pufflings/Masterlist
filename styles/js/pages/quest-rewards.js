@@ -84,7 +84,10 @@ const charCoins = (count, baseForFirst) => {
  * Encode JSON to URL-safe Base64.
  */
 const encodeUrlSafeBase64 = (obj) => {
-  return btoa(JSON.stringify(obj))
+  const utf8 = new TextEncoder().encode(JSON.stringify(obj));
+  let binary = '';
+  for (const byte of utf8) binary += String.fromCharCode(byte);
+  return btoa(binary)
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=+$/, '');
