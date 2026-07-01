@@ -100,6 +100,7 @@ let pageState = {
   username: '',
   promptTitle: '',
   promptData: null,
+  promptExists: true,
   lastTimestamp: null,
   hasHistory: false,
   itemsList: [],
@@ -138,16 +139,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // Validate prompt
+    // Validate prompt (if missing, pretend it exists with no cooldown/first-time bonus)
     const promptEntry = promptsData.find(
       (row) => row.title && row.title === prompt
     );
-    if (!promptEntry) {
-      showError(`Prompt "<strong>${escapeHtml(prompt)}</strong>" not found in the prompts sheet.`);
-      return;
-    }
-
-    pageState.promptData = promptEntry;
+    pageState.promptExists = !!promptEntry;
+    pageState.promptData = promptEntry || {};
     pageState.itemsList = itemsData;
 
     // Find quest history
@@ -196,7 +193,7 @@ const escapeHtml = (str) => {
 /* Render Status Card
 ======================================================================= */
 const renderStatus = () => {
-  const { promptData, lastTimestamp, hasHistory, username, promptTitle } = pageState;
+  const { promptData, promptExists, lastTimestamp, hasHistory, username, promptTitle } = pageState;
 
   // Title
   document.getElementById('quest-title').textContent = promptTitle;
@@ -204,6 +201,10 @@ const renderStatus = () => {
   // Completing for
   document.getElementById('quest-completing-for').innerHTML =
     `Completing quest for <strong>${escapeHtml(username)}</strong>: ${escapeHtml(promptTitle)}`;
+
+  // Badges row (first time bonus / cooldown) - only shown for prompts found in the sheet
+  document.getElementById('quest-status-badges').style.display = promptExists ? '' : 'none';
+  if (!promptExists) return;
 
   // Archived
   const isArchived = parseBool(promptData.archived);
@@ -403,15 +404,15 @@ const recalculate = () => {
 /* Preview
 ======================================================================= */
 const renderPreview = (r) => {
-  const { username, promptTitle, promptData, hasHistory } = pageState;
+  const { username, promptTitle, promptData, promptExists, hasHistory } = pageState;
 
   // First time bonus status text
-  const ftb = parseBool(promptData.firsttimebonus);
+  const ftb = promptExists && parseBool(promptData.firsttimebonus);
   let ftbText = '-';
   if (ftb) ftbText = hasHistory ? '\u274E' : '\u2705';
 
   // Cooldown status text
-  const cooldown = promptData.cooldown || '';
+  const cooldown = promptExists ? (promptData.cooldown || '') : '';
   let cooldownText = '-';
   if (cooldown) {
     const ready = isCooldownReady(pageState.lastTimestamp, cooldown);
@@ -434,7 +435,9 @@ const renderPreview = (r) => {
 
   const lines = [];
   lines.push(`**${promptTitle}**`);
-  lines.push(`First Time Bonus: ${ftbText}  | Cooldown: ${cooldownText}`);
+  if (promptExists) {
+    lines.push(`First Time Bonus: ${ftbText}  | Cooldown: ${cooldownText}`);
+  }
   lines.push('');
   lines.push(`Completing quest for **${username}**: ${promptTitle}`);
   lines.push('');
